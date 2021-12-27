@@ -8,10 +8,15 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -21,25 +26,25 @@ import java.util.regex.Pattern;
 
 @Component
 public class SyncData {
+    private static final Logger logger = LoggerFactory.getLogger(SyncData.class);
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private FundService fundService;
 
-    public void syncFundData(){
+    public void syncFundData() {
         //http://fundf10.eastmoney.com/jjjz_519983.html
-        LocalDate startDate = LocalDate.of(1980,1,1);
+        LocalDate startDate = LocalDate.of(1980, 1, 1);
         LocalDate endDate = startDate.plusDays(20);
-        ArrayList<Fund> funds = new ArrayList<Fund>();
         HashMap<String, Object> paramMap = new HashMap<>();
-        paramMap.put("callback","jQuery18305687664236277068_1640352419325");
-        paramMap.put("fundCode","519983");
-        paramMap.put("pageIndex","1");
-        paramMap.put("pageSize","20");
-        paramMap.put("startDate",startDate.toString());
-        paramMap.put("endDate",endDate.toString());
-        LocalDate localDate =  LocalDate.now();
+        paramMap.put("callback", "jQuery18305687664236277068_1640352419325");
+        paramMap.put("fundCode", "519983");
+        paramMap.put("pageIndex", "1");
+        paramMap.put("pageSize", "20");
+        paramMap.put("startDate", startDate.toString());
+        paramMap.put("endDate", endDate.toString());
+        LocalDate localDate = LocalDate.now();
         Pattern compile = Pattern.compile("\\((.*)\\)");
-        while(startDate.isBefore(localDate)) {
+        while (startDate.isBefore(localDate)) {
             startDate = startDate.plusDays(20);
             endDate = endDate.plusDays(20);
             paramMap.put("startDate", startDate.toString());
@@ -64,13 +69,16 @@ public class SyncData {
                 fund.setFsrq(LocalDate.parse(fundInfo.getStr("FSRQ"), timeDtf));
                 fund.setDwjz(BigDecimal.valueOf(fundInfo.getDouble("DWJZ")));
                 Double jzzzl = fundInfo.getDouble("JZZZL");
-                if(jzzzl == null)
+                if (jzzzl == null)
                     jzzzl = 0.0;
                 fund.setJzzzl(BigDecimal.valueOf(jzzzl));
                 fund.setLjjz(BigDecimal.valueOf(fundInfo.getDouble("LJJZ")));
-                funds.add(fund);
+                try {
+                    fundService.save(fund);
+                } catch (DuplicateKeyException e) {
+                    logger.warn("主键冲突数据：{}", fund.toString());
+                }
             }
         }
-        fundService.saveBatch(funds);
     }
 }

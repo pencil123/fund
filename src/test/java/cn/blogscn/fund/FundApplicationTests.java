@@ -2,7 +2,7 @@ package cn.blogscn.fund;
 
 import cn.blogscn.fund.service.FundService;
 import cn.blogscn.fund.service.job.SyncData;
-import com.baomidou.mybatisplus.annotation.TableName;
+import cn.blogscn.fund.service.job.UpdateData;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,8 @@ class FundApplicationTests {
     private SyncData syncData;
     @Autowired
     private FundService fundService;
+    @Autowired
+    private UpdateData updateData;
 
     @Test
     void test() {
@@ -28,6 +30,11 @@ class FundApplicationTests {
         fundService.updateAvgWeek("519983");
         fundService.updateAvgMonth("519983");
         fundService.updateAvg3month("519983");
+    }
+
+    @Test
+    void updateTodayData(){
+        updateData.updateTodayData();
     }
 
 }
