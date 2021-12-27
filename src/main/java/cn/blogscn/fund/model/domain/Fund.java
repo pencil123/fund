@@ -1,11 +1,14 @@
 package cn.blogscn.fund.model.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Fund {
     private String fundCode;
-    private String fundName;
-    private LocalDate jzrq;// 净值日期
+    private BigDecimal dwjz;
+    private BigDecimal ljjz;
+    private BigDecimal jzzzl;
+    private LocalDate fsrq;
 
     public String getFundCode() {
         return fundCode;
@@ -15,19 +18,35 @@ public class Fund {
         this.fundCode = fundCode;
     }
 
-    public String getFundName() {
-        return fundName;
+    public BigDecimal getDwjz() {
+        return dwjz;
     }
 
-    public void setFundName(String fundName) {
-        this.fundName = fundName;
+    public void setDwjz(BigDecimal dwjz) {
+        this.dwjz = dwjz;
     }
 
-    public LocalDate getJzrq() {
-        return jzrq;
+    public BigDecimal getLjjz() {
+        return ljjz;
     }
 
-    public void setJzrq(LocalDate jzrq) {
-        this.jzrq = jzrq;
+    public void setLjjz(BigDecimal ljjz) {
+        this.ljjz = ljjz;
+    }
+
+    public BigDecimal getJzzzl() {
+        return jzzzl;
+    }
+
+    public void setJzzzl(BigDecimal jzzzl) {
+        this.jzzzl = jzzzl;
+    }
+
+    public LocalDate getFsrq() {
+        return fsrq;
+    }
+
+    public void setFsrq(LocalDate fsrq) {
+        this.fsrq = fsrq;
     }
 }
