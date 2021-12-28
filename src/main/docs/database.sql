@@ -10,4 +10,4 @@
   `avg3month` decimal(10,4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniqu` (`fund_code`,`fsrq`)
-) ENGINE=InnoDB AUTO_INCREMENT=4829 DEFAULT CHARSET=utf8 |
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 |
