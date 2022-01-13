@@ -1,6 +1,8 @@
 package cn.blogscn.fund.service.job;
 
+import cn.blogscn.fund.model.domain.Fund;
 import cn.blogscn.fund.model.domain.Record;
+import cn.blogscn.fund.service.FundService;
 import cn.blogscn.fund.service.RecordService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
@@ -13,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +33,17 @@ public class SyncData {
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private RecordService recordService;
+    @Autowired
+    private FundService fundService;
 
-    public void syncRecordData(String fundCode) {
+    public void syncRecordData() {
+        List<Fund> funds = fundService.list();
+        for(Fund fund: funds){
+            syncRecordData(fund.getFundCode());
+        }
+    }
+
+    private void syncRecordData(String fundCode){
         //http://fundf10.eastmoney.com/jjjz_519983.html
         LocalDate startDate = LocalDate.of(1980, 1, 1);
         LocalDate endDate = startDate.plusDays(20);

@@ -22,7 +22,12 @@ class FundApplicationTests {
 
     @Test
     void test() {
-        syncData.syncRecordData("011041");
+        syncData.syncRecordData();
+    }
+
+    @Test
+    void updateTodayData(){
+        updateData.updateTodayData();
     }
 
     @Test
@@ -32,9 +37,6 @@ class FundApplicationTests {
         recordService.updateAvg3month("519983");
     }
 
-    @Test
-    void updateTodayData(){
-        updateData.updateTodayData();
-    }
+
 
 }

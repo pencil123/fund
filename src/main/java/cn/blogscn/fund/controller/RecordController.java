@@ -18,7 +18,7 @@ public class RecordController {
 
     @GetMapping("/job/sync")
     public String jobSyncData(){
-        syncData.syncRecordData("011041");
+        syncData.syncRecordData();
         return "successs";
     }
     @GetMapping("/job/update")
