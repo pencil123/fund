@@ -3,10 +3,14 @@ package cn.blogscn.fund.service.impl;
 import cn.blogscn.fund.mapper.RecordMapper;
 import cn.blogscn.fund.model.domain.Record;
 import cn.blogscn.fund.service.RecordService;
+import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Queue;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> implements RecordService {
+
     /**
      * 更新每周的均值
      */
@@ -65,5 +70,23 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             updateById(record);
         }
         return null;
+    }
+
+    @Override
+    public IPage<Record> queryRecordPage(String fundCode, Long currentPage, Long pageSize) {
+        IPage<Record> recordPage = new Page<>(currentPage, pageSize);
+        QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
+        recordQueryWrapper.eq("fund_code",fundCode);
+        recordQueryWrapper.orderByDesc("fsrq");
+        return page(recordPage,recordQueryWrapper);
+    }
+
+    @Override
+    public List<Record> queryRecordList(String fundCode, LocalDate startDay, LocalDate endDay) {
+        QueryWrapper<Record> recordQueryWrapper = new QueryWrapper<>();
+        recordQueryWrapper.eq("fund_code",fundCode);
+        recordQueryWrapper.between("fsrq",startDay,endDay);
+        recordQueryWrapper.orderByDesc("fsrq");
+        return list(recordQueryWrapper);
     }
 }

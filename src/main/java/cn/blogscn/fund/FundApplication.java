@@ -6,10 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.TimeZone;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableScheduling //开启定时任务
-@MapperScan("cn.blogscn.fund.mapper")
+
+@EnableTransactionManagement
 public class FundApplication {
 
     public static void main(String[] args) {
