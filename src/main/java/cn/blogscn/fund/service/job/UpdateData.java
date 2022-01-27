@@ -1,9 +1,9 @@
 package cn.blogscn.fund.service.job;
 
 import cn.blogscn.fund.model.domain.Fund;
-import cn.blogscn.fund.model.domain.Record;
+import cn.blogscn.fund.model.domain.FundRecord;
 import cn.blogscn.fund.service.FundService;
-import cn.blogscn.fund.service.RecordService;
+import cn.blogscn.fund.service.FundRecordService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
@@ -30,7 +30,7 @@ public class UpdateData {
     private static final Logger logger = LoggerFactory.getLogger(UpdateData.class);
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
-    private RecordService recordService;
+    private FundRecordService fundRecordService;
     @Autowired
     private FundService fundService;
 
@@ -41,9 +41,9 @@ public class UpdateData {
         for(Fund fund: funds){
             String fundCode = fund.getFundCode();
             updateOne(fundCode);
-            recordService.updateAvgWeek(fundCode);
-            recordService.updateAvgMonth(fundCode);
-            recordService.updateAvg3month(fundCode);
+            fundRecordService.updateAvgWeek(fundCode);
+            fundRecordService.updateAvgMonth(fundCode);
+            fundRecordService.updateAvg3month(fundCode);
         }
     }
 
@@ -70,21 +70,21 @@ public class UpdateData {
         JSONArray lsjzList = data.getJSONArray("LSJZList");
         lsjzList.size();
         for (int i = 0; i < lsjzList.size(); i++) {
-            JSONObject recordInfo = lsjzList.get(i, JSONObject.class);
-            Record record = new Record();
-            System.out.println(recordInfo.toString());
-            record.setFundCode(fundCode);
-            record.setFsrq(LocalDate.parse(recordInfo.getStr("FSRQ"), timeDtf));
-            record.setDwjz(BigDecimal.valueOf(recordInfo.getDouble("DWJZ")));
-            Double jzzzl = recordInfo.getDouble("JZZZL");
+            JSONObject fundRecordInfo = lsjzList.get(i, JSONObject.class);
+            FundRecord fundRecord = new FundRecord();
+            System.out.println(fundRecordInfo.toString());
+            fundRecord.setFundCode(fundCode);
+            fundRecord.setFsrq(LocalDate.parse(fundRecordInfo.getStr("FSRQ"), timeDtf));
+            fundRecord.setDwjz(BigDecimal.valueOf(fundRecordInfo.getDouble("DWJZ")));
+            Double jzzzl = fundRecordInfo.getDouble("JZZZL");
             if (jzzzl == null)
                 jzzzl = 0.0;
-            record.setJzzzl(BigDecimal.valueOf(jzzzl));
-            record.setLjjz(BigDecimal.valueOf(recordInfo.getDouble("LJJZ")));
+            fundRecord.setJzzzl(BigDecimal.valueOf(jzzzl));
+            fundRecord.setLjjz(BigDecimal.valueOf(fundRecordInfo.getDouble("LJJZ")));
             try {
-                recordService.save(record);
+                fundRecordService.save(fundRecord);
             } catch (DuplicateKeyException e) {
-                logger.warn("主键冲突数据：{}", record.toString());
+                logger.warn("主键冲突数据：{}", fundRecord.toString());
             }
         }
     }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/jobs")
+@RequestMapping("/api/jobs")
 public class JobController {
     @Autowired
     private SyncData syncData;
@@ -17,7 +17,7 @@ public class JobController {
 
     @GetMapping("/job/sync")
     public String jobSyncData(){
-        syncData.syncRecordData();
+        syncData.syncFundRecordData();
         return "successs";
     }
     @GetMapping("/job/update")

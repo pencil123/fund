@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/fund")
+@RequestMapping("/api/fund")
 public class FundController {
     @Autowired
     private FundService fundService;

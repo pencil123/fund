@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Record {
+public class FundRecord {
     @TableId(type= IdType.AUTO)
     private Integer id;
     private String fundCode;

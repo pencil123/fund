@@ -1,6 +1,6 @@
 package cn.blogscn.fund;
 
-import cn.blogscn.fund.service.RecordService;
+import cn.blogscn.fund.service.FundRecordService;
 import cn.blogscn.fund.service.job.SyncData;
 import cn.blogscn.fund.service.job.UpdateData;
 import org.junit.jupiter.api.Test;
@@ -16,13 +16,13 @@ class FundApplicationTests {
     @Autowired
     private SyncData syncData;
     @Autowired
-    private RecordService recordService;
+    private FundRecordService fundRecordService;
     @Autowired
     private UpdateData updateData;
 
     @Test
     void test() {
-        syncData.syncRecordData();
+        syncData.syncFundRecordData();
     }
 
     @Test
@@ -32,9 +32,9 @@ class FundApplicationTests {
 
     @Test
     void updateAvgWeek(){
-        recordService.updateAvgWeek("519983");
-        recordService.updateAvgMonth("519983");
-        recordService.updateAvg3month("519983");
+        fundRecordService.updateAvgWeek("519983");
+        fundRecordService.updateAvgMonth("519983");
+        fundRecordService.updateAvg3month("519983");
     }
 
 
