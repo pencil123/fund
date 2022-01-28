@@ -7,7 +7,7 @@ package cn.blogscn.fund.model.json;
  * @date 2021/1/18 14:52
  */
 public class JsonResult<T> {
-    private static Boolean success = true;
+    private Integer code = 0;
     private String message = "";
     private T data;
 
@@ -20,20 +20,20 @@ public class JsonResult<T> {
 
     /**
      * 内部构建
-     * @param success
+     * @param code
      * @param message
      * @param data
      */
-    private JsonResult(Boolean success ,String message, T data) {
+    private JsonResult(Integer code ,String message, T data) {
         super();
-        this.success = success;
+        this.code = code;
         this.message = message;
         this.data = data;
     }
 
-    private JsonResult(Boolean success,String message) {
+    private JsonResult(Integer code,String message) {
         super();
-        this.success = success;
+        this.code = code;
         this.message = message;
     }
 
@@ -42,21 +42,21 @@ public class JsonResult<T> {
      * 自定义成功信息
      */
     public static <T> JsonResult<T> success(String message, T data) {
-        return new JsonResult<>(true,message, data);
+        return new JsonResult<>(0,message, data);
     }
 
     /**
      * @描述： 默认success成功信息
      */
     public static <T> JsonResult<T> success(T data) {
-        return new JsonResult<>(true,"success", data);
+        return new JsonResult<>(0,"success", data);
     }
 
     /**
      * 默认的成功信息，data为空
      */
     public static <T> JsonResult<T> success() {
-        return new JsonResult<>(true, "success", null);
+        return new JsonResult<>(0, "success", null);
     }
     private static final String EXCEPTION_MESSAGE_500 = "Server Internal Error";
     /**
@@ -68,7 +68,7 @@ public class JsonResult<T> {
      * 仅指定message时使用
      */
     public static  <T>  JsonResult <T>  error( String message) {
-        return new JsonResult<> (false, message);
+        return new JsonResult<> (500, message);
     }
 
     /**
@@ -76,6 +76,14 @@ public class JsonResult<T> {
      */
     public static <T> JsonResult<T> error() {
         return error("");
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
     public String getMessage() {
