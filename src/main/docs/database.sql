@@ -1,4 +1,4 @@
- CREATE TABLE `record` (
+ CREATE TABLE `fund_record` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `fund_code` varchar(20) DEFAULT NULL,
   `dwjz` decimal(10,4) DEFAULT NULL,

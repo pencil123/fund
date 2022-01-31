@@ -1,7 +1,8 @@
 package cn.blogscn.fund.controller;
 
-import cn.blogscn.fund.service.job.SyncData;
-import cn.blogscn.fund.service.job.UpdateData;
+import cn.blogscn.fund.xxljob.bankuai.BankuaiUpdateJob;
+import cn.blogscn.fund.xxljob.fund.SyncData;
+import cn.blogscn.fund.xxljob.fund.UpdateData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,15 +15,22 @@ public class JobController {
     private SyncData syncData;
     @Autowired
     private UpdateData updateData;
+    @Autowired
+    private BankuaiUpdateJob bankuaiUpdateJob;
 
-    @GetMapping("/job/sync")
+    @GetMapping("/fund/listUpdate")
     public String jobSyncData(){
         syncData.syncFundRecordData();
         return "successs";
     }
-    @GetMapping("/job/update")
+    @GetMapping("/fund/dataUpdate")
     public String jobUpdateData(){
         updateData.updateTodayData();
+        return "success";
+    }
+    @GetMapping("/bankuai/listUpdate")
+    public String bankuaiListUpdate(){
+        bankuaiUpdateJob.updateBankuaiData();
         return "success";
     }
 }

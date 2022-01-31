@@ -1,4 +1,4 @@
-package cn.blogscn.fund.service.job;
+package cn.blogscn.fund.xxljob.fund;
 
 import cn.blogscn.fund.model.domain.Fund;
 import cn.blogscn.fund.model.domain.FundRecord;
@@ -57,7 +57,7 @@ public class UpdateData {
         paramMap.put("startDate", "");
         paramMap.put("endDate", "");
         Pattern compile = Pattern.compile("\\((.*)\\)");
-        HttpUtil.get("http://api.fund.eastmoney.com/f10/lsjz", paramMap);
+        //HttpUtil.get("http://api.fund.eastmoney.com/f10/lsjz", paramMap);
         String result12 = HttpRequest.get("http://api.fund.eastmoney.com/f10/lsjz")
                 .header(Header.REFERER, "http://fundf10.eastmoney.com/")
                 .form(paramMap)
