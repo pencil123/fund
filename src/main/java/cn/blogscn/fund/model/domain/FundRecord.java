@@ -15,8 +15,8 @@ public class FundRecord {
     private BigDecimal jzzzl;
     private LocalDate fsrq;
     private BigDecimal avgWeek;
+    private BigDecimal avgTwoWeek;
     private BigDecimal avgMonth;
-    private BigDecimal avg3month;
 
     public String getFundCode() {
         return fundCode;
@@ -74,11 +74,19 @@ public class FundRecord {
         this.avgMonth = avgMonth;
     }
 
-    public BigDecimal getAvg3month() {
-        return avg3month;
+    public Integer getId() {
+        return id;
     }
 
-    public void setAvg3month(BigDecimal avg3month) {
-        this.avg3month = avg3month;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public BigDecimal getAvgTwoWeek() {
+        return avgTwoWeek;
+    }
+
+    public void setAvgTwoWeek(BigDecimal avgTwoWeek) {
+        this.avgTwoWeek = avgTwoWeek;
     }
 }

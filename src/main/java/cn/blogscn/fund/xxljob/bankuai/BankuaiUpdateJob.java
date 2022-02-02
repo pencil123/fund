@@ -21,6 +21,7 @@ public class BankuaiUpdateJob {
     private static final Logger logger = LoggerFactory.getLogger(BankuaiUpdateJob.class);
     @Autowired
     private BankuaiService bankuaiService;
+    private static final String BK_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_bk";
 
     public Boolean updateBankuaiData(){
         HashMap<String, Object> paramMap = new HashMap<>();
@@ -29,8 +30,7 @@ public class BankuaiUpdateJob {
         paramMap.put("fenlei", "0");
         paramMap.put("num", "80");
         paramMap.put("page", "1");
-        //HttpUtil.get("http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_bk", paramMap);
-        String result = HttpRequest.get("http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_bk")
+        String result = HttpRequest.get(BK_URL)
                 .header(Header.REFERER, "http://vip.stock.finance.sina.com.cn/moneyflow/")
                 .form(paramMap)
                 .execute().body();

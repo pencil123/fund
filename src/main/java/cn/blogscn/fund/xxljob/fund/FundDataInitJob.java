@@ -6,7 +6,6 @@ import cn.blogscn.fund.service.FundService;
 import cn.blogscn.fund.service.FundRecordService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -27,8 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class SyncData {
-    private static final Logger logger = LoggerFactory.getLogger(SyncData.class);
+public class FundDataInitJob {
+    private static final Logger logger = LoggerFactory.getLogger(FundDataInitJob.class);
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private FundRecordService fundRecordService;

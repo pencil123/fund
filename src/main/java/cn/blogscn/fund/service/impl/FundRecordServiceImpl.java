@@ -22,7 +22,7 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
      * 更新每周的均值
      */
     @Override
-    public Boolean updateAvgWeek(String fundCode) {
+    public Boolean updateAvgWeek() {
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
         fundRecordQueryWrapper.isNull("avg_week");
         fundRecordQueryWrapper.select("id", "fund_code", "fsrq");
@@ -32,7 +32,7 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
             fundRecord.setAvgWeek(bigDecimal);
             updateById(fundRecord);
         }
-        return null;
+        return true;
     }
 
 
@@ -40,7 +40,7 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
      * 更新每月均值
      */
     @Override
-    public Boolean updateAvgMonth(String fundCode) {
+    public Boolean updateAvgMonth() {
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
         fundRecordQueryWrapper.isNull("avg_month");
         fundRecordQueryWrapper.select("id", "fund_code", "fsrq");
@@ -50,25 +50,25 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
             fundRecord.setAvgMonth(bigDecimal);
             updateById(fundRecord);
         }
-        return null;
+        return true;
     }
 
     /**
-     * 更新三个月均值
+     * 更新近两周的平均值
      */
 
     @Override
-    public Boolean updateAvg3month(String fundCode) {
+    public Boolean updateAvgTwoWeek() {
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
-        fundRecordQueryWrapper.isNull("avg3month");
+        fundRecordQueryWrapper.isNull("avg_two_week");
         fundRecordQueryWrapper.select("id", "fund_code", "fsrq");
         List<FundRecord> list = list(fundRecordQueryWrapper);
         for (FundRecord fundRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avg3month(fundRecord.getFsrq().toString(), fundRecord.getFundCode());
-            fundRecord.setAvg3month(bigDecimal);
+            BigDecimal bigDecimal = baseMapper.avgTwoWeek(fundRecord.getFsrq().toString(), fundRecord.getFundCode());
+            fundRecord.setAvgTwoWeek(bigDecimal);
             updateById(fundRecord);
         }
-        return null;
+        return true;
     }
 
     @Override

@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface FundRecordService extends IService<FundRecord> {
-    Boolean updateAvgWeek(String fundCode);
-    Boolean updateAvgMonth(String fundCode);
-    Boolean updateAvg3month(String fundCode);
+    Boolean updateAvgWeek();
+    Boolean updateAvgMonth();
+    Boolean updateAvgTwoWeek();
 
     IPage<FundRecord> queryFundRecordPage(String fundCode,Long currentPage,Long pageSize);
     List<FundRecord> queryFundRecordList(String fundCode, LocalDate startDay,LocalDate endDay);

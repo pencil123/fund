@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Bankuai {
+public class Indices {
     @TableId
     private String code;
     private String name;
-    private LocalDateTime createDatetime;
+    private LocalDateTime createTime;
     private LocalDate startDay;
     private LocalDate endDay;
 
@@ -28,12 +28,12 @@ public class Bankuai {
         this.name = name;
     }
 
-    public LocalDateTime getCreateDatetime() {
-        return createDatetime;
+    public LocalDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateDatetime(LocalDateTime createDatetime) {
-        this.createDatetime = createDatetime;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
     public LocalDate getStartDay() {

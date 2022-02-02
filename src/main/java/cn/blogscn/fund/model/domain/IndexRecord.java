@@ -5,29 +5,17 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class BkRecord {
+public class IndexRecord {
     @TableId(type= IdType.AUTO)
     private Integer id;
     private String code;
     private BigDecimal price;
-    private LocalDate opendate;
+    private Long volume;
     private BigDecimal turnover;
-    private BigDecimal netamount;
-    private BigDecimal r0Net;
-    private BigDecimal r0Ratio;
-    private BigDecimal r0xRatio;
+    private LocalDate opendate;
     private BigDecimal avgWeek;
     private BigDecimal avgTwoWeek;
     private BigDecimal avgMonth;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getCode() {
         return code;
     }
@@ -44,12 +32,12 @@ public class BkRecord {
         this.price = price;
     }
 
-    public LocalDate getOpendate() {
-        return opendate;
+    public Long getVolume() {
+        return volume;
     }
 
-    public void setOpendate(LocalDate opendate) {
-        this.opendate = opendate;
+    public void setVolume(Long volume) {
+        this.volume = volume;
     }
 
     public BigDecimal getTurnover() {
@@ -60,36 +48,12 @@ public class BkRecord {
         this.turnover = turnover;
     }
 
-    public BigDecimal getNetamount() {
-        return netamount;
+    public LocalDate getOpendate() {
+        return opendate;
     }
 
-    public void setNetamount(BigDecimal netamount) {
-        this.netamount = netamount;
-    }
-
-    public BigDecimal getR0Net() {
-        return r0Net;
-    }
-
-    public void setR0Net(BigDecimal r0Net) {
-        this.r0Net = r0Net;
-    }
-
-    public BigDecimal getR0Ratio() {
-        return r0Ratio;
-    }
-
-    public void setR0Ratio(BigDecimal r0Ratio) {
-        this.r0Ratio = r0Ratio;
-    }
-
-    public BigDecimal getR0xRatio() {
-        return r0xRatio;
-    }
-
-    public void setR0xRatio(BigDecimal r0xRatio) {
-        this.r0xRatio = r0xRatio;
+    public void setOpendate(LocalDate opendate) {
+        this.opendate = opendate;
     }
 
     public BigDecimal getAvgWeek() {
@@ -118,16 +82,12 @@ public class BkRecord {
 
     @Override
     public String toString() {
-        return "BkRecord{" +
-                "id=" + id +
-                ", bkCode='" + code + '\'' +
+        return "IndexRecord{" +
+                "code='" + code + '\'' +
                 ", price=" + price +
-                ", opendate=" + opendate +
+                ", volume=" + volume +
                 ", turnover=" + turnover +
-                ", netamount=" + netamount +
-                ", r0Net=" + r0Net +
-                ", r0Ratio=" + r0Ratio +
-                ", r0xRatio=" + r0xRatio +
+                ", opendate=" + opendate +
                 '}';
     }
 }

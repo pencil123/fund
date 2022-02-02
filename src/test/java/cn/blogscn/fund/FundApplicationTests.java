@@ -2,8 +2,10 @@ package cn.blogscn.fund;
 
 import cn.blogscn.fund.service.FundRecordService;
 import cn.blogscn.fund.xxljob.bankuai.BankuaiUpdateJob;
-import cn.blogscn.fund.xxljob.fund.SyncData;
-import cn.blogscn.fund.xxljob.fund.UpdateData;
+import cn.blogscn.fund.xxljob.bankuai.BkRecordUpdateJob;
+import cn.blogscn.fund.xxljob.fund.FundDataInitJob;
+import cn.blogscn.fund.xxljob.fund.FundRecordDataUpdateJob;
+import cn.blogscn.fund.xxljob.index.IndexRecordDataUpdateJob;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,29 +17,26 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 class FundApplicationTests {
     @Autowired
-    private SyncData syncData;
+    private FundDataInitJob fundDataInitJob;
     @Autowired
     private FundRecordService fundRecordService;
     @Autowired
-    private UpdateData updateData;
+    private FundRecordDataUpdateJob fundRecordDataUpdateJob;
     @Autowired
     private BankuaiUpdateJob bankuaiUpdateJob;
+    @Autowired
+    private BkRecordUpdateJob bkRecordUpdateJob;
+    @Autowired
+    private IndexRecordDataUpdateJob indexRecordDataUpdateJob;
 
     @Test
-    void test() {
-        syncData.syncFundRecordData();
+    void fundDataInit() {
+        fundDataInitJob.syncFundRecordData();
     }
 
     @Test
-    void updateTodayData(){
-        updateData.updateTodayData();
-    }
-
-    @Test
-    void updateAvgWeek(){
-        fundRecordService.updateAvgWeek("519983");
-        fundRecordService.updateAvgMonth("519983");
-        fundRecordService.updateAvg3month("519983");
+    void fundRecordDataUpdateTodayJob(){
+        fundRecordDataUpdateJob.updateTodayData();
     }
 
     @Test
@@ -45,5 +44,19 @@ class FundApplicationTests {
         bankuaiUpdateJob.updateBankuaiData();
     }
 
+    @Test
+    void bkRecordDataUpdate()throws InterruptedException{
+        bkRecordUpdateJob.updateBkRecords();
+    }
+
+    @Test
+    void bkAvgValuesUpdate(){
+        bkRecordUpdateJob.updateAvgValue();
+    }
+
+    @Test
+    void indicesDataUpdate(){
+        indexRecordDataUpdateJob.indexRecordDataUpdateMain();
+    }
 
 }

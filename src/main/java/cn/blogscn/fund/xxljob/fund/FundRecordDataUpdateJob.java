@@ -6,7 +6,6 @@ import cn.blogscn.fund.service.FundService;
 import cn.blogscn.fund.service.FundRecordService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -26,8 +25,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class UpdateData {
-    private static final Logger logger = LoggerFactory.getLogger(UpdateData.class);
+public class FundRecordDataUpdateJob {
+    private static final Logger logger = LoggerFactory.getLogger(FundRecordDataUpdateJob.class);
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private FundRecordService fundRecordService;
@@ -41,9 +40,9 @@ public class UpdateData {
         for(Fund fund: funds){
             String fundCode = fund.getFundCode();
             updateOne(fundCode);
-            fundRecordService.updateAvgWeek(fundCode);
-            fundRecordService.updateAvgMonth(fundCode);
-            fundRecordService.updateAvg3month(fundCode);
+            fundRecordService.updateAvgWeek();
+            fundRecordService.updateAvgMonth();
+            fundRecordService.updateAvgTwoWeek();
         }
     }
 
