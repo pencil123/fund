@@ -98,4 +98,12 @@ public class IndexRecordDataUpdateJob {
         }
         return true;
     }
+
+
+
+    public void updateAvgValue(){
+        indexRecordService.updateAvgMonth();
+        indexRecordService.updateAvgTwoWeek();
+        indexRecordService.updateAvgWeek();
+    }
 }

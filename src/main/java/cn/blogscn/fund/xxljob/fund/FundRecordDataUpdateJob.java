@@ -33,6 +33,13 @@ public class FundRecordDataUpdateJob {
     @Autowired
     private FundService fundService;
 
+    public void updateAvgValue(){
+        fundRecordService.updateAvgMonth();
+        fundRecordService.updateAvgTwoWeek();
+        fundRecordService.updateAvgWeek();
+    }
+
+
     //http://api.fund.eastmoney.com/f10/lsjz?callback=jQuery183019096624312824972_1640614711227&fundCode=519983&pageIndex=1&pageSize=20&startDate=&endDate=&_=1640614711245
     @Scheduled(cron = "0 10 23 ? * MON-FRI")
     public void updateTodayData() {
