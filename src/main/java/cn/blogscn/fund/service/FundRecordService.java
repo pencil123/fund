@@ -11,6 +11,6 @@ public interface FundRecordService extends IService<FundRecord> {
     Boolean updateAvgMonth();
     Boolean updateAvgTwoWeek();
 
-    IPage<FundRecord> queryFundRecordPage(String fundCode,Long currentPage,Long pageSize);
-    List<FundRecord> queryFundRecordList(String fundCode, LocalDate startDay,LocalDate endDay);
+    IPage<FundRecord> queryFundRecordPage(String code,Long currentPage,Long pageSize);
+    List<FundRecord> queryFundRecordList(String code, LocalDate startDay,LocalDate endDay);
 }

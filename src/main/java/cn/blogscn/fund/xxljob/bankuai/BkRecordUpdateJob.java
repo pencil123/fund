@@ -19,8 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 public class BkRecordUpdateJob {
 
     private static final Logger logger = LoggerFactory.getLogger(BkRecordUpdateJob.class);

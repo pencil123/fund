@@ -10,13 +10,13 @@ import java.math.BigDecimal;
 
 @Repository
 public interface FundRecordMapper extends BaseMapper<FundRecord> {
-    //select avg(dwjz) from (select dwjz from fund where fsrq < ${fsrq} and fund_code = ${fund_code} order by fsrq desc limit 7) x;
-    @Select("select avg(dwjz) from (select dwjz from fund_record where fsrq < #{fsrq} and fund_code = #{fund_code} order by fsrq desc limit 5) x")
-    BigDecimal avgWeek(@Param("fsrq")String fsrq,@Param("fund_code") String fundCode);
+    //select avg(price) from (select price from fund where opendate < ${opendate} and code = ${code} order by opendate desc limit 7) x;
+    @Select("select avg(price) from (select price from fund_record where opendate < #{opendate} and code = #{code} order by opendate desc limit 5) x")
+    BigDecimal avgWeek(@Param("opendate")String opendate,@Param("code") String fundCode);
 
-    @Select("select avg(dwjz) from (select dwjz from fund_record where fsrq < #{fsrq} and fund_code = #{fund_code} order by fsrq desc limit 20) x")
-    BigDecimal avgMonth(@Param("fsrq")String fsrq,@Param("fund_code") String fundCode);
+    @Select("select avg(price) from (select price from fund_record where opendate < #{opendate} and code = #{code} order by opendate desc limit 20) x")
+    BigDecimal avgMonth(@Param("opendate")String opendate,@Param("code") String fundCode);
 
-    @Select("select avg(dwjz) from (select dwjz from fund_record where fsrq < #{fsrq} and fund_code = #{fund_code} order by fsrq desc limit 10) x")
-    BigDecimal avgTwoWeek(@Param("fsrq")String fsrq,@Param("fund_code") String fundCode);
+    @Select("select avg(price) from (select price from fund_record where opendate < #{opendate} and code = #{code} order by opendate desc limit 10) x")
+    BigDecimal avgTwoWeek(@Param("opendate")String opendate,@Param("code") String fundCode);
 }

@@ -23,21 +23,21 @@ public class FundRecordController {
     private FundRecordService fundRecordService;
 
     @GetMapping("/find/page")
-    public JsonResult<PageResult<FundRecord>> queryRecordPage(@RequestParam("fundCode") String fundCode,
+    public JsonResult<PageResult<FundRecord>> queryRecordPage(@RequestParam("code") String code,
             @RequestParam(required = false, defaultValue = "1") Long currentPage,
             @RequestParam(required = false, defaultValue = "20") Long pageSize) {
 
         IPage<FundRecord> recordIPage = fundRecordService
-                .queryFundRecordPage(fundCode, currentPage, pageSize);
+                .queryFundRecordPage(code, currentPage, pageSize);
         PageResult pageResult = new PageResult<>(recordIPage);
         return JsonResult.success(pageResult);
     }
 
     @GetMapping("/find/list")
-    public JsonResult<List<FundRecord>> queryRecordList(@RequestParam("fundCode") String fundCode,
+    public JsonResult<List<FundRecord>> queryRecordList(@RequestParam("code") String code,
             @RequestParam("startDay") @DateTimeFormat(iso = ISO.DATE) LocalDate startDay, @RequestParam("endDay") @DateTimeFormat(iso = ISO.DATE) LocalDate endDay) {
 
-        List<FundRecord> records = fundRecordService.queryFundRecordList(fundCode, startDay, endDay);
+        List<FundRecord> records = fundRecordService.queryFundRecordList(code, startDay, endDay);
         return JsonResult.success(records);
     }
 

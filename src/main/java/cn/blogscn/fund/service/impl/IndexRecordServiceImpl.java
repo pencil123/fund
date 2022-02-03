@@ -8,13 +8,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class IndexRecordServiceImpl extends ServiceImpl<IndexRecordMapper,IndexRecord> implements IndexRecordService {
 
     @Override
@@ -24,7 +27,7 @@ public class IndexRecordServiceImpl extends ServiceImpl<IndexRecordMapper,IndexR
         indexRecordQueryWrapper.select("id", "code", "opendate");
         List<IndexRecord> list = list(indexRecordQueryWrapper);
         for (IndexRecord indexRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgMonth(indexRecord.getOpendate().toString(), indexRecord.getCode());
+            BigDecimal bigDecimal = baseMapper.avgWeek(indexRecord.getOpendate().toString(), indexRecord.getCode());
             indexRecord.setAvgWeek(bigDecimal);
             updateById(indexRecord);
         }
@@ -52,10 +55,19 @@ public class IndexRecordServiceImpl extends ServiceImpl<IndexRecordMapper,IndexR
         indexRecordQueryWrapper.select("id", "code", "opendate");
         List<IndexRecord> list = list(indexRecordQueryWrapper);
         for (IndexRecord indexRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgMonth(indexRecord.getOpendate().toString(), indexRecord.getCode());
+            BigDecimal bigDecimal = baseMapper.avgTwoWeek(indexRecord.getOpendate().toString(), indexRecord.getCode());
             indexRecord.setAvgTwoWeek(bigDecimal);
             updateById(indexRecord);
         }
         return true;
+    }
+
+    @Override
+    public List<IndexRecord> queryRecordList(String code, LocalDate startDay, LocalDate endDay) {
+        QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
+        indexRecordQueryWrapper.eq("code",code);
+        indexRecordQueryWrapper.between("opendate",startDay,endDay);
+        indexRecordQueryWrapper.orderByDesc("opendate");
+        return list(indexRecordQueryWrapper);
     }
 }

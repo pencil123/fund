@@ -23,8 +23,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 public class FundRecordDataUpdateJob {
     private static final Logger logger = LoggerFactory.getLogger(FundRecordDataUpdateJob.class);
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -45,7 +47,7 @@ public class FundRecordDataUpdateJob {
     public void updateTodayData() {
         List<Fund> funds = fundService.list();
         for(Fund fund: funds){
-            String fundCode = fund.getFundCode();
+            String fundCode = fund.getCode();
             updateOne(fundCode);
             fundRecordService.updateAvgWeek();
             fundRecordService.updateAvgMonth();
@@ -79,9 +81,9 @@ public class FundRecordDataUpdateJob {
             JSONObject fundRecordInfo = lsjzList.get(i, JSONObject.class);
             FundRecord fundRecord = new FundRecord();
             System.out.println(fundRecordInfo.toString());
-            fundRecord.setFundCode(fundCode);
-            fundRecord.setFsrq(LocalDate.parse(fundRecordInfo.getStr("FSRQ"), timeDtf));
-            fundRecord.setDwjz(BigDecimal.valueOf(fundRecordInfo.getDouble("DWJZ")));
+            fundRecord.setCode(fundCode);
+            fundRecord.setOpendate(LocalDate.parse(fundRecordInfo.getStr("FSRQ"), timeDtf));
+            fundRecord.setPrice(BigDecimal.valueOf(fundRecordInfo.getDouble("DWJZ")));
             Double jzzzl = fundRecordInfo.getDouble("JZZZL");
             if (jzzzl == null)
                 jzzzl = 0.0;

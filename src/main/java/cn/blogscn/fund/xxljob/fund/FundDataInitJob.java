@@ -24,8 +24,10 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 public class FundDataInitJob {
     private static final Logger logger = LoggerFactory.getLogger(FundDataInitJob.class);
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -37,7 +39,7 @@ public class FundDataInitJob {
     public void syncFundRecordData() {
         List<Fund> funds = fundService.list();
         for(Fund fund: funds){
-            syncFundRecordData(fund.getFundCode());
+            syncFundRecordData(fund.getCode());
         }
     }
 
@@ -75,9 +77,9 @@ public class FundDataInitJob {
                 JSONObject fundRecordInfo = lsjzList.get(i, JSONObject.class);
                 FundRecord fundRecord = new FundRecord();
                 System.out.println(fundRecordInfo.toString());
-                fundRecord.setFundCode(fundCode);
-                fundRecord.setFsrq(LocalDate.parse(fundRecordInfo.getStr("FSRQ"), timeDtf));
-                fundRecord.setDwjz(BigDecimal.valueOf(fundRecordInfo.getDouble("DWJZ")));
+                fundRecord.setCode(fundCode);
+                fundRecord.setOpendate(LocalDate.parse(fundRecordInfo.getStr("FSRQ"), timeDtf));
+                fundRecord.setPrice(BigDecimal.valueOf(fundRecordInfo.getDouble("DWJZ")));
                 Double jzzzl = fundRecordInfo.getDouble("JZZZL");
                 if (jzzzl == null)
                     jzzzl = 0.0;

@@ -9,30 +9,15 @@ import java.time.LocalDate;
 public class FundRecord {
     @TableId(type= IdType.AUTO)
     private Integer id;
-    private String fundCode;
-    private BigDecimal dwjz;
+    private String code;
+    private BigDecimal price;
     private BigDecimal ljjz;
     private BigDecimal jzzzl;
-    private LocalDate fsrq;
+    private LocalDate opendate;
     private BigDecimal avgWeek;
     private BigDecimal avgTwoWeek;
     private BigDecimal avgMonth;
 
-    public String getFundCode() {
-        return fundCode;
-    }
-
-    public void setFundCode(String fundCode) {
-        this.fundCode = fundCode;
-    }
-
-    public BigDecimal getDwjz() {
-        return dwjz;
-    }
-
-    public void setDwjz(BigDecimal dwjz) {
-        this.dwjz = dwjz;
-    }
 
     public BigDecimal getLjjz() {
         return ljjz;
@@ -50,12 +35,28 @@ public class FundRecord {
         this.jzzzl = jzzzl;
     }
 
-    public LocalDate getFsrq() {
-        return fsrq;
+    public String getCode() {
+        return code;
     }
 
-    public void setFsrq(LocalDate fsrq) {
-        this.fsrq = fsrq;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public LocalDate getOpendate() {
+        return opendate;
+    }
+
+    public void setOpendate(LocalDate opendate) {
+        this.opendate = opendate;
     }
 
     public BigDecimal getAvgWeek() {

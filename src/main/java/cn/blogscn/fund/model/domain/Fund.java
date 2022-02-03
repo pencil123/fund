@@ -6,24 +6,24 @@ import java.time.LocalDateTime;
 
 public class Fund {
     @TableId
-    private String fundCode;
-    private String fundName;
+    private String code;
+    private String name;
     private LocalDateTime createDatetime;
 
-    public String getFundCode() {
-        return fundCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setFundCode(String fundCode) {
-        this.fundCode = fundCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getFundName() {
-        return fundName;
+    public String getName() {
+        return name;
     }
 
-    public void setFundName(String fundName) {
-        this.fundName = fundName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDateTime getCreateDatetime() {

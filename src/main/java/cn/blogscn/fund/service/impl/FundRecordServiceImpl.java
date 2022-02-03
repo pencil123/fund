@@ -12,9 +12,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
+@Transactional
 public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRecord> implements
         FundRecordService {
 
@@ -25,10 +27,10 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
     public Boolean updateAvgWeek() {
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
         fundRecordQueryWrapper.isNull("avg_week");
-        fundRecordQueryWrapper.select("id", "fund_code", "fsrq");
+        fundRecordQueryWrapper.select("id", "code", "opendate");
         List<FundRecord> list = list(fundRecordQueryWrapper);
         for (FundRecord fundRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgWeek(fundRecord.getFsrq().toString(), fundRecord.getFundCode());
+            BigDecimal bigDecimal = baseMapper.avgWeek(fundRecord.getOpendate().toString(), fundRecord.getCode());
             fundRecord.setAvgWeek(bigDecimal);
             updateById(fundRecord);
         }
@@ -43,10 +45,10 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
     public Boolean updateAvgMonth() {
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
         fundRecordQueryWrapper.isNull("avg_month");
-        fundRecordQueryWrapper.select("id", "fund_code", "fsrq");
+        fundRecordQueryWrapper.select("id", "code", "opendate");
         List<FundRecord> list = list(fundRecordQueryWrapper);
         for (FundRecord fundRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgMonth(fundRecord.getFsrq().toString(), fundRecord.getFundCode());
+            BigDecimal bigDecimal = baseMapper.avgMonth(fundRecord.getOpendate().toString(), fundRecord.getCode());
             fundRecord.setAvgMonth(bigDecimal);
             updateById(fundRecord);
         }
@@ -61,10 +63,10 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
     public Boolean updateAvgTwoWeek() {
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
         fundRecordQueryWrapper.isNull("avg_two_week");
-        fundRecordQueryWrapper.select("id", "fund_code", "fsrq");
+        fundRecordQueryWrapper.select("id", "code", "opendate");
         List<FundRecord> list = list(fundRecordQueryWrapper);
         for (FundRecord fundRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgTwoWeek(fundRecord.getFsrq().toString(), fundRecord.getFundCode());
+            BigDecimal bigDecimal = baseMapper.avgTwoWeek(fundRecord.getOpendate().toString(), fundRecord.getCode());
             fundRecord.setAvgTwoWeek(bigDecimal);
             updateById(fundRecord);
         }
@@ -72,20 +74,20 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
     }
 
     @Override
-    public IPage<FundRecord> queryFundRecordPage(String fundCode, Long currentPage, Long pageSize) {
+    public IPage<FundRecord> queryFundRecordPage(String code, Long currentPage, Long pageSize) {
         IPage<FundRecord> fundRecordPage = new Page<>(currentPage, pageSize);
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
-        fundRecordQueryWrapper.eq("fund_code",fundCode);
-        fundRecordQueryWrapper.orderByDesc("fsrq");
+        fundRecordQueryWrapper.eq("code",code);
+        fundRecordQueryWrapper.orderByDesc("opendate");
         return page(fundRecordPage,fundRecordQueryWrapper);
     }
 
     @Override
-    public List<FundRecord> queryFundRecordList(String fundCode, LocalDate startDay, LocalDate endDay) {
+    public List<FundRecord> queryFundRecordList(String code, LocalDate startDay, LocalDate endDay) {
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
-        fundRecordQueryWrapper.eq("fund_code",fundCode);
-        fundRecordQueryWrapper.between("fsrq",startDay,endDay);
-        fundRecordQueryWrapper.orderByDesc("fsrq");
+        fundRecordQueryWrapper.eq("code",code);
+        fundRecordQueryWrapper.between("opendate",startDay,endDay);
+        fundRecordQueryWrapper.orderByDesc("opendate");
         return list(fundRecordQueryWrapper);
     }
 }

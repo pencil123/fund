@@ -6,10 +6,13 @@ import cn.blogscn.fund.service.BkRecordService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class BkRecordServiceImpl extends ServiceImpl<BkRecordMapper, BkRecord> implements BkRecordService {
 
     @Override
@@ -53,4 +56,15 @@ public class BkRecordServiceImpl extends ServiceImpl<BkRecordMapper, BkRecord> i
         }
         return true;
     }
+
+    @Override
+    public List<BkRecord> queryRecordList(String code, LocalDate startDay, LocalDate endDay) {
+        QueryWrapper<BkRecord> bkRecordQueryWrapper = new QueryWrapper<>();
+        bkRecordQueryWrapper.eq("code",code);
+        bkRecordQueryWrapper.between("opendate",startDay,endDay);
+        bkRecordQueryWrapper.orderByDesc("opendate");
+        return list(bkRecordQueryWrapper);
+    }
+
+
 }
