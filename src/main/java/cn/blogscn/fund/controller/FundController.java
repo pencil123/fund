@@ -27,4 +27,10 @@ public class FundController {
         return fundService.save(fund)? JsonResult.success():JsonResult.error();
     }
 
+
+    @GetMapping("/updateStartAndEndDay")
+    public JsonResult<String> updateStartAndEndDay(){
+        return fundService.updateStartAndEndDay()? JsonResult.success("success"):JsonResult.error("false");
+    }
+
 }

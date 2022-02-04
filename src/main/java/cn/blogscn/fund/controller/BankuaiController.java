@@ -19,4 +19,9 @@ public class BankuaiController {
     public JsonResult<List<Bankuai>> list(){
         return JsonResult.success(bankuaiService.list());
     }
+
+    @GetMapping("/updateStartAndEndDay")
+    public JsonResult<String> updateStartAndEndDay(){
+        return bankuaiService.updateStartAndEndDay()? JsonResult.success("success"):JsonResult.error("false");
+    }
 }

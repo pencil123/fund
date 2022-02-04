@@ -19,4 +19,9 @@ public class IndicesController {
     public JsonResult<List<Indices>> list(){
         return JsonResult.success(indicesService.list());
     }
+
+    @GetMapping("/updateStartAndEndDay")
+    public JsonResult<String> updateStartAndEndDay(){
+        return indicesService.updateStartAndEndDay()? JsonResult.success("success"):JsonResult.error("false");
+    }
 }
