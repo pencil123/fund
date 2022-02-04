@@ -19,7 +19,7 @@ public class FundController {
 
     @GetMapping("/list")
     public JsonResult<List<Fund>> list(){
-        return JsonResult.success(fundService.list());
+        return JsonResult.success(fundService.listByDegreeDesc());
     }
 
     @PostMapping("add")

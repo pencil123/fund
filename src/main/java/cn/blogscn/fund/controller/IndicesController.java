@@ -17,7 +17,7 @@ public class IndicesController {
 
     @GetMapping("/list")
     public JsonResult<List<Indices>> list(){
-        return JsonResult.success(indicesService.list());
+        return JsonResult.success(indicesService.listByDegreeDesc());
     }
 
     @GetMapping("/updateStartAndEndDay")

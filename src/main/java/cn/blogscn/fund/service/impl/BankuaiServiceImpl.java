@@ -21,9 +21,7 @@ public class BankuaiServiceImpl extends ServiceImpl<BankuaiMapper, Bankuai> impl
     public Boolean updateStartAndEndDay(){
         List<Bankuai> bankuais = list();
         QueryWrapper<BkRecord> bkRecordQueryWrapperAsc = new QueryWrapper<>();
-
         QueryWrapper<BkRecord> bkRecordQueryWrapperDesc = new QueryWrapper<>();
-
         for(Bankuai bankuai:bankuais){
             // startDay Asc
             bkRecordQueryWrapperAsc.select("opendate");
@@ -41,8 +39,16 @@ public class BankuaiServiceImpl extends ServiceImpl<BankuaiMapper, Bankuai> impl
             bkRecordQueryWrapperDesc.clear();
             bankuai.setStartDay(startDayOne.getOpendate());
             bankuai.setEndDay(endDayOne.getOpendate());
+            bankuai.setDegree(bkRecordService.calculateDegree(bankuai.getCode(),endDayOne.getOpendate()));
             updateById(bankuai);
         }
         return true;
+    }
+
+    @Override
+    public List<Bankuai> listByDegreeDesc() {
+        QueryWrapper<Bankuai> bankuaiQueryWrapper = new QueryWrapper<>();
+        bankuaiQueryWrapper.orderByDesc("degree");
+        return list(bankuaiQueryWrapper);
     }
 }

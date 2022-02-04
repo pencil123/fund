@@ -43,8 +43,16 @@ public class IndicesServiceImpl extends ServiceImpl<IndicesMapper, Indices> impl
             indexRecordQueryWrapperDesc.clear();
             indices.setStartDay(startDayOne.getOpendate());
             indices.setEndDay(endDayOne.getOpendate());
+            indices.setDegree(indexRecordService.calculateDegree(indices.getCode(),endDayOne.getOpendate()));
             updateById(indices);
         }
         return true;
+    }
+
+    @Override
+    public List<Indices> listByDegreeDesc() {
+        QueryWrapper<Indices> indicesQueryWrapper = new QueryWrapper<>();
+        indicesQueryWrapper.orderByDesc("degree");
+        return list(indicesQueryWrapper);
     }
 }

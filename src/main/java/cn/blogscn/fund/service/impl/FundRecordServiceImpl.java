@@ -90,4 +90,9 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
         fundRecordQueryWrapper.orderByDesc("opendate");
         return list(fundRecordQueryWrapper);
     }
+
+    @Override
+    public BigDecimal calculateDegree(String code, LocalDate opendate) {
+        return baseMapper.calculateDegree(opendate.toString(), code);
+    }
 }

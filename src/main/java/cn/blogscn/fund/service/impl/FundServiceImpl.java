@@ -24,9 +24,7 @@ public class FundServiceImpl extends ServiceImpl<FundMapper, Fund> implements Fu
     public Boolean updateStartAndEndDay() {
         List<Fund> fundList = list();
         QueryWrapper<FundRecord> fundRecordQueryWrapperAsc = new QueryWrapper<>();
-
         QueryWrapper<FundRecord> fundRecordQueryWrapperDesc = new QueryWrapper<>();
-
         for(Fund fund:fundList){
             // startDay Asc
             fundRecordQueryWrapperAsc.select("opendate");
@@ -44,8 +42,16 @@ public class FundServiceImpl extends ServiceImpl<FundMapper, Fund> implements Fu
             fundRecordQueryWrapperDesc.clear();
             fund.setStartDay(startDayOne.getOpendate());
             fund.setEndDay(endDayOne.getOpendate());
+            fund.setDegree(fundRecordService.calculateDegree(fund.getCode(),endDayOne.getOpendate()));
             updateById(fund);
         }
         return true;
+    }
+
+    @Override
+    public List<Fund> listByDegreeDesc() {
+        QueryWrapper<Fund> fundQueryWrapper = new QueryWrapper<>();
+        fundQueryWrapper.orderByDesc("degree");
+        return list(fundQueryWrapper);
     }
 }

@@ -66,5 +66,8 @@ public class BkRecordServiceImpl extends ServiceImpl<BkRecordMapper, BkRecord> i
         return list(bkRecordQueryWrapper);
     }
 
-
+    @Override
+    public BigDecimal calculateDegree(String code, LocalDate opendate) {
+        return baseMapper.calculateDegree(opendate.toString(), code);
+    }
 }

@@ -18,4 +18,7 @@ public interface IndexRecordMapper extends BaseMapper<IndexRecord> {
 
     @Select("select avg(price) from (select price from index_record where opendate < #{opendate} and code = #{code} order by opendate desc limit 10) x")
     BigDecimal avgTwoWeek(@Param("opendate")String opendate,@Param("code") String fundCode);
+
+    @Select("select (price-avg_week)*20+(price-avg_two_week)*10+(price-avg_month)*5 from index_record where code = #{code} and opendate = #{opendate}")
+    BigDecimal calculateDegree(@Param("opendate")String opendate,@Param("code") String code);
 }

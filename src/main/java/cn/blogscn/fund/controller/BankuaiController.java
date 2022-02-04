@@ -17,7 +17,7 @@ public class BankuaiController {
 
     @GetMapping("/list")
     public JsonResult<List<Bankuai>> list(){
-        return JsonResult.success(bankuaiService.list());
+        return JsonResult.success(bankuaiService.listByDegreeDesc());
     }
 
     @GetMapping("/updateStartAndEndDay")

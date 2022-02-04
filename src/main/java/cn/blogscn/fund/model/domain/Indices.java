@@ -1,6 +1,7 @@
 package cn.blogscn.fund.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -8,6 +9,7 @@ public class Indices {
     @TableId
     private String code;
     private String name;
+    private BigDecimal degree;
     private LocalDateTime createTime;
     private LocalDate startDay;
     private LocalDate endDay;
@@ -22,6 +24,14 @@ public class Indices {
 
     public String getName() {
         return name;
+    }
+
+    public BigDecimal getDegree() {
+        return degree;
+    }
+
+    public void setDegree(BigDecimal degree) {
+        this.degree = degree;
     }
 
     public void setName(String name) {

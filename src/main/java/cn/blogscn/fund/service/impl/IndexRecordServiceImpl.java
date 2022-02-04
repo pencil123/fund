@@ -70,4 +70,9 @@ public class IndexRecordServiceImpl extends ServiceImpl<IndexRecordMapper,IndexR
         indexRecordQueryWrapper.orderByDesc("opendate");
         return list(indexRecordQueryWrapper);
     }
+
+    @Override
+    public BigDecimal calculateDegree(String code, LocalDate opendate) {
+        return baseMapper.calculateDegree(opendate.toString(), code);
+    }
 }
