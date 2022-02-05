@@ -1,32 +1,25 @@
-package cn.blogscn.fund.model.domain;
+package cn.blogscn.fund.model.dts;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class IndexRecord {
-    @TableId(type= IdType.AUTO)
-    private Integer id;
+public class BkRecordDto {
     private String code;
+    private String name;
     private BigDecimal price;
     private BigDecimal degree;
-    private Long volume;
-    private BigDecimal turnover;
     private LocalDate opendate;
+    private BigDecimal turnover;
+    private BigDecimal netamount;
+    private BigDecimal r0Net;
+    private BigDecimal r0Ratio;
+    private BigDecimal r0xRatio;
     private BigDecimal avgWeek;
     private BigDecimal avgTwoWeek;
     private BigDecimal avgMonth;
+
     public String getCode() {
         return code;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public BigDecimal getDegree() {
@@ -41,6 +34,14 @@ public class IndexRecord {
         this.code = code;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -49,12 +50,12 @@ public class IndexRecord {
         this.price = price;
     }
 
-    public Long getVolume() {
-        return volume;
+    public LocalDate getOpendate() {
+        return opendate;
     }
 
-    public void setVolume(Long volume) {
-        this.volume = volume;
+    public void setOpendate(LocalDate opendate) {
+        this.opendate = opendate;
     }
 
     public BigDecimal getTurnover() {
@@ -65,12 +66,36 @@ public class IndexRecord {
         this.turnover = turnover;
     }
 
-    public LocalDate getOpendate() {
-        return opendate;
+    public BigDecimal getNetamount() {
+        return netamount;
     }
 
-    public void setOpendate(LocalDate opendate) {
-        this.opendate = opendate;
+    public void setNetamount(BigDecimal netamount) {
+        this.netamount = netamount;
+    }
+
+    public BigDecimal getR0Net() {
+        return r0Net;
+    }
+
+    public void setR0Net(BigDecimal r0Net) {
+        this.r0Net = r0Net;
+    }
+
+    public BigDecimal getR0Ratio() {
+        return r0Ratio;
+    }
+
+    public void setR0Ratio(BigDecimal r0Ratio) {
+        this.r0Ratio = r0Ratio;
+    }
+
+    public BigDecimal getR0xRatio() {
+        return r0xRatio;
+    }
+
+    public void setR0xRatio(BigDecimal r0xRatio) {
+        this.r0xRatio = r0xRatio;
     }
 
     public BigDecimal getAvgWeek() {
@@ -95,16 +120,5 @@ public class IndexRecord {
 
     public void setAvgMonth(BigDecimal avgMonth) {
         this.avgMonth = avgMonth;
-    }
-
-    @Override
-    public String toString() {
-        return "IndexRecord{" +
-                "code='" + code + '\'' +
-                ", price=" + price +
-                ", volume=" + volume +
-                ", turnover=" + turnover +
-                ", opendate=" + opendate +
-                '}';
     }
 }

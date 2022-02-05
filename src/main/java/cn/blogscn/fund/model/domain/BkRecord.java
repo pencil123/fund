@@ -10,6 +10,7 @@ public class BkRecord {
     private Integer id;
     private String code;
     private BigDecimal price;
+    private BigDecimal degree;
     private LocalDate opendate;
     private BigDecimal turnover;
     private BigDecimal netamount;
@@ -19,6 +20,14 @@ public class BkRecord {
     private BigDecimal avgWeek;
     private BigDecimal avgTwoWeek;
     private BigDecimal avgMonth;
+
+    public BigDecimal getDegree() {
+        return degree;
+    }
+
+    public void setDegree(BigDecimal degree) {
+        this.degree = degree;
+    }
 
     public Integer getId() {
         return id;

@@ -1,14 +1,11 @@
-package cn.blogscn.fund.model.domain;
+package cn.blogscn.fund.model.dts;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class IndexRecord {
-    @TableId(type= IdType.AUTO)
-    private Integer id;
+public class IndexRecordDto {
     private String code;
+    private String name;
     private BigDecimal price;
     private BigDecimal degree;
     private Long volume;
@@ -17,16 +14,9 @@ public class IndexRecord {
     private BigDecimal avgWeek;
     private BigDecimal avgTwoWeek;
     private BigDecimal avgMonth;
+
     public String getCode() {
         return code;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public BigDecimal getDegree() {
@@ -39,6 +29,14 @@ public class IndexRecord {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public BigDecimal getPrice() {
@@ -99,12 +97,16 @@ public class IndexRecord {
 
     @Override
     public String toString() {
-        return "IndexRecord{" +
+        return "IndexRecordDto{" +
                 "code='" + code + '\'' +
+                ", name='" + name + '\'' +
                 ", price=" + price +
                 ", volume=" + volume +
                 ", turnover=" + turnover +
                 ", opendate=" + opendate +
+                ", avgWeek=" + avgWeek +
+                ", avgTwoWeek=" + avgTwoWeek +
+                ", avgMonth=" + avgMonth +
                 '}';
     }
 }

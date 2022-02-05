@@ -11,6 +11,7 @@ public class FundRecord {
     private Integer id;
     private String code;
     private BigDecimal price;
+    private BigDecimal degree;
     private BigDecimal ljjz;
     private BigDecimal jzzzl;
     private LocalDate opendate;
@@ -18,6 +19,13 @@ public class FundRecord {
     private BigDecimal avgTwoWeek;
     private BigDecimal avgMonth;
 
+    public BigDecimal getDegree() {
+        return degree;
+    }
+
+    public void setDegree(BigDecimal degree) {
+        this.degree = degree;
+    }
 
     public BigDecimal getLjjz() {
         return ljjz;
