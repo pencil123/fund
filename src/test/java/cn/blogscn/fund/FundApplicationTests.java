@@ -1,15 +1,20 @@
 package cn.blogscn.fund;
 
 import cn.blogscn.fund.service.FundRecordService;
+import cn.blogscn.fund.xxljob.SendMailJob;
 import cn.blogscn.fund.xxljob.bankuai.BankuaiUpdateJob;
 import cn.blogscn.fund.xxljob.bankuai.BkRecordUpdateJob;
 import cn.blogscn.fund.xxljob.fund.FundDataInitJob;
 import cn.blogscn.fund.xxljob.fund.FundRecordDataUpdateJob;
 import cn.blogscn.fund.xxljob.index.IndexRecordDataUpdateJob;
+import java.util.Date;
+import javax.mail.MessagingException;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
@@ -59,4 +64,11 @@ class FundApplicationTests {
         indexRecordDataUpdateJob.indexRecordDataUpdateMain();
     }
 
+
+    @Autowired
+    private SendMailJob sendMailJob;
+    @Test
+    void sendMailJob() throws MessagingException {
+        sendMailJob.sendMail();
+    }
 }

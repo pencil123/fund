@@ -3,6 +3,8 @@ server:
 spring:
   profiles:
     active: h
+  thymeleaf:
+    cache: false
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
