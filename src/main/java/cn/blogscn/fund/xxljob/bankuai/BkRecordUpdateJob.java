@@ -18,6 +18,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,23 +34,18 @@ public class BkRecordUpdateJob {
     private BkRecordService bkRecordService;
     private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
 
-    public void updateBkRecords() throws InterruptedException{
+    @Scheduled(cron = "0 40 23 ? * MON-FRI")
+    public void updateBkRecords() throws InterruptedException {
         List<Bankuai> bankuaiList = bankuaiService.list();
         for (Bankuai bankuai : bankuaiList) {
-            //updateBkRecord(bankuai.getCode());
+            updateBkRecord(bankuai.getCode(),true);
             bankuai.setStartDay(getBkRecordStartDay(bankuai.getCode()));
             bankuai.setEndDay(getBkRecordEndDay(bankuai.getCode()));
             bankuaiService.updateById(bankuai);
         }
     }
 
-    public void updateAvgValue(){
-        bkRecordService.updateAvgMonth();
-        bkRecordService.updateAvgTwoWeek();
-        bkRecordService.updateAvgWeek();
-    }
-
-    private void updateBkRecord(String code) throws InterruptedException {
+    private void updateBkRecord(String code, Boolean singlePage) throws InterruptedException {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bankuai", "0/" + code);
         paramMap.put("sort", "opendate");
@@ -62,14 +58,19 @@ public class BkRecordUpdateJob {
                     .form(paramMap)
                     .execute().body();
             JSONArray jsonArray = JSONUtil.parseArray(result);
-            if(jsonArray.size() ==0) break;
+            if (jsonArray.size() == 0) {
+                break;
+            }
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject jsonObject = jsonArray.get(i, JSONObject.class);
                 BkRecord bkRecord = parseBkRecordJson(jsonObject, code);
                 bkRecordService.save(bkRecord);
             }
-            logger.info("处理完成：{}",code);
-            Thread.sleep(10000);
+            if (singlePage) {
+                break;
+            } else {
+                Thread.sleep(10000);
+            }
         }
     }
 
@@ -86,18 +87,18 @@ public class BkRecordUpdateJob {
         return bkRecord;
     }
 
-    private LocalDate getBkRecordStartDay(String code){
+    private LocalDate getBkRecordStartDay(String code) {
         QueryWrapper<BkRecord> bkRecordQueryWrapper = new QueryWrapper<>();
-        bkRecordQueryWrapper.eq("code",code);
+        bkRecordQueryWrapper.eq("code", code);
         bkRecordQueryWrapper.orderByAsc("opendate");
         bkRecordQueryWrapper.last("limit 1");
         BkRecord bkRecord = bkRecordService.getOne(bkRecordQueryWrapper);
         return bkRecord.getOpendate();
     }
 
-    private LocalDate getBkRecordEndDay(String code){
+    private LocalDate getBkRecordEndDay(String code) {
         QueryWrapper<BkRecord> bkRecordQueryWrapper = new QueryWrapper<>();
-        bkRecordQueryWrapper.eq("code",code);
+        bkRecordQueryWrapper.eq("code", code);
         bkRecordQueryWrapper.orderByDesc("opendate");
         bkRecordQueryWrapper.last("limit 1");
         BkRecord bkRecord = bkRecordService.getOne(bkRecordQueryWrapper);

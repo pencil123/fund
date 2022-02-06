@@ -1,15 +1,15 @@
-package cn.blogscn.fund.xxljob.bankuai;
+package cn.blogscn.fund.xxljob.gainian;
 
 import cn.blogscn.fund.model.domain.Bankuai;
+import cn.blogscn.fund.model.domain.Gainian;
 import cn.blogscn.fund.service.BankuaiService;
+import cn.blogscn.fund.service.GainianService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import java.util.HashMap;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +20,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Transactional
-public class BankuaiUpdateJob {
-    private static final Logger logger = LoggerFactory.getLogger(BankuaiUpdateJob.class);
+public class GainianUpdateJob {
+    private static final Logger logger = LoggerFactory.getLogger(
+            GainianUpdateJob.class);
     @Autowired
-    private BankuaiService bankuaiService;
+    private GainianService gainianService;
     private static final String BK_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_bk";
+
     @Scheduled(cron = "0 10 9 ? * MON-FRI")
-    public Boolean updateBankuaiData(){
-        logger.info("定时任务：遍历板块列表Start");
+    public Boolean updateGainianData(){
+        logger.info("定时任务：遍历概念列表Start");
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("sort", "netamount");
         paramMap.put("asc", "0");
-        paramMap.put("fenlei", "0");
-        paramMap.put("num", "80");
+        paramMap.put("fenlei", "1");
+        paramMap.put("num", "800");
         paramMap.put("page", "1");
         String result = HttpRequest.get(BK_URL)
                 .header(Header.REFERER, "http://vip.stock.finance.sina.com.cn/moneyflow/")
@@ -42,22 +44,22 @@ public class BankuaiUpdateJob {
         JSONArray jsonArray = JSONUtil.parseArray(result);
         for(int i=0;i< jsonArray.size();i++){
             JSONObject jsonObject = jsonArray.get(i, JSONObject.class);
-            Bankuai bankuai = parseBankuaiJson(jsonObject);
+            Gainian gainian = parseBankuaiJson(jsonObject);
             try {
-                bankuaiService.save(bankuai);
+                gainianService.save(gainian);
             } catch (DuplicateKeyException e) {
-                logger.warn("主键冲突数据：{}", bankuai.toString());
+                logger.warn("主键冲突数据：{}", gainian.toString());
             }
         }
-        logger.info("定时任务：遍历板块列表End");
+        logger.info("定时任务：遍历概念列表End");
         return true;
     }
 
-    private Bankuai parseBankuaiJson(JSONObject bankuaiObject){
-        Bankuai bankuai = new Bankuai();
-        bankuai.setCode(bankuaiObject.getStr("category"));
-        bankuai.setName(bankuaiObject.getStr("name"));
-        return bankuai;
+    private Gainian parseBankuaiJson(JSONObject bankuaiObject){
+        Gainian gainian = new Gainian();
+        gainian.setCode(bankuaiObject.getStr("category"));
+        gainian.setName(bankuaiObject.getStr("name"));
+        return gainian;
     }
 
 }

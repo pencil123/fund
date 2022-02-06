@@ -6,6 +6,8 @@ import cn.blogscn.fund.xxljob.bankuai.BankuaiUpdateJob;
 import cn.blogscn.fund.xxljob.bankuai.BkRecordUpdateJob;
 import cn.blogscn.fund.xxljob.fund.FundDataInitJob;
 import cn.blogscn.fund.xxljob.fund.FundRecordDataUpdateJob;
+import cn.blogscn.fund.xxljob.gainian.GainianUpdateJob;
+import cn.blogscn.fund.xxljob.gainian.GnRecordUpdateJob;
 import cn.blogscn.fund.xxljob.index.IndexRecordDataUpdateJob;
 import java.util.Date;
 import javax.mail.MessagingException;
@@ -30,6 +32,10 @@ class FundApplicationTests {
     @Autowired
     private BankuaiUpdateJob bankuaiUpdateJob;
     @Autowired
+    private GainianUpdateJob gainianUpdateJob;
+    @Autowired
+    private GnRecordUpdateJob gnRecordDataUpdate;
+    @Autowired
     private BkRecordUpdateJob bkRecordUpdateJob;
     @Autowired
     private IndexRecordDataUpdateJob indexRecordDataUpdateJob;
@@ -50,13 +56,18 @@ class FundApplicationTests {
     }
 
     @Test
+    void gainianListDataUpdate(){
+        gainianUpdateJob.updateGainianData();
+    }
+
+    @Test
     void bkRecordDataUpdate()throws InterruptedException{
         bkRecordUpdateJob.updateBkRecords();
     }
 
     @Test
-    void bkAvgValuesUpdate(){
-        bkRecordUpdateJob.updateAvgValue();
+    void gnRecordDataUpdate()throws InterruptedException{
+        gnRecordDataUpdate.updateGnRecords();
     }
 
     @Test

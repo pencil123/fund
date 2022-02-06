@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Fund {
+public class Gainian {
     @TableId
     private String code;
     private String name;
@@ -13,16 +13,9 @@ public class Fund {
     private LocalDateTime createDatetime;
     private LocalDate startDay;
     private LocalDate endDay;
+
     public String getCode() {
         return code;
-    }
-
-    public BigDecimal getDegree() {
-        return degree;
-    }
-
-    public void setDegree(BigDecimal degree) {
-        this.degree = degree;
     }
 
     public void setCode(String code) {
@@ -35,6 +28,14 @@ public class Fund {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public BigDecimal getDegree() {
+        return degree;
+    }
+
+    public void setDegree(BigDecimal degree) {
+        this.degree = degree;
     }
 
     public LocalDateTime getCreateDatetime() {

@@ -45,12 +45,4 @@ public class JobController {
         indexRecordDataUpdateJob.indexRecordDataUpdateMain();
         return "success";
     }
-
-    @GetMapping("/avgValuesUpdate")
-    public String avgValuesUpdate(){
-        bkRecordUpdateJob.updateAvgValue();
-        fundRecordDataUpdateJob.updateAvgValue();
-        indexRecordDataUpdateJob.updateAvgValue();
-        return "success";
-    }
 }

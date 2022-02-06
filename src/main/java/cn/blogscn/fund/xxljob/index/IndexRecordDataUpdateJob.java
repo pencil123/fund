@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,7 @@ public class IndexRecordDataUpdateJob {
     final LocalDate startDay = LocalDate.of(1991, 1, 1);
     final private String INDEX_URL = "https://q.stock.sohu.com/hisHq";
     private static final Logger logger = LoggerFactory.getLogger(IndexRecordDataUpdateJob.class);
-
+    @Scheduled(cron = "0 10 0 ? * MON-FRI")
     public void indexRecordDataUpdateMain() {
         List<Indices> list = indicesService.list();
         for (Indices indices : list) {
@@ -99,13 +100,5 @@ public class IndexRecordDataUpdateJob {
             }
         }
         return true;
-    }
-
-
-
-    public void updateAvgValue(){
-        indexRecordService.updateAvgMonth();
-        indexRecordService.updateAvgTwoWeek();
-        indexRecordService.updateAvgWeek();
     }
 }
