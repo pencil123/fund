@@ -18,6 +18,11 @@ public class BankuaiServiceImpl extends ServiceImpl<BankuaiMapper, Bankuai> impl
     @Autowired
     private BkRecordService bkRecordService;
 
+    @Override
+    public Boolean updateDegree(){
+        return baseMapper.updateDegree();
+    }
+
     public Boolean updateStartAndEndDay(){
         List<Bankuai> bankuais = list();
         QueryWrapper<BkRecord> bkRecordQueryWrapperAsc = new QueryWrapper<>();

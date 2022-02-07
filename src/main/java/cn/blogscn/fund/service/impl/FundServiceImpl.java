@@ -20,6 +20,13 @@ public class FundServiceImpl extends ServiceImpl<FundMapper, Fund> implements Fu
 
     @Autowired
     private FundRecordService fundRecordService;
+
+    @Override
+    public Boolean updateDegree(){
+        return baseMapper.updateDegree();
+    }
+
+
     @Override
     public Boolean updateStartAndEndDay() {
         List<Fund> fundList = list();

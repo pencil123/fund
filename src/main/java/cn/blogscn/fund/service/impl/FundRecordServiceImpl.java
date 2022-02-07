@@ -20,57 +20,29 @@ import org.springframework.transaction.annotation.Transactional;
 public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRecord> implements
         FundRecordService {
 
-    /**
-     * 更新每周的均值
-     */
     @Override
-    public Boolean updateAvgWeek() {
+    public Boolean updateAllAvgValue() {
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
         fundRecordQueryWrapper.isNull("avg_week");
+        fundRecordQueryWrapper.or().isNull("avg_two_week");
+        fundRecordQueryWrapper.or().isNull("avg_month");
         fundRecordQueryWrapper.select("id", "code", "opendate");
         List<FundRecord> list = list(fundRecordQueryWrapper);
         for (FundRecord fundRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgWeek(fundRecord.getOpendate().toString(), fundRecord.getCode());
-            fundRecord.setAvgWeek(bigDecimal);
+            fundRecord.setAvgTwoWeek(baseMapper.avgTwoWeek(
+                    fundRecord.getOpendate().toString(), fundRecord.getCode()));
+            fundRecord.setAvgWeek(baseMapper.avgWeek(
+                    fundRecord.getOpendate().toString(), fundRecord.getCode()));
+            fundRecord.setAvgMonth(baseMapper.avgMonth(
+                    fundRecord.getOpendate().toString(), fundRecord.getCode()));
             updateById(fundRecord);
         }
-        return true;
+        return null;
     }
 
-
-    /**
-     * 更新每月均值
-     */
     @Override
-    public Boolean updateAvgMonth() {
-        QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
-        fundRecordQueryWrapper.isNull("avg_month");
-        fundRecordQueryWrapper.select("id", "code", "opendate");
-        List<FundRecord> list = list(fundRecordQueryWrapper);
-        for (FundRecord fundRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgMonth(fundRecord.getOpendate().toString(), fundRecord.getCode());
-            fundRecord.setAvgMonth(bigDecimal);
-            updateById(fundRecord);
-        }
-        return true;
-    }
-
-    /**
-     * 更新近两周的平均值
-     */
-
-    @Override
-    public Boolean updateAvgTwoWeek() {
-        QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
-        fundRecordQueryWrapper.isNull("avg_two_week");
-        fundRecordQueryWrapper.select("id", "code", "opendate");
-        List<FundRecord> list = list(fundRecordQueryWrapper);
-        for (FundRecord fundRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgTwoWeek(fundRecord.getOpendate().toString(), fundRecord.getCode());
-            fundRecord.setAvgTwoWeek(bigDecimal);
-            updateById(fundRecord);
-        }
-        return true;
+    public Boolean updateDegree() {
+        return baseMapper.updateDegree();
     }
 
     @Override

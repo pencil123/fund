@@ -42,10 +42,9 @@ public class FundRecordDataUpdateJob {
         for(Fund fund: funds){
             String fundCode = fund.getCode();
             updateOne(fundCode);
-            fundRecordService.updateAvgWeek();
-            fundRecordService.updateAvgMonth();
-            fundRecordService.updateAvgTwoWeek();
+            fundRecordService.updateAllAvgValue();
         }
+        updateAvgValueAndDegree();
     }
 
 
@@ -88,5 +87,12 @@ public class FundRecordDataUpdateJob {
                 logger.warn("主键冲突数据：{}", fundRecord.toString());
             }
         }
+    }
+
+    public Boolean updateAvgValueAndDegree(){
+        fundRecordService.updateAllAvgValue();
+        fundRecordService.updateDegree();
+        fundService.updateDegree();
+        return true;
     }
 }

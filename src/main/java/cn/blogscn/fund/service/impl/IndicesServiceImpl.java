@@ -20,6 +20,11 @@ public class IndicesServiceImpl extends ServiceImpl<IndicesMapper, Indices> impl
     private IndexRecordService indexRecordService;
 
     @Override
+    public Boolean updateDegree(){
+        return baseMapper.updateDegree();
+    }
+
+    @Override
     public Boolean updateStartAndEndDay() {
         List<Indices> indicesList = list();
         QueryWrapper<IndexRecord> indexRecordQueryWrapperAsc = new QueryWrapper<>();

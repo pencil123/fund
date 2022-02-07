@@ -36,12 +36,15 @@ public class IndexRecordDataUpdateJob {
     final LocalDate startDay = LocalDate.of(1991, 1, 1);
     final private String INDEX_URL = "https://q.stock.sohu.com/hisHq";
     private static final Logger logger = LoggerFactory.getLogger(IndexRecordDataUpdateJob.class);
+
+
     @Scheduled(cron = "0 10 0 ? * MON-FRI")
     public void indexRecordDataUpdateMain() {
         List<Indices> list = indicesService.list();
         for (Indices indices : list) {
             indexRecordDataUpdate(indices.getCode());
         }
+        updateAvgValueAndDegree();
     }
 
     private void indexRecordDataUpdate(String code) {
@@ -99,6 +102,14 @@ public class IndexRecordDataUpdateJob {
                 logger.warn("主键冲突数据：{}", indexRecord.toString());
             }
         }
+        return true;
+    }
+
+
+    public Boolean updateAvgValueAndDegree(){
+        indexRecordService.updateAllAvgValue();
+        indexRecordService.updateDegree();
+        indicesService.updateDegree();
         return true;
     }
 }

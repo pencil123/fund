@@ -21,45 +21,28 @@ import org.springframework.transaction.annotation.Transactional;
 public class IndexRecordServiceImpl extends ServiceImpl<IndexRecordMapper,IndexRecord> implements IndexRecordService {
 
     @Override
-    public Boolean updateAvgWeek() {
+    public Boolean updateAllAvgValue() {
         QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
         indexRecordQueryWrapper.isNull("avg_week");
+        indexRecordQueryWrapper.or().isNull("avg_two_week");
+        indexRecordQueryWrapper.or().isNull("avg_month");
         indexRecordQueryWrapper.select("id", "code", "opendate");
         List<IndexRecord> list = list(indexRecordQueryWrapper);
         for (IndexRecord indexRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgWeek(indexRecord.getOpendate().toString(), indexRecord.getCode());
-            indexRecord.setAvgWeek(bigDecimal);
+            indexRecord.setAvgTwoWeek(baseMapper.avgTwoWeek(
+                    indexRecord.getOpendate().toString(), indexRecord.getCode()));
+            indexRecord.setAvgWeek(baseMapper.avgWeek(
+                    indexRecord.getOpendate().toString(), indexRecord.getCode()));
+            indexRecord.setAvgMonth(baseMapper.avgMonth(
+                    indexRecord.getOpendate().toString(), indexRecord.getCode()));
             updateById(indexRecord);
         }
-        return true;
+        return null;
     }
 
     @Override
-    public Boolean updateAvgMonth() {
-        QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
-        indexRecordQueryWrapper.isNull("avg_month");
-        indexRecordQueryWrapper.select("id", "code", "opendate");
-        List<IndexRecord> list = list(indexRecordQueryWrapper);
-        for (IndexRecord indexRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgMonth(indexRecord.getOpendate().toString(), indexRecord.getCode());
-            indexRecord.setAvgMonth(bigDecimal);
-            updateById(indexRecord);
-        }
-        return true;
-    }
-
-    @Override
-    public Boolean updateAvgTwoWeek() {
-        QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
-        indexRecordQueryWrapper.isNull("avg_two_week");
-        indexRecordQueryWrapper.select("id", "code", "opendate");
-        List<IndexRecord> list = list(indexRecordQueryWrapper);
-        for (IndexRecord indexRecord : list) {
-            BigDecimal bigDecimal = baseMapper.avgTwoWeek(indexRecord.getOpendate().toString(), indexRecord.getCode());
-            indexRecord.setAvgTwoWeek(bigDecimal);
-            updateById(indexRecord);
-        }
-        return true;
+    public Boolean updateDegree() {
+        return baseMapper.updateDegree();
     }
 
     @Override

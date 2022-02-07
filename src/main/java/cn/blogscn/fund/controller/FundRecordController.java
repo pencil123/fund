@@ -36,7 +36,6 @@ public class FundRecordController {
     @GetMapping("/find/list")
     public JsonResult<List<FundRecord>> queryRecordList(@RequestParam("code") String code,
             @RequestParam("startDay") @DateTimeFormat(iso = ISO.DATE) LocalDate startDay, @RequestParam("endDay") @DateTimeFormat(iso = ISO.DATE) LocalDate endDay) {
-
         List<FundRecord> records = fundRecordService.queryFundRecordList(code, startDay, endDay);
         return JsonResult.success(records);
     }

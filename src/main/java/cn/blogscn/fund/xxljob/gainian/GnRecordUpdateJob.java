@@ -1,11 +1,7 @@
 package cn.blogscn.fund.xxljob.gainian;
 
-import cn.blogscn.fund.model.domain.Bankuai;
-import cn.blogscn.fund.model.domain.BkRecord;
 import cn.blogscn.fund.model.domain.Gainian;
 import cn.blogscn.fund.model.domain.GnRecord;
-import cn.blogscn.fund.service.BankuaiService;
-import cn.blogscn.fund.service.BkRecordService;
 import cn.blogscn.fund.service.GainianService;
 import cn.blogscn.fund.service.GnRecordService;
 import cn.hutool.http.Header;
@@ -22,13 +18,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Transactional
 public class GnRecordUpdateJob {
+
     private static final Logger logger = LoggerFactory.getLogger(
             GnRecordUpdateJob.class);
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -40,13 +36,16 @@ public class GnRecordUpdateJob {
 
     @Scheduled(cron = "0 40 23 ? * MON-FRI")
     public void updateGnRecords() throws InterruptedException {
-        List<Gainian> gainainList = gainianService.list();
+        QueryWrapper<Gainian> gainianQueryWrapper = new QueryWrapper<>();
+        gainianQueryWrapper.isNull("start_day");
+        List<Gainian> gainainList = gainianService.list(gainianQueryWrapper);
         for (Gainian gainian : gainainList) {
-            updateGnRecord(gainian.getCode(),false);
+            updateGnRecord(gainian.getCode(), true);
             gainian.setStartDay(getGnRecordStartDay(gainian.getCode()));
             gainian.setEndDay(getGnRecordEndDay(gainian.getCode()));
             gainianService.updateById(gainian);
         }
+        updateAvgValueAndDegree();
     }
 
     private void updateGnRecord(String code, Boolean singlePage) throws InterruptedException {
@@ -68,12 +67,16 @@ public class GnRecordUpdateJob {
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject jsonObject = jsonArray.get(i, JSONObject.class);
                 GnRecord gnRecord = parseGnRecordJson(jsonObject, code);
-                gnRecordService.save(gnRecord);
+                try {
+                    gnRecordService.save(gnRecord);
+                } catch (DuplicateKeyException e) {
+                    logger.warn("主键冲突数据：{}", gnRecord.toString());
+                }
             }
             if (singlePage) {
                 break;
             } else {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             }
         }
     }
@@ -107,5 +110,12 @@ public class GnRecordUpdateJob {
         gnRecordQueryWrapper.last("limit 1");
         GnRecord gnRecord = gnRecordService.getOne(gnRecordQueryWrapper);
         return gnRecord.getOpendate();
+    }
+
+    public Boolean updateAvgValueAndDegree(){
+        gnRecordService.updateAllAvgValue();
+        gnRecordService.updateDegree();
+        gainianService.updateDegree();
+        return true;
     }
 }

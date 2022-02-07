@@ -1,7 +1,9 @@
 package cn.blogscn.fund.xxljob.bankuai;
 
 import cn.blogscn.fund.model.domain.Bankuai;
+import cn.blogscn.fund.model.domain.LogData;
 import cn.blogscn.fund.service.BankuaiService;
+import cn.blogscn.fund.service.LogDataService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
@@ -24,6 +26,8 @@ public class BankuaiUpdateJob {
     private static final Logger logger = LoggerFactory.getLogger(BankuaiUpdateJob.class);
     @Autowired
     private BankuaiService bankuaiService;
+    @Autowired
+    private LogDataService logDataService;
     private static final String BK_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_bk";
     @Scheduled(cron = "0 10 9 ? * MON-FRI")
     public Boolean updateBankuaiData(){
@@ -50,6 +54,7 @@ public class BankuaiUpdateJob {
             }
         }
         logger.info("定时任务：遍历板块列表End");
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"板块遍历完成(获取80个)；板块数为：" + jsonArray.size()));
         return true;
     }
 

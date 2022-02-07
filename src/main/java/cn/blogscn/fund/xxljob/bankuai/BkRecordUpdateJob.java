@@ -43,6 +43,7 @@ public class BkRecordUpdateJob {
             bankuai.setEndDay(getBkRecordEndDay(bankuai.getCode()));
             bankuaiService.updateById(bankuai);
         }
+        updateAvgValueAndDegree();
     }
 
     private void updateBkRecord(String code, Boolean singlePage) throws InterruptedException {
@@ -103,5 +104,13 @@ public class BkRecordUpdateJob {
         bkRecordQueryWrapper.last("limit 1");
         BkRecord bkRecord = bkRecordService.getOne(bkRecordQueryWrapper);
         return bkRecord.getOpendate();
+    }
+
+
+    public Boolean updateAvgValueAndDegree(){
+        bkRecordService.updateAllAvgValue();
+        bkRecordService.updateDegree();
+        bankuaiService.updateDegree();
+        return true;
     }
 }
