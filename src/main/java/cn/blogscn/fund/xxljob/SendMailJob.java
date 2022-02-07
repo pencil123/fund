@@ -1,13 +1,18 @@
 package cn.blogscn.fund.xxljob;
 import cn.blogscn.fund.model.domain.Bankuai;
 import cn.blogscn.fund.model.domain.BkRecord;
+import cn.blogscn.fund.model.domain.Gainian;
+import cn.blogscn.fund.model.domain.GnRecord;
 import cn.blogscn.fund.model.domain.IndexRecord;
 import cn.blogscn.fund.model.domain.Indices;
 import cn.blogscn.fund.model.domain.User;
 import cn.blogscn.fund.model.dts.BkRecordDto;
+import cn.blogscn.fund.model.dts.EmailRecordDto;
 import cn.blogscn.fund.model.dts.IndexRecordDto;
 import cn.blogscn.fund.service.BankuaiService;
 import cn.blogscn.fund.service.BkRecordService;
+import cn.blogscn.fund.service.GainianService;
+import cn.blogscn.fund.service.GnRecordService;
 import cn.blogscn.fund.service.IndexRecordService;
 import cn.blogscn.fund.service.IndicesService;
 import cn.blogscn.fund.service.UserService;
@@ -39,13 +44,17 @@ public class SendMailJob {
     @Autowired
     private BkRecordService bkRecordService;
     @Autowired
+    private GainianService gainianService;
+    @Autowired
+    private GnRecordService gnRecordService;
+    @Autowired
     private MailSend mailSend;
     private static final Logger logger = LoggerFactory.getLogger(SendMailJob.class);
 
 
     @Scheduled(cron = "0 10 23 ? * MON-FRI")
     public void sendMail() throws MessagingException {
-        List<IndexRecordDto> indexRecordDtos = new ArrayList<>();
+        List<EmailRecordDto> indexRecordDtos = new ArrayList<>();
         List<Indices> indicesList = indicesService.listByDegreeDesc();
         QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
         for(Indices indices:indicesList){
@@ -54,14 +63,30 @@ public class SendMailJob {
             indexRecordQueryWrapper.last("limit 1");
             IndexRecord indexRecord = indexRecordService.getOne(indexRecordQueryWrapper);
             indexRecordQueryWrapper.clear();
-            IndexRecordDto indexRecordDto = BeanConvertUtils
-                    .copyProperties(indexRecord, IndexRecordDto.class);
-            indexRecordDto.setName(indices.getName());
-            indexRecordDto.setDegree(indices.getDegree());
-            indexRecordDtos.add(indexRecordDto);
+            EmailRecordDto emailRecordDto = BeanConvertUtils
+                    .copyProperties(indexRecord, EmailRecordDto.class);
+            emailRecordDto.setName(indices.getName());
+            emailRecordDto.setDegree(indices.getDegree());
+            indexRecordDtos.add(emailRecordDto);
         }
 
-        List<BkRecordDto> bkRecordDtos = new ArrayList<>();
+        List<EmailRecordDto> gnRecordDtos = new ArrayList<>();
+        List<Gainian> gainians = gainianService.listByDegreeDesc();
+        QueryWrapper<GnRecord> gnRecordQueryWrapper = new QueryWrapper<>();
+        for(Gainian gainian:gainians){
+            gnRecordQueryWrapper.eq("code",gainian.getCode());
+            gnRecordQueryWrapper.orderByDesc("opendate");
+            gnRecordQueryWrapper.last("limit 1");
+            GnRecord gnRecord = gnRecordService.getOne(gnRecordQueryWrapper);
+            gnRecordQueryWrapper.clear();
+            EmailRecordDto emailRecordDto = BeanConvertUtils
+                    .copyProperties(gnRecord, EmailRecordDto.class);
+            emailRecordDto.setName(gainian.getName());
+            emailRecordDto.setDegree(gainian.getDegree());
+            gnRecordDtos.add(emailRecordDto);
+        }
+
+        List<EmailRecordDto> bkRecordDtos = new ArrayList<>();
         List<Bankuai> bankuais = bankuaiService.listByDegreeDesc();
         QueryWrapper<BkRecord> bkRecordQueryWrapper = new QueryWrapper<>();
         for(Bankuai bankuai:bankuais){
@@ -70,10 +95,11 @@ public class SendMailJob {
             bkRecordQueryWrapper.last("limit 1");
             BkRecord bkRecord = bkRecordService.getOne(bkRecordQueryWrapper);
             bkRecordQueryWrapper.clear();
-            BkRecordDto bkRecordDto = BeanConvertUtils.copyProperties(bkRecord, BkRecordDto.class);
-            bkRecordDto.setName(bankuai.getName());
-            bkRecordDto.setDegree(bankuai.getDegree());
-            bkRecordDtos.add(bkRecordDto);
+            EmailRecordDto emailRecordDto = BeanConvertUtils
+                    .copyProperties(bkRecord, EmailRecordDto.class);
+            emailRecordDto.setName(bankuai.getName());
+            emailRecordDto.setDegree(bankuai.getDegree());
+            bkRecordDtos.add(emailRecordDto);
         }
 
         Context context = new Context();
@@ -81,6 +107,7 @@ public class SendMailJob {
         // 第一个参数为模板的名称
         context.setVariable("bkRecordDtos",bkRecordDtos);
         context.setVariable("indexRecordDtos", indexRecordDtos);
+        context.setVariable("gnRecordDtos",gnRecordDtos);
         List<User> userList = userService.list();
         for(User user:userList){
             mailSend.sendThymeleafMail("明天会议安排",context,user.getEmail());

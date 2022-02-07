@@ -4,6 +4,7 @@ import cn.blogscn.fund.service.BkRecordService;
 import cn.blogscn.fund.service.FundRecordService;
 import cn.blogscn.fund.service.GnRecordService;
 import cn.blogscn.fund.service.IndexRecordService;
+import cn.blogscn.fund.xxljob.SendMailJob;
 import cn.blogscn.fund.xxljob.bankuai.BankuaiUpdateJob;
 import cn.blogscn.fund.xxljob.bankuai.BkRecordUpdateJob;
 import cn.blogscn.fund.xxljob.fund.FundDataInitJob;
@@ -11,6 +12,7 @@ import cn.blogscn.fund.xxljob.fund.FundRecordDataUpdateJob;
 import cn.blogscn.fund.xxljob.gainian.GainianUpdateJob;
 import cn.blogscn.fund.xxljob.gainian.GnRecordUpdateJob;
 import cn.blogscn.fund.xxljob.index.IndexRecordDataUpdateJob;
+import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,8 @@ public class JobController {
     private BkRecordUpdateJob bkRecordUpdateJob;
     @Autowired
     IndexRecordDataUpdateJob indexRecordDataUpdateJob;
+    @Autowired
+    private SendMailJob sendMailJob;
 
     @GetMapping("/fund/listUpdate")
     public String jobSyncData(){
@@ -73,6 +77,12 @@ public class JobController {
         fundRecordDataUpdateJob.updateAvgValueAndDegree();
         gnRecordUpdateJob.updateAvgValueAndDegree();
         indexRecordDataUpdateJob.updateAvgValueAndDegree();
+        return "success";
+    }
+
+    @GetMapping("/dataMailSend")
+    public String dataMailSend() throws MessagingException {
+        sendMailJob.sendMail();
         return "success";
     }
 }
