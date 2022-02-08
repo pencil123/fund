@@ -31,7 +31,7 @@ public class GainianUpdateJob {
     private LogDataService logDataService;
     private static final String BK_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_bk";
 
-    @Scheduled(cron = "0 10 9 ? * MON-FRI")
+    @Scheduled(cron = "0 30 9 ? * MON-FRI")
     public Boolean updateGainianData(){
         logger.info("定时任务：遍历概念列表Start");
         HashMap<String, Object> paramMap = new HashMap<>();

@@ -52,7 +52,7 @@ public class SendMailJob {
     private static final Logger logger = LoggerFactory.getLogger(SendMailJob.class);
 
 
-    @Scheduled(cron = "0 10 23 ? * MON-FRI")
+    @Scheduled(cron = "0 10 4 ? * MON-FRI")
     public void sendMail() throws MessagingException {
         List<EmailRecordDto> indexRecordDtos = new ArrayList<>();
         List<Indices> indicesList = indicesService.listByDegreeDesc();

@@ -2,8 +2,10 @@ package cn.blogscn.fund.xxljob.index;
 
 import cn.blogscn.fund.model.domain.IndexRecord;
 import cn.blogscn.fund.model.domain.Indices;
+import cn.blogscn.fund.model.domain.LogData;
 import cn.blogscn.fund.service.IndexRecordService;
 import cn.blogscn.fund.service.IndicesService;
+import cn.blogscn.fund.service.LogDataService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
@@ -36,15 +38,18 @@ public class IndexRecordDataUpdateJob {
     final LocalDate startDay = LocalDate.of(1991, 1, 1);
     final private String INDEX_URL = "https://q.stock.sohu.com/hisHq";
     private static final Logger logger = LoggerFactory.getLogger(IndexRecordDataUpdateJob.class);
+    @Autowired
+    private LogDataService logDataService;
 
-
-    @Scheduled(cron = "0 10 0 ? * MON-FRI")
+    @Scheduled(cron = "0 10 23 ? * MON-FRI")
     public void indexRecordDataUpdateMain() {
         List<Indices> list = indicesService.list();
         for (Indices indices : list) {
             indexRecordDataUpdate(indices.getCode());
         }
         updateAvgValueAndDegree();
+        updateAvgValueAndDegree();
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"指标Record遍历操作"));
     }
 
     private void indexRecordDataUpdate(String code) {

@@ -2,8 +2,10 @@ package cn.blogscn.fund.xxljob.gainian;
 
 import cn.blogscn.fund.model.domain.Gainian;
 import cn.blogscn.fund.model.domain.GnRecord;
+import cn.blogscn.fund.model.domain.LogData;
 import cn.blogscn.fund.service.GainianService;
 import cn.blogscn.fund.service.GnRecordService;
+import cn.blogscn.fund.service.LogDataService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
@@ -32,23 +34,27 @@ public class GnRecordUpdateJob {
     private GainianService gainianService;
     @Autowired
     private GnRecordService gnRecordService;
+    @Autowired
+    private LogDataService logDataService;
     private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
 
-    @Scheduled(cron = "0 40 23 ? * MON-FRI")
+    @Scheduled(cron = "0 50 23 ? * MON-FRI")
     public void updateGnRecords() throws InterruptedException {
         QueryWrapper<Gainian> gainianQueryWrapper = new QueryWrapper<>();
-        gainianQueryWrapper.isNull("start_day");
+        //gainianQueryWrapper.isNull("start_day");
         List<Gainian> gainainList = gainianService.list(gainianQueryWrapper);
         for (Gainian gainian : gainainList) {
-            updateGnRecord(gainian.getCode(), true);
+            updateGnRecord(gainian.getCode());
             gainian.setStartDay(getGnRecordStartDay(gainian.getCode()));
             gainian.setEndDay(getGnRecordEndDay(gainian.getCode()));
             gainianService.updateById(gainian);
         }
         updateAvgValueAndDegree();
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"概念Record遍历操作"));
     }
 
-    private void updateGnRecord(String code, Boolean singlePage) throws InterruptedException {
+    private void updateGnRecord(String code) throws InterruptedException {
+        Boolean pageContinue = true;
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bankuai", "1/" + code);
         paramMap.put("sort", "opendate");
@@ -70,10 +76,11 @@ public class GnRecordUpdateJob {
                 try {
                     gnRecordService.save(gnRecord);
                 } catch (DuplicateKeyException e) {
+                    pageContinue = false;
                     logger.warn("主键冲突数据：{}", gnRecord.toString());
                 }
             }
-            if (singlePage) {
+            if (!pageContinue) {
                 break;
             } else {
                 Thread.sleep(5000);

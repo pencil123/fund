@@ -2,8 +2,10 @@ package cn.blogscn.fund.xxljob.bankuai;
 
 import cn.blogscn.fund.model.domain.Bankuai;
 import cn.blogscn.fund.model.domain.BkRecord;
+import cn.blogscn.fund.model.domain.LogData;
 import cn.blogscn.fund.service.BankuaiService;
 import cn.blogscn.fund.service.BkRecordService;
+import cn.blogscn.fund.service.LogDataService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
@@ -18,6 +20,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,21 +35,25 @@ public class BkRecordUpdateJob {
     private BankuaiService bankuaiService;
     @Autowired
     private BkRecordService bkRecordService;
+    @Autowired
+    private LogDataService logDataService;
     private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
 
-    @Scheduled(cron = "0 40 23 ? * MON-FRI")
+    @Scheduled(cron = "0 30 23 ? * MON-FRI")
     public void updateBkRecords() throws InterruptedException {
         List<Bankuai> bankuaiList = bankuaiService.list();
         for (Bankuai bankuai : bankuaiList) {
-            updateBkRecord(bankuai.getCode(),true);
+            updateBkRecord(bankuai.getCode());
             bankuai.setStartDay(getBkRecordStartDay(bankuai.getCode()));
             bankuai.setEndDay(getBkRecordEndDay(bankuai.getCode()));
             bankuaiService.updateById(bankuai);
         }
         updateAvgValueAndDegree();
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"板块Record遍历操作"));
     }
 
-    private void updateBkRecord(String code, Boolean singlePage) throws InterruptedException {
+    private void updateBkRecord(String code) throws InterruptedException {
+        Boolean pageContinue = true;
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bankuai", "0/" + code);
         paramMap.put("sort", "opendate");
@@ -65,9 +72,15 @@ public class BkRecordUpdateJob {
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject jsonObject = jsonArray.get(i, JSONObject.class);
                 BkRecord bkRecord = parseBkRecordJson(jsonObject, code);
-                bkRecordService.save(bkRecord);
+                try {
+                    bkRecordService.save(bkRecord);
+                } catch (DuplicateKeyException e) {
+                    pageContinue = false;
+                    logger.warn("主键冲突数据：{}", bkRecord.toString());
+                }
+
             }
-            if (singlePage) {
+            if (!pageContinue) {
                 break;
             } else {
                 Thread.sleep(10000);

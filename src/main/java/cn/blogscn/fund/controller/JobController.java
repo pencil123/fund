@@ -53,6 +53,13 @@ public class JobController {
         bankuaiUpdateJob.updateBankuaiData();
         return "success";
     }
+
+    @GetMapping("/bankuai/RecordUpdate")
+    public String bankuaiRecordUpdate() throws InterruptedException {
+        bkRecordUpdateJob.updateBkRecords();
+        return "success";
+    }
+
     @GetMapping("/gainian/listUpdate")
     public String gainianListUpdate(){
         gainianUpdateJob.updateGainianData();
