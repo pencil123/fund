@@ -1,22 +1,19 @@
 package cn.blogscn.fund;
 
 import cn.blogscn.fund.service.FundRecordService;
-import cn.blogscn.fund.xxljob.SendMailJob;
-import cn.blogscn.fund.xxljob.bankuai.BankuaiUpdateJob;
-import cn.blogscn.fund.xxljob.bankuai.BkRecordUpdateJob;
-import cn.blogscn.fund.xxljob.fund.FundDataInitJob;
-import cn.blogscn.fund.xxljob.fund.FundRecordDataUpdateJob;
-import cn.blogscn.fund.xxljob.gainian.GainianUpdateJob;
-import cn.blogscn.fund.xxljob.gainian.GnRecordUpdateJob;
-import cn.blogscn.fund.xxljob.index.IndexRecordDataUpdateJob;
-import java.util.Date;
+import cn.blogscn.fund.rabbitMq.SendMailJob;
+import cn.blogscn.fund.rabbitMq.bankuai.BankuaiUpdateJob;
+import cn.blogscn.fund.rabbitMq.bankuai.BkRecordUpdateJob;
+import cn.blogscn.fund.rabbitMq.fund.FundDataInitJob;
+import cn.blogscn.fund.rabbitMq.fund.FundRecordDataUpdateJob;
+import cn.blogscn.fund.rabbitMq.gainian.GainianUpdateJob;
+import cn.blogscn.fund.rabbitMq.gainian.GnRecordUpdateJob;
+import cn.blogscn.fund.rabbitMq.index.IndexRecordDataUpdateJob;
 import javax.mail.MessagingException;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit4.SpringRunner;
 
 

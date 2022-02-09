@@ -5,6 +5,11 @@ spring:
     active: dev
   thymeleaf:
     cache: false
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+rabbitmq:
+  process:
+    queue: fundQueue
+    exchange: fundExchange
+    routing: fund
+  dlx:
+    queue: dlxFundQueue
+    exchange: dlxFundExchange

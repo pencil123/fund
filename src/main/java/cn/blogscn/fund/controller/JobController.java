@@ -1,17 +1,15 @@
 package cn.blogscn.fund.controller;
 
-import cn.blogscn.fund.service.BkRecordService;
-import cn.blogscn.fund.service.FundRecordService;
-import cn.blogscn.fund.service.GnRecordService;
-import cn.blogscn.fund.service.IndexRecordService;
-import cn.blogscn.fund.xxljob.SendMailJob;
-import cn.blogscn.fund.xxljob.bankuai.BankuaiUpdateJob;
-import cn.blogscn.fund.xxljob.bankuai.BkRecordUpdateJob;
-import cn.blogscn.fund.xxljob.fund.FundDataInitJob;
-import cn.blogscn.fund.xxljob.fund.FundRecordDataUpdateJob;
-import cn.blogscn.fund.xxljob.gainian.GainianUpdateJob;
-import cn.blogscn.fund.xxljob.gainian.GnRecordUpdateJob;
-import cn.blogscn.fund.xxljob.index.IndexRecordDataUpdateJob;
+import cn.blogscn.fund.emuns.Process;
+import cn.blogscn.fund.rabbitMq.Publisher;
+import cn.blogscn.fund.rabbitMq.SendMailJob;
+import cn.blogscn.fund.rabbitMq.bankuai.BankuaiUpdateJob;
+import cn.blogscn.fund.rabbitMq.bankuai.BkRecordUpdateJob;
+import cn.blogscn.fund.rabbitMq.fund.FundDataInitJob;
+import cn.blogscn.fund.rabbitMq.fund.FundRecordDataUpdateJob;
+import cn.blogscn.fund.rabbitMq.gainian.GainianUpdateJob;
+import cn.blogscn.fund.rabbitMq.gainian.GnRecordUpdateJob;
+import cn.blogscn.fund.rabbitMq.index.IndexRecordDataUpdateJob;
 import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +35,8 @@ public class JobController {
     IndexRecordDataUpdateJob indexRecordDataUpdateJob;
     @Autowired
     private SendMailJob sendMailJob;
+    @Autowired
+    private Publisher publisher;
 
     @GetMapping("/fund/listUpdate")
     public String jobSyncData(){
@@ -90,6 +90,13 @@ public class JobController {
     @GetMapping("/dataMailSend")
     public String dataMailSend() throws MessagingException {
         sendMailJob.sendMail();
+        return "success";
+    }
+
+
+    @GetMapping("/rabbitmqTest")
+    public String rabbitmqTest(){
+        publisher.sendDirectMessage(Process.IndexList);
         return "success";
     }
 }

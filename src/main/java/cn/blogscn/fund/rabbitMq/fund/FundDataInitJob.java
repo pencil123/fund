@@ -1,4 +1,4 @@
-package cn.blogscn.fund.xxljob.fund;
+package cn.blogscn.fund.rabbitMq.fund;
 
 import cn.blogscn.fund.model.domain.Fund;
 import cn.blogscn.fund.model.domain.FundRecord;

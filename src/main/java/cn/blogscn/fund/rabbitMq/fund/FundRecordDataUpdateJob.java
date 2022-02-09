@@ -1,4 +1,4 @@
-package cn.blogscn.fund.xxljob.fund;
+package cn.blogscn.fund.rabbitMq.fund;
 
 import cn.blogscn.fund.model.domain.Fund;
 import cn.blogscn.fund.model.domain.FundRecord;
@@ -40,8 +40,7 @@ public class FundRecordDataUpdateJob {
     private LogDataService logDataService;
 
     //http://api.fund.eastmoney.com/f10/lsjz?callback=jQuery183019096624312824972_1640614711227&fundCode=519983&pageIndex=1&pageSize=20&startDate=&endDate=&_=1640614711245
-    @Scheduled(cron = "0 0 23 ? * MON-FRI")
-    public void updateTodayData() {
+    public Boolean updateTodayData() {
         List<Fund> funds = fundService.list();
         for(Fund fund: funds){
             String fundCode = fund.getCode();
@@ -50,6 +49,7 @@ public class FundRecordDataUpdateJob {
         }
         updateAvgValueAndDegree();
         logDataService.save(new LogData(this.getClass().getSimpleName(),"基金Record遍历操作"));
+        return true;
     }
 
 

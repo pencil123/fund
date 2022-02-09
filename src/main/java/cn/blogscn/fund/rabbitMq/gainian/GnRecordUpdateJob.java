@@ -1,4 +1,4 @@
-package cn.blogscn.fund.xxljob.gainian;
+package cn.blogscn.fund.rabbitMq.gainian;
 
 import cn.blogscn.fund.model.domain.Gainian;
 import cn.blogscn.fund.model.domain.GnRecord;
@@ -38,8 +38,7 @@ public class GnRecordUpdateJob {
     private LogDataService logDataService;
     private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
 
-    @Scheduled(cron = "0 50 23 ? * MON-FRI")
-    public void updateGnRecords() throws InterruptedException {
+    public Boolean updateGnRecords()  {
         QueryWrapper<Gainian> gainianQueryWrapper = new QueryWrapper<>();
         //gainianQueryWrapper.isNull("start_day");
         List<Gainian> gainainList = gainianService.list(gainianQueryWrapper);
@@ -51,21 +50,25 @@ public class GnRecordUpdateJob {
         }
         updateAvgValueAndDegree();
         logDataService.save(new LogData(this.getClass().getSimpleName(),"概念Record遍历操作"));
+        return true;
     }
 
-    private void updateGnRecord(String code) throws InterruptedException {
+    private void updateGnRecord(String code)  {
         Boolean pageContinue = true;
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bankuai", "1/" + code);
         paramMap.put("sort", "opendate");
         paramMap.put("asc", "0");
-        paramMap.put("num", "260");
+        paramMap.put("num", "10");
         for (int d = 1; d < 40; d++) {
             paramMap.put("page", d);
             String result = HttpRequest.get(BK_RECORD_URL)
                     .header(Header.REFERER, "http://vip.stock.finance.sina.com.cn/moneyflow/")
                     .form(paramMap)
                     .execute().body();
+            if(!result.startsWith("[")){
+                logDataService.save(new LogData(this.getClass().getSimpleName(),"Record遍历结果异常,Param:" + paramMap.toString() + "\nResult:" + result));
+            }
             JSONArray jsonArray = JSONUtil.parseArray(result);
             if (jsonArray.size() == 0) {
                 break;
@@ -83,7 +86,11 @@ public class GnRecordUpdateJob {
             if (!pageContinue) {
                 break;
             } else {
-                Thread.sleep(5000);
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

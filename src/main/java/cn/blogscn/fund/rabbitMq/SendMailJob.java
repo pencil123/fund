@@ -1,4 +1,4 @@
-package cn.blogscn.fund.xxljob;
+package cn.blogscn.fund.rabbitMq;
 import cn.blogscn.fund.model.domain.Bankuai;
 import cn.blogscn.fund.model.domain.BkRecord;
 import cn.blogscn.fund.model.domain.Gainian;
@@ -6,9 +6,7 @@ import cn.blogscn.fund.model.domain.GnRecord;
 import cn.blogscn.fund.model.domain.IndexRecord;
 import cn.blogscn.fund.model.domain.Indices;
 import cn.blogscn.fund.model.domain.User;
-import cn.blogscn.fund.model.dts.BkRecordDto;
 import cn.blogscn.fund.model.dts.EmailRecordDto;
-import cn.blogscn.fund.model.dts.IndexRecordDto;
 import cn.blogscn.fund.service.BankuaiService;
 import cn.blogscn.fund.service.BkRecordService;
 import cn.blogscn.fund.service.GainianService;
@@ -18,9 +16,7 @@ import cn.blogscn.fund.service.IndicesService;
 import cn.blogscn.fund.service.UserService;
 import cn.blogscn.fund.util.BeanConvertUtils;
 import cn.blogscn.fund.util.MailSend;
-import cn.blogscn.fund.xxljob.index.IndexRecordDataUpdateJob;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.mail.MessagingException;
@@ -51,9 +47,7 @@ public class SendMailJob {
     private MailSend mailSend;
     private static final Logger logger = LoggerFactory.getLogger(SendMailJob.class);
 
-
-    @Scheduled(cron = "0 10 4 ? * MON-FRI")
-    public void sendMail() throws MessagingException {
+    public Boolean sendMail() {
         List<EmailRecordDto> indexRecordDtos = new ArrayList<>();
         List<Indices> indicesList = indicesService.listByDegreeDesc();
         QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
@@ -110,7 +104,13 @@ public class SendMailJob {
         context.setVariable("gnRecordDtos",gnRecordDtos);
         List<User> userList = userService.list();
         for(User user:userList){
-            mailSend.sendThymeleafMail("明天会议安排",context,user.getEmail());
+            try {
+                mailSend.sendThymeleafMail("明天会议安排",context,user.getEmail());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
+        return true;
     }
 }

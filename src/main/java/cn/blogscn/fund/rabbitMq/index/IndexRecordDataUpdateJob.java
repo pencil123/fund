@@ -1,4 +1,4 @@
-package cn.blogscn.fund.xxljob.index;
+package cn.blogscn.fund.rabbitMq.index;
 
 import cn.blogscn.fund.model.domain.IndexRecord;
 import cn.blogscn.fund.model.domain.Indices;
@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,15 +40,14 @@ public class IndexRecordDataUpdateJob {
     @Autowired
     private LogDataService logDataService;
 
-    @Scheduled(cron = "0 10 23 ? * MON-FRI")
-    public void indexRecordDataUpdateMain() {
+    public Boolean indexRecordDataUpdateMain() {
         List<Indices> list = indicesService.list();
         for (Indices indices : list) {
             indexRecordDataUpdate(indices.getCode());
         }
         updateAvgValueAndDegree();
-        updateAvgValueAndDegree();
         logDataService.save(new LogData(this.getClass().getSimpleName(),"指标Record遍历操作"));
+        return true;
     }
 
     private void indexRecordDataUpdate(String code) {

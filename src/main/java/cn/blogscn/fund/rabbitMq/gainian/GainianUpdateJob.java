@@ -1,9 +1,7 @@
-package cn.blogscn.fund.xxljob.gainian;
+package cn.blogscn.fund.rabbitMq.gainian;
 
-import cn.blogscn.fund.model.domain.Bankuai;
 import cn.blogscn.fund.model.domain.Gainian;
 import cn.blogscn.fund.model.domain.LogData;
-import cn.blogscn.fund.service.BankuaiService;
 import cn.blogscn.fund.service.GainianService;
 import cn.blogscn.fund.service.LogDataService;
 import cn.hutool.http.Header;
@@ -31,7 +29,6 @@ public class GainianUpdateJob {
     private LogDataService logDataService;
     private static final String BK_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_bk";
 
-    @Scheduled(cron = "0 30 9 ? * MON-FRI")
     public Boolean updateGainianData(){
         logger.info("定时任务：遍历概念列表Start");
         HashMap<String, Object> paramMap = new HashMap<>();

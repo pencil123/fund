@@ -1,4 +1,4 @@
-package cn.blogscn.fund.xxljob.bankuai;
+package cn.blogscn.fund.rabbitMq.bankuai;
 
 import cn.blogscn.fund.model.domain.Bankuai;
 import cn.blogscn.fund.model.domain.BkRecord;
@@ -39,8 +39,7 @@ public class BkRecordUpdateJob {
     private LogDataService logDataService;
     private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
 
-    @Scheduled(cron = "0 30 23 ? * MON-FRI")
-    public void updateBkRecords() throws InterruptedException {
+    public Boolean updateBkRecords() {
         List<Bankuai> bankuaiList = bankuaiService.list();
         for (Bankuai bankuai : bankuaiList) {
             updateBkRecord(bankuai.getCode());
@@ -50,15 +49,16 @@ public class BkRecordUpdateJob {
         }
         updateAvgValueAndDegree();
         logDataService.save(new LogData(this.getClass().getSimpleName(),"板块Record遍历操作"));
+        return true;
     }
 
-    private void updateBkRecord(String code) throws InterruptedException {
+    private void updateBkRecord(String code) {
         Boolean pageContinue = true;
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bankuai", "0/" + code);
         paramMap.put("sort", "opendate");
         paramMap.put("asc", "0");
-        paramMap.put("num", "260");
+        paramMap.put("num", "10");
         for (int d = 1; d < 40; d++) {
             paramMap.put("page", d);
             String result = HttpRequest.get(BK_RECORD_URL)
@@ -83,7 +83,11 @@ public class BkRecordUpdateJob {
             if (!pageContinue) {
                 break;
             } else {
-                Thread.sleep(10000);
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
