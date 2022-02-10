@@ -72,7 +72,7 @@ public class Listener {
                 }
                 break;
             case GainianRecord:
-                Boolean aBoolean4 = gnRecordUpdateJob.updateAvgValueAndDegree();
+                Boolean aBoolean4 = gnRecordUpdateJob.updateGnRecords();
                 if(aBoolean4){
                     msgHandleStatus = publisher.sendDirectMessage(Process.FundList);
                 }
