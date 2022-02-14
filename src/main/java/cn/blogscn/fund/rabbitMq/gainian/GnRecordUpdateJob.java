@@ -54,6 +54,7 @@ public class GnRecordUpdateJob {
     }
 
     private void updateGnRecord(String code)  {
+
         Boolean pageContinue = true;
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bankuai", "1/" + code);
@@ -68,6 +69,7 @@ public class GnRecordUpdateJob {
                     .execute().body();
             if(!result.startsWith("[")){
                 logDataService.save(new LogData(this.getClass().getSimpleName(),"Record遍历结果异常,Param:" + paramMap.toString() + "\nResult:" + result));
+                continue;
             }
             JSONArray jsonArray = JSONUtil.parseArray(result);
             if (jsonArray.size() == 0) {

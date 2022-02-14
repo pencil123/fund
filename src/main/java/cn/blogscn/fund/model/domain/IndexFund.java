@@ -5,12 +5,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Gainian {
+public class IndexFund {
     @TableId
     private String code;
     private String name;
     private BigDecimal degree;
-    private LocalDateTime createDatetime;
+    private LocalDateTime createTime;
     private LocalDate startDay;
     private LocalDate endDay;
     private Integer count;
@@ -55,12 +55,12 @@ public class Gainian {
         this.degree = degree;
     }
 
-    public LocalDateTime getCreateDatetime() {
-        return createDatetime;
+    public LocalDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateDatetime(LocalDateTime createDatetime) {
-        this.createDatetime = createDatetime;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
     public LocalDate getStartDay() {
@@ -77,5 +77,17 @@ public class Gainian {
 
     public void setEndDay(LocalDate endDay) {
         this.endDay = endDay;
+    }
+
+    @Override
+    public String toString() {
+        return "IndexFund{" +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", degree=" + degree +
+                ", createTime=" + createTime +
+                ", startDay=" + startDay +
+                ", endDay=" + endDay +
+                '}';
     }
 }

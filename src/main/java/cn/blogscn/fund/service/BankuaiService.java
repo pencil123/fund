@@ -8,4 +8,5 @@ public interface BankuaiService extends IService<Bankuai> {
     Boolean  updateDegree();
     Boolean updateStartAndEndDay();
     List<Bankuai> listByDegreeDesc();
+    Boolean batchInsert(List<Bankuai> bankuaiList);
 }

@@ -8,6 +8,7 @@ import cn.blogscn.fund.rabbitMq.fund.FundRecordDataUpdateJob;
 import cn.blogscn.fund.rabbitMq.gainian.GainianUpdateJob;
 import cn.blogscn.fund.rabbitMq.gainian.GnRecordUpdateJob;
 import cn.blogscn.fund.rabbitMq.index.IndexRecordDataUpdateJob;
+import cn.blogscn.fund.rabbitMq.indexFund.IndexFundUpdateJob;
 import com.rabbitmq.client.Channel;
 import java.io.IOException;
 import org.slf4j.Logger;
@@ -35,6 +36,8 @@ public class Listener {
     @Autowired
     private GnRecordUpdateJob gnRecordUpdateJob;
     @Autowired
+    private IndexFundUpdateJob indexFundUpdateJob;
+    @Autowired
     private FundRecordDataUpdateJob fundRecordDataUpdateJob;
     @Autowired
     private SendMailJob sendMailJob;
@@ -48,48 +51,38 @@ public class Listener {
         switch(process){
             case IndexList:
             case IndexRecord:
-                Boolean aBoolean = indexRecordDataUpdateJob.indexRecordDataUpdateMain();
-                if(aBoolean){
-                    msgHandleStatus = publisher.sendDirectMessage(Process.BankuaiList);
-                }
+                indexRecordDataUpdateJob.indexRecordDataUpdateMain();
+                publisher.sendDirectMessage(Process.BankuaiList);
                 break;
             case BankuaiList:
-                Boolean aBoolean1 = bankuaiUpdateJob.updateBankuaiData();
-                if(aBoolean1){
-                    msgHandleStatus = publisher.sendDirectMessage(Process.BankuaiRecord);
-                }
+                bankuaiUpdateJob.updateBankuaiData();
+                publisher.sendDirectMessage(Process.BankuaiRecord);
                 break;
             case BankuaiRecord:
-                Boolean aBoolean2 = bkRecordUpdateJob.updateBkRecords();
-                if(aBoolean2){
-                    msgHandleStatus = publisher.sendDirectMessage(Process.GainianList);
-                }
+                bkRecordUpdateJob.updateBkRecords();
+                publisher.sendDirectMessage(Process.GainianList);
                 break;
             case GainianList:
-                Boolean aBoolean3 = gainianUpdateJob.updateGainianData();
-                if(aBoolean3){
-                    msgHandleStatus = publisher.sendDirectMessage(Process.GainianRecord);
-                }
+                gainianUpdateJob.updateGainianData();
+                publisher.sendDirectMessage(Process.GainianRecord);
                 break;
             case GainianRecord:
-                Boolean aBoolean4 = gnRecordUpdateJob.updateGnRecords();
-                if(aBoolean4){
-                    msgHandleStatus = publisher.sendDirectMessage(Process.FundList);
-                }
+                gnRecordUpdateJob.updateGnRecords();
+                publisher.sendDirectMessage(Process.FundList);
                 break;
             case FundList:
+                indexFundUpdateJob.updateIndexFund();
+                publisher.sendDirectMessage(Process.FundRecord);
             case FundRecord:
                 Boolean aBoolean5 =fundRecordDataUpdateJob.updateTodayData();
-                if(aBoolean5){
-                    msgHandleStatus = publisher.sendDirectMessage(Process.SendMail);
-                }
+                publisher.sendDirectMessage(Process.SendMail);
                 break;
             case SendMail:
                 msgHandleStatus = sendMailJob.sendMail();
                 break;
         }
         try {
-            if (msgHandleStatus) {
+            if (true) {
                 channel.basicAck(deliveryTag, false);
             } else {
                 channel.basicNack(deliveryTag, false, true);

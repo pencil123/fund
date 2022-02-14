@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   profiles:
-    active: dev
+    active: h
   thymeleaf:
     cache: false
 rabbitmq:
@@ -13,3 +13,6 @@ rabbitmq:
   dlx:
     queue: dlxFundQueue
     exchange: dlxFundExchange
+mybatis-plus:
+  # 支持统配符 * 或者 ; 分割
+  typeEnumsPackage: cn.blogscn.fund.emuns

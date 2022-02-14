@@ -65,6 +65,10 @@ public class BkRecordUpdateJob {
                     .header(Header.REFERER, "http://vip.stock.finance.sina.com.cn/moneyflow/")
                     .form(paramMap)
                     .execute().body();
+            if(!result.startsWith("[")){
+                logDataService.save(new LogData(this.getClass().getSimpleName(),"Record遍历结果异常,Param:" + paramMap.toString() + "\nResult:" + result));
+                continue;
+            }
             JSONArray jsonArray = JSONUtil.parseArray(result);
             if (jsonArray.size() == 0) {
                 break;

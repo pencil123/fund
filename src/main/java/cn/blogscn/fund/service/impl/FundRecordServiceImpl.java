@@ -67,4 +67,10 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
     public BigDecimal calculateDegree(String code, LocalDate opendate) {
         return baseMapper.calculateDegree(opendate.toString(), code);
     }
+
+    @Override
+    public Boolean batchInsert(List<FundRecord> fundRecordList) {
+        baseMapper.batchInsert(fundRecordList);
+        return true;
+    }
 }

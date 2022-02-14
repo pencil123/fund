@@ -13,6 +13,25 @@ public class Fund {
     private LocalDateTime createDatetime;
     private LocalDate startDay;
     private LocalDate endDay;
+
+    private Integer count;
+    private Integer status;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
     public String getCode() {
         return code;
     }

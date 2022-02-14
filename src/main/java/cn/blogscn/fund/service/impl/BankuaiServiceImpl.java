@@ -56,4 +56,10 @@ public class BankuaiServiceImpl extends ServiceImpl<BankuaiMapper, Bankuai> impl
         bankuaiQueryWrapper.orderByDesc("degree");
         return list(bankuaiQueryWrapper);
     }
+
+    @Override
+    public Boolean batchInsert(List<Bankuai> bankuaiList) {
+        baseMapper.batchInsert(bankuaiList);
+        return true;
+    }
 }

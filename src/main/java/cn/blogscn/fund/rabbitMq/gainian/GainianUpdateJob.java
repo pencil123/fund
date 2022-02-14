@@ -42,6 +42,10 @@ public class GainianUpdateJob {
                 .form(paramMap)
                 .execute().body();
         //logger.info("获取结果：{}",result);
+        if(!result.startsWith("[")){
+            logger.info("解析存在问题,result:{}", result);
+            return false;
+        }
         JSONArray jsonArray = JSONUtil.parseArray(result);
         for(int i=0;i< jsonArray.size();i++){
             JSONObject jsonObject = jsonArray.get(i, JSONObject.class);

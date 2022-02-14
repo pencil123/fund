@@ -9,7 +9,10 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +44,18 @@ public class BankuaiUpdateJob {
                 .form(paramMap)
                 .execute().body();
         //logger.info("获取结果：{}",result);
+        if(!result.startsWith("[")){
+            logger.info("解析存在问题,result:{}", result);
+            return false;
+        }
         JSONArray jsonArray = JSONUtil.parseArray(result);
+        ArrayList<Bankuai> bankuais = new ArrayList<>();
         for(int i=0;i< jsonArray.size();i++){
             JSONObject jsonObject = jsonArray.get(i, JSONObject.class);
             Bankuai bankuai = parseBankuaiJson(jsonObject);
-            try {
-                bankuaiService.save(bankuai);
-            } catch (DuplicateKeyException e) {
-                logger.warn("主键冲突数据：{}", bankuai.toString());
-            }
+            bankuais.add(bankuai);
         }
+        bankuaiService.batchInsert(bankuais);
         logger.info("定时任务：遍历板块列表End");
         logDataService.save(new LogData(this.getClass().getSimpleName(),"板块遍历完成(获取80个)；板块数为：" + jsonArray.size()));
         return true;

@@ -13,4 +13,5 @@ public interface FundRecordService extends IService<FundRecord> {
     IPage<FundRecord> queryFundRecordPage(String code,Long currentPage,Long pageSize);
     List<FundRecord> queryFundRecordList(String code, LocalDate startDay,LocalDate endDay);
     BigDecimal calculateDegree(String code,LocalDate opendate);
+    Boolean batchInsert(List<FundRecord> fundRecordList);
 }

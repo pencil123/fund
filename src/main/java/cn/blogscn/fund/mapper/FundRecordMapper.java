@@ -2,6 +2,7 @@ package cn.blogscn.fund.mapper;
 
 import cn.blogscn.fund.model.domain.FundRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -26,4 +27,6 @@ public interface FundRecordMapper extends BaseMapper<FundRecord> {
 
     @Update("update fund_record set degree = (price-avg_week)*20+(price-avg_two_week)*10+(price-avg_month)*5 where degree is null")
     Boolean updateDegree();
+
+    void batchInsert(@Param("fundRecordList") List<FundRecord> fundRecordList);
 }

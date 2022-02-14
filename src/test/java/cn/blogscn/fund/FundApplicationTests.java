@@ -1,5 +1,6 @@
 package cn.blogscn.fund;
 
+import cn.blogscn.fund.rabbitMq.indexFund.IndexFundUpdateJob;
 import cn.blogscn.fund.service.FundRecordService;
 import cn.blogscn.fund.rabbitMq.SendMailJob;
 import cn.blogscn.fund.rabbitMq.bankuai.BankuaiUpdateJob;
@@ -9,6 +10,7 @@ import cn.blogscn.fund.rabbitMq.fund.FundRecordDataUpdateJob;
 import cn.blogscn.fund.rabbitMq.gainian.GainianUpdateJob;
 import cn.blogscn.fund.rabbitMq.gainian.GnRecordUpdateJob;
 import cn.blogscn.fund.rabbitMq.index.IndexRecordDataUpdateJob;
+import cn.blogscn.fund.xxljob.CheckItemStatusJob;
 import javax.mail.MessagingException;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +38,10 @@ class FundApplicationTests {
     private BkRecordUpdateJob bkRecordUpdateJob;
     @Autowired
     private IndexRecordDataUpdateJob indexRecordDataUpdateJob;
+    @Autowired
+    private IndexFundUpdateJob indexFundUpdateJob;
+    @Autowired
+    private CheckItemStatusJob checkItemStatusJob;
 
     @Test
     void fundDataInit() {
@@ -63,6 +69,11 @@ class FundApplicationTests {
     }
 
     @Test
+    void checkItemStatusJob(){
+        checkItemStatusJob.updateItemStatus();
+    }
+
+    @Test
     void gnRecordDataUpdate()throws InterruptedException{
         gnRecordDataUpdate.updateGnRecords();
     }
@@ -78,5 +89,10 @@ class FundApplicationTests {
     @Test
     void sendMailJob() throws MessagingException {
         sendMailJob.sendMail();
+    }
+
+    @Test
+    void indexFundUpdateFunc(){
+        indexFundUpdateJob.updateIndexFund();
     }
 }
