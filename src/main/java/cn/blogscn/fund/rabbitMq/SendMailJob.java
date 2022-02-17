@@ -5,6 +5,7 @@ import cn.blogscn.fund.model.domain.Gainian;
 import cn.blogscn.fund.model.domain.GnRecord;
 import cn.blogscn.fund.model.domain.IndexRecord;
 import cn.blogscn.fund.model.domain.Indices;
+import cn.blogscn.fund.model.domain.LogData;
 import cn.blogscn.fund.model.domain.User;
 import cn.blogscn.fund.model.dts.EmailRecordDto;
 import cn.blogscn.fund.service.BankuaiService;
@@ -13,6 +14,7 @@ import cn.blogscn.fund.service.GainianService;
 import cn.blogscn.fund.service.GnRecordService;
 import cn.blogscn.fund.service.IndexRecordService;
 import cn.blogscn.fund.service.IndicesService;
+import cn.blogscn.fund.service.LogDataService;
 import cn.blogscn.fund.service.UserService;
 import cn.blogscn.fund.util.BeanConvertUtils;
 import cn.blogscn.fund.util.MailSend;
@@ -44,10 +46,13 @@ public class SendMailJob {
     @Autowired
     private GnRecordService gnRecordService;
     @Autowired
+    private LogDataService logDataService;
+    @Autowired
     private MailSend mailSend;
     private static final Logger logger = LoggerFactory.getLogger(SendMailJob.class);
 
     public Boolean sendMail() {
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "发送邮件操作:start"));
         List<EmailRecordDto> indexRecordDtos = new ArrayList<>();
         List<Indices> indicesList = indicesService.listByDegreeDesc();
         QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
@@ -111,6 +116,7 @@ public class SendMailJob {
                 return false;
             }
         }
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "发送邮件操作:end"));
         return true;
     }
 }

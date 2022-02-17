@@ -25,7 +25,7 @@ public interface FundRecordMapper extends BaseMapper<FundRecord> {
     @Select("select (price-avg_week)*20+(price-avg_two_week)*10+(price-avg_month)*5 from fund_record where code = #{code} and opendate = #{opendate}")
     BigDecimal calculateDegree(@Param("opendate")String opendate,@Param("code") String code);
 
-    @Update("update fund_record set degree = (price-avg_week)*20+(price-avg_two_week)*10+(price-avg_month)*5 where degree is null")
+    @Update("update fund_record set degree = ((price-avg_week)*20+(price-avg_two_week)*10+(price-avg_month)*5)/price where degree is null")
     Boolean updateDegree();
 
     void batchInsert(@Param("fundRecordList") List<FundRecord> fundRecordList);

@@ -32,7 +32,7 @@ public class BankuaiUpdateJob {
     private static final String BK_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_bk";
 
     public Boolean updateBankuaiData(){
-        logger.info("定时任务：遍历板块列表Start");
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"板块遍历完成(获取80个)；start"));
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("sort", "netamount");
         paramMap.put("asc", "0");
@@ -56,7 +56,6 @@ public class BankuaiUpdateJob {
             bankuais.add(bankuai);
         }
         bankuaiService.batchInsert(bankuais);
-        logger.info("定时任务：遍历板块列表End");
         logDataService.save(new LogData(this.getClass().getSimpleName(),"板块遍历完成(获取80个)；板块数为：" + jsonArray.size()));
         return true;
     }

@@ -43,6 +43,7 @@ public class FundRecordDataUpdateJob {
 
     //http://api.fund.eastmoney.com/f10/lsjz?callback=jQuery183019096624312824972_1640614711227&fundCode=519983&pageIndex=1&pageSize=20&startDate=&endDate=&_=1640614711245
     public Boolean updateTodayData() {
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "基金Record遍历操作：start"));
         List<Fund> funds = fundService.list();
         List<IndexFund> indexFunds = indexFundService.list();
         for (Fund fund : funds) {
@@ -52,7 +53,7 @@ public class FundRecordDataUpdateJob {
             updateOne(indexFund.getCode(), indexFund.getStatus());
         }
         updateAvgValueAndDegree();
-        logDataService.save(new LogData(this.getClass().getSimpleName(), "基金Record遍历操作"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "基金Record遍历操作:end"));
         return true;
     }
 

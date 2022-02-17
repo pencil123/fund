@@ -41,12 +41,13 @@ public class IndexRecordDataUpdateJob {
     private LogDataService logDataService;
 
     public Boolean indexRecordDataUpdateMain() {
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"指标Record遍历操作:start"));
         List<Indices> list = indicesService.list();
         for (Indices indices : list) {
             indexRecordDataUpdate(indices.getCode());
         }
         updateAvgValueAndDegree();
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"指标Record遍历操作"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"指标Record遍历操作:end"));
         return true;
     }
 

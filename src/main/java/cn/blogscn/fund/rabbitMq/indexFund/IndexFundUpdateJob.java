@@ -28,7 +28,7 @@ public class IndexFundUpdateJob {
     //?type=17&parent_type=1&order=desc&order_by=percent&page=19&size=30&_=1644654777740
 
     public Boolean updateIndexFund(){
-        logger.info("定时任务：遍历板块列表Start");
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"指数基金列表更新操作:start"));
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("type", "17");
         paramMap.put("parent_type", "1");
@@ -43,6 +43,9 @@ public class IndexFundUpdateJob {
         logger.info("获取结果：{}",result);
         JSONObject resultJsonObj = JSONUtil.parseObj(result);
         JSONObject data = resultJsonObj.getJSONObject("data");
+        if(data == null){
+            return false;
+        }
         JSONArray jsonArray = data.getJSONArray("list");
         for(int i=0;i< jsonArray.size();i++){
             JSONObject jsonObject = jsonArray.get(i, JSONObject.class);
@@ -54,8 +57,7 @@ public class IndexFundUpdateJob {
                 logger.warn("主键冲突数据：{}", indexFund.toString());
             }
         }
-        logger.info("定时任务：遍历板块列表End");
-        //logDataService.save(new LogData(this.getClass().getSimpleName(),"板块遍历完成(获取80个)；板块数为：" + jsonArray.size()));
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"指数基金列表更新操作:end"));
         return true;
     }
 

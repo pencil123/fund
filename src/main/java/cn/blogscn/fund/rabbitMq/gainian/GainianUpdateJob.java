@@ -30,7 +30,7 @@ public class GainianUpdateJob {
     private static final String BK_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_bk";
 
     public Boolean updateGainianData(){
-        logger.info("定时任务：遍历概念列表Start");
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"概念遍历完成(获取800个)；start"));
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("sort", "netamount");
         paramMap.put("asc", "0");
@@ -56,7 +56,6 @@ public class GainianUpdateJob {
                 logger.warn("主键冲突数据：{}", gainian.toString());
             }
         }
-        logger.info("定时任务：遍历概念列表End");
         logDataService.save(new LogData(this.getClass().getSimpleName(),"概念遍历完成(获取800个)；概念数为：" + jsonArray.size()));
         return true;
     }

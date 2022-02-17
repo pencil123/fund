@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BankuaiMapper extends BaseMapper<Bankuai> {
-    @Update("update gainian g set degree = (select degree from gn_record where gn_record.opendate = g.end_day and gn_record.code = g.code)")
+    @Update("update bankuai g set degree = (select degree from bk_record where bk_record.opendate = g.end_day and bk_record.code = g.code)")
     Boolean updateDegree();
     void batchInsert(@Param("bankuais") List<Bankuai> bankuais);
 

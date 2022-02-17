@@ -40,6 +40,7 @@ public class BkRecordUpdateJob {
     private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
 
     public Boolean updateBkRecords() {
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"板块Record遍历操作:start"));
         List<Bankuai> bankuaiList = bankuaiService.list();
         for (Bankuai bankuai : bankuaiList) {
             updateBkRecord(bankuai.getCode());
@@ -48,7 +49,7 @@ public class BkRecordUpdateJob {
             bankuaiService.updateById(bankuai);
         }
         updateAvgValueAndDegree();
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"板块Record遍历操作"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"板块Record遍历操作:end"));
         return true;
     }
 

@@ -39,6 +39,7 @@ public class GnRecordUpdateJob {
     private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
 
     public Boolean updateGnRecords()  {
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"概念Record遍历操作:start"));
         QueryWrapper<Gainian> gainianQueryWrapper = new QueryWrapper<>();
         //gainianQueryWrapper.isNull("start_day");
         List<Gainian> gainainList = gainianService.list(gainianQueryWrapper);
@@ -49,7 +50,7 @@ public class GnRecordUpdateJob {
             gainianService.updateById(gainian);
         }
         updateAvgValueAndDegree();
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"概念Record遍历操作"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(),"概念Record遍历操作:end"));
         return true;
     }
 

@@ -51,38 +51,45 @@ public class Listener {
         switch(process){
             case IndexList:
             case IndexRecord:
-                indexRecordDataUpdateJob.indexRecordDataUpdateMain();
-                publisher.sendDirectMessage(Process.BankuaiList);
+                msgHandleStatus = indexRecordDataUpdateJob.indexRecordDataUpdateMain();
+                if (msgHandleStatus)
+                    publisher.sendDirectMessage(Process.BankuaiList);
                 break;
             case BankuaiList:
-                bankuaiUpdateJob.updateBankuaiData();
-                publisher.sendDirectMessage(Process.BankuaiRecord);
+                msgHandleStatus = bankuaiUpdateJob.updateBankuaiData();
+                if (msgHandleStatus)
+                    publisher.sendDirectMessage(Process.BankuaiRecord);
                 break;
             case BankuaiRecord:
-                bkRecordUpdateJob.updateBkRecords();
-                publisher.sendDirectMessage(Process.GainianList);
+                msgHandleStatus = bkRecordUpdateJob.updateBkRecords();
+                if (msgHandleStatus)
+                    publisher.sendDirectMessage(Process.GainianList);
                 break;
             case GainianList:
-                gainianUpdateJob.updateGainianData();
-                publisher.sendDirectMessage(Process.GainianRecord);
+                msgHandleStatus = gainianUpdateJob.updateGainianData();
+                if (msgHandleStatus)
+                    publisher.sendDirectMessage(Process.GainianRecord);
                 break;
             case GainianRecord:
-                gnRecordUpdateJob.updateGnRecords();
-                publisher.sendDirectMessage(Process.FundList);
+                msgHandleStatus = gnRecordUpdateJob.updateGnRecords();
+                if (msgHandleStatus)
+                    publisher.sendDirectMessage(Process.FundList);
                 break;
             case FundList:
-                indexFundUpdateJob.updateIndexFund();
-                publisher.sendDirectMessage(Process.FundRecord);
+                msgHandleStatus = indexFundUpdateJob.updateIndexFund();
+                if (msgHandleStatus)
+                    publisher.sendDirectMessage(Process.FundRecord);
             case FundRecord:
-                Boolean aBoolean5 =fundRecordDataUpdateJob.updateTodayData();
-                publisher.sendDirectMessage(Process.SendMail);
+                msgHandleStatus = fundRecordDataUpdateJob.updateTodayData();
+                if (msgHandleStatus)
+                    publisher.sendDirectMessage(Process.SendMail);
                 break;
             case SendMail:
                 msgHandleStatus = sendMailJob.sendMail();
                 break;
         }
         try {
-            if (true) {
+            if (msgHandleStatus) {
                 channel.basicAck(deliveryTag, false);
             } else {
                 channel.basicNack(deliveryTag, false, true);
