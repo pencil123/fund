@@ -20,6 +20,9 @@ import cn.blogscn.fund.service.UserService;
 import cn.blogscn.fund.util.BeanConvertUtils;
 import cn.blogscn.fund.util.MailSend;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.mail.MessagingException;
@@ -53,6 +56,16 @@ public class SendMailJob {
     private MailSend mailSend;
 
     public Boolean sendMail() {
+        LocalDate now = LocalDate.now();
+        LocalDateTime startOfTheDay = now.atStartOfDay();
+        QueryWrapper<LogData> logDataQueryWrapper = new QueryWrapper<>();
+        logDataQueryWrapper.eq("module",this.getClass().getSimpleName());
+        logDataQueryWrapper.gt("create_time",startOfTheDay);
+        LogData ifExist = logDataService.getOne(logDataQueryWrapper);
+        if(ifExist != null){
+            logDataService.save(new LogData(this.getClass().getSimpleName(), "发送邮件操作；skip"));
+            return true;
+        }
         logDataService.save(new LogData(this.getClass().getSimpleName(), "发送邮件操作:start"));
         List<EmailRecordDto> indexRecordDtos = new ArrayList<>();
         List<Indices> indicesList = indicesService.listByDegreeDesc();

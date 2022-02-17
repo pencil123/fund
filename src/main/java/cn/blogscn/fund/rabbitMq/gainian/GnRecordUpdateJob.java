@@ -43,6 +43,10 @@ public class GnRecordUpdateJob {
         //gainianQueryWrapper.isNull("start_day");
         List<Gainian> gainainList = gainianService.list(gainianQueryWrapper);
         for (Gainian gainian : gainainList) {
+            if(gainian.getEndDay().equals(LocalDate.now())){
+                logDataService.save(new LogData(this.getClass().getSimpleName(), "概念Record遍历操作:"+gainian.getName()+";;skip"));
+                return true;
+            }
             updateGnRecord(gainian.getCode());
             gainian.setStartDay(getGnRecordStartDay(gainian.getCode()));
             gainian.setEndDay(getGnRecordEndDay(gainian.getCode()));

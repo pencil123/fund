@@ -1,5 +1,6 @@
 package cn.blogscn.fund.rabbitMq.index;
 
+import cn.blogscn.fund.model.domain.BkRecord;
 import cn.blogscn.fund.model.domain.IndexRecord;
 import cn.blogscn.fund.model.domain.Indices;
 import cn.blogscn.fund.model.domain.LogData;
@@ -17,6 +18,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +47,14 @@ public class IndexRecordDataUpdateJob {
         logDataService.save(new LogData(this.getClass().getSimpleName(), "指标Record遍历操作:start"));
         List<Indices> list = indicesService.list();
         for (Indices indices : list) {
+            if(indices.getEndDay().equals(LocalDate.now())){
+                logDataService.save(new LogData(this.getClass().getSimpleName(), "指标Record遍历操作:"+indices.getName()+";;skip"));
+                return true;
+            }
             indexRecordDataUpdate(indices.getCode());
+            indices.setEndDay(getEndDay(indices.getCode()));
+            indices.setStartDay(getStartDay(indices.getCode()));
+            indicesService.save(indices);
         }
         updateAvgValueAndDegree();
         logDataService.save(new LogData(this.getClass().getSimpleName(), "指标Record遍历操作:end"));
@@ -108,6 +118,25 @@ public class IndexRecordDataUpdateJob {
         }
         return true;
     }
+
+    private LocalDate getStartDay(String code) {
+        QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
+        indexRecordQueryWrapper.eq("code", code);
+        indexRecordQueryWrapper.orderByAsc("opendate");
+        indexRecordQueryWrapper.last("limit 1");
+        IndexRecord indexRecord = indexRecordService.getOne(indexRecordQueryWrapper);
+        return indexRecord.getOpendate();
+    }
+
+    private LocalDate getEndDay(String code) {
+        QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
+        indexRecordQueryWrapper.eq("code", code);
+        indexRecordQueryWrapper.orderByDesc("opendate");
+        indexRecordQueryWrapper.last("limit 1");
+        IndexRecord indexRecord = indexRecordService.getOne(indexRecordQueryWrapper);
+        return indexRecord.getOpendate();
+    }
+
 
 
     public Boolean updateAvgValueAndDegree() {

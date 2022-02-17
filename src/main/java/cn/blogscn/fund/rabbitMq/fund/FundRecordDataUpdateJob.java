@@ -46,9 +46,17 @@ public class FundRecordDataUpdateJob {
         List<Fund> funds = fundService.list();
         List<IndexFund> indexFunds = indexFundService.list();
         for (Fund fund : funds) {
+            if(fund.getEndDay().equals(LocalDate.now())){
+                logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:"+fund.getName()+";;skip"));
+                return true;
+            }
             updateOne(fund.getCode(), fund.getStatus());
         }
         for (IndexFund indexFund : indexFunds) {
+            if(indexFund.getEndDay().equals(LocalDate.now())){
+                logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:"+indexFund.getName()+";;skip"));
+                return true;
+            }
             updateOne(indexFund.getCode(), indexFund.getStatus());
         }
         updateAvgValueAndDegree();

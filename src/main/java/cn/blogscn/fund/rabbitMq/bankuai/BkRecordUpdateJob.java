@@ -14,6 +14,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,10 @@ public class BkRecordUpdateJob {
         logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:start"));
         List<Bankuai> bankuaiList = bankuaiService.list();
         for (Bankuai bankuai : bankuaiList) {
+            if(bankuai.getEndDay().equals(LocalDate.now())){
+                logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:"+bankuai.getName()+";;skip"));
+                return true;
+            }
             updateBkRecord(bankuai.getCode());
             bankuai.setStartDay(getBkRecordStartDay(bankuai.getCode()));
             bankuai.setEndDay(getBkRecordEndDay(bankuai.getCode()));

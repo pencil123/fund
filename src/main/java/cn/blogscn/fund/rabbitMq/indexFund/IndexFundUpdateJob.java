@@ -9,7 +9,12 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,16 @@ public class IndexFundUpdateJob {
     //?type=17&parent_type=1&order=desc&order_by=percent&page=19&size=30&_=1644654777740
 
     public Boolean updateIndexFund() {
+        LocalDate now = LocalDate.now();
+        LocalDateTime startOfTheDay = now.atStartOfDay();
+        QueryWrapper<LogData> logDataQueryWrapper = new QueryWrapper<>();
+        logDataQueryWrapper.eq("module",this.getClass().getSimpleName());
+        logDataQueryWrapper.gt("create_time",startOfTheDay);
+        LogData ifExist = logDataService.getOne(logDataQueryWrapper);
+        if(ifExist != null){
+            logDataService.save(new LogData(this.getClass().getSimpleName(), "指数基金列表更新操作；skip"));
+            return true;
+        }
         logDataService.save(new LogData(this.getClass().getSimpleName(), "指数基金列表更新操作:start"));
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("type", "17");
