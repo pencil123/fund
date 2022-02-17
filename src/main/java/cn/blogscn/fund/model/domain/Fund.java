@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Fund {
+
     @TableId
     private String code;
     private String name;
@@ -32,8 +33,13 @@ public class Fund {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
     public String getCode() {
         return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public BigDecimal getDegree() {
@@ -42,10 +48,6 @@ public class Fund {
 
     public void setDegree(BigDecimal degree) {
         this.degree = degree;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getName() {

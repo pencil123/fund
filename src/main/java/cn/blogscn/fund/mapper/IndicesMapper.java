@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IndicesMapper extends BaseMapper<Indices> {
+
     @Update("update indices g set degree = (select degree from index_record where index_record.opendate = g.end_day and index_record.code = g.code)")
     Boolean updateDegree();
 

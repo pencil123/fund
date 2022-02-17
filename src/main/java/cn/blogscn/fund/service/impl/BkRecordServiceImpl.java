@@ -2,7 +2,6 @@ package cn.blogscn.fund.service.impl;
 
 import cn.blogscn.fund.mapper.BkRecordMapper;
 import cn.blogscn.fund.model.domain.BkRecord;
-import cn.blogscn.fund.model.domain.GnRecord;
 import cn.blogscn.fund.service.BkRecordService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -14,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class BkRecordServiceImpl extends ServiceImpl<BkRecordMapper, BkRecord> implements BkRecordService {
+public class BkRecordServiceImpl extends ServiceImpl<BkRecordMapper, BkRecord> implements
+        BkRecordService {
 
     @Override
     public Boolean updateAllAvgValue() {
@@ -44,8 +44,8 @@ public class BkRecordServiceImpl extends ServiceImpl<BkRecordMapper, BkRecord> i
     @Override
     public List<BkRecord> queryRecordList(String code, LocalDate startDay, LocalDate endDay) {
         QueryWrapper<BkRecord> bkRecordQueryWrapper = new QueryWrapper<>();
-        bkRecordQueryWrapper.eq("code",code);
-        bkRecordQueryWrapper.between("opendate",startDay,endDay);
+        bkRecordQueryWrapper.eq("code", code);
+        bkRecordQueryWrapper.between("opendate", startDay, endDay);
         bkRecordQueryWrapper.orderByDesc("opendate");
         return list(bkRecordQueryWrapper);
     }

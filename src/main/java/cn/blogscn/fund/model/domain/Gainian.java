@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Gainian {
+
     @TableId
     private String code;
     private String name;
@@ -31,6 +32,7 @@ public class Gainian {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
     public String getCode() {
         return code;
     }

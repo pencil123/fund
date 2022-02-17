@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/gainian")
 public class GainianController {
+
     @Autowired
     private GainianService gainianService;
 
     @GetMapping("/list")
-    public JsonResult<List<Gainian>> list(){
+    public JsonResult<List<Gainian>> list() {
         return JsonResult.success(gainianService.listByDegreeDesc());
     }
 
     @GetMapping("/updateStartAndEndDay")
-    public JsonResult<String> updateStartAndEndDay(){
-        return gainianService.updateStartAndEndDay()? JsonResult.success("success"):JsonResult.error("false");
+    public JsonResult<String> updateStartAndEndDay() {
+        return gainianService.updateStartAndEndDay() ? JsonResult.success("success")
+                : JsonResult.error("false");
     }
 }

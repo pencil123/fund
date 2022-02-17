@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.blogscn.fund.mapper.BankuaiMapper">
-  <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+  <insert id="batchInsert" keyProperty="id" parameterType="java.util.List" useGeneratedKeys="true">
     insert ignore into bankuai(code,name)
     values
-    <foreach collection="bankuais" item="item" index="index" separator=",">
+    <foreach collection="bankuais" index="index" item="item" separator=",">
       (
       #{item.code},#{item.name}
       )

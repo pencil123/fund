@@ -12,6 +12,7 @@ import java.util.List;
  * @date 2020/9/17 14:53
  */
 public class PageResult<T> implements Serializable {
+
     private Long totalCount;
     private List<T> records;
     private Long pageSize;

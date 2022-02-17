@@ -7,8 +7,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface BkRecordService extends IService<BkRecord> {
+
     Boolean updateAllAvgValue();
-    Boolean  updateDegree();
-    List<BkRecord> queryRecordList(String code, LocalDate startDay,LocalDate endDay);
-    BigDecimal calculateDegree(String code,LocalDate opendate);
+
+    Boolean updateDegree();
+
+    List<BkRecord> queryRecordList(String code, LocalDate startDay, LocalDate endDay);
+
+    BigDecimal calculateDegree(String code, LocalDate opendate);
 }

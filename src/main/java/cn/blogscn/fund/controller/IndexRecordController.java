@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/indexRecord")
 public class IndexRecordController {
+
     @Autowired
     private IndexRecordService indexRecordService;
 
     @GetMapping("/find/list")
     public JsonResult<List<IndexRecord>> queryRecordList(@RequestParam("code") String code,
-            @RequestParam("startDay") @DateTimeFormat(iso = ISO.DATE) LocalDate startDay, @RequestParam("endDay") @DateTimeFormat(iso = ISO.DATE) LocalDate endDay) {
+            @RequestParam("startDay") @DateTimeFormat(iso = ISO.DATE) LocalDate startDay,
+            @RequestParam("endDay") @DateTimeFormat(iso = ISO.DATE) LocalDate endDay) {
         List<IndexRecord> records = indexRecordService.queryRecordList(code, startDay, endDay);
         return JsonResult.success(records);
     }

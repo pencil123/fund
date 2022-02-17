@@ -6,8 +6,16 @@
 </head>
 <body>
 <h3>指数数据</h3>
-<table width="95%" border="1" cellpadding="2" cellspacing="1">
-  <tr><th>指数名</th><th>日期</th><th>指数</th><th>周均值</th><th>两周均值</th><th>月均值</th><th>Degree</th></tr>
+<table border="1" cellpadding="2" cellspacing="1" width="95%">
+  <tr>
+    <th>指数名</th>
+    <th>日期</th>
+    <th>指数</th>
+    <th>周均值</th>
+    <th>两周均值</th>
+    <th>月均值</th>
+    <th>Degree</th>
+  </tr>
   <tr th:each="in:${indexRecordDtos}">
     <td th:text="${in.name}"></td>
     <td th:text="${in.opendate}"></td>
@@ -19,8 +27,16 @@
   </tr>
 </table>
 <h3>行业板块</h3>
-<table width="95%" border="1" cellpadding="2" cellspacing="1">
-  <tr><th>板块名</th><th>日期</th><th>指数</th><th>周均值</th><th>两周均值</th><th>月均值</th><th>Degree</th></tr>
+<table border="1" cellpadding="2" cellspacing="1" width="95%">
+  <tr>
+    <th>板块名</th>
+    <th>日期</th>
+    <th>指数</th>
+    <th>周均值</th>
+    <th>两周均值</th>
+    <th>月均值</th>
+    <th>Degree</th>
+  </tr>
   <tr th:each="in:${bkRecordDtos}">
     <td th:text="${in.name}"></td>
     <td th:text="${in.opendate}"></td>
@@ -32,8 +48,16 @@
   </tr>
 </table>
 <h3>概念板块</h3>
-<table width="95%" border="1" cellpadding="2" cellspacing="1">
-  <tr><th>板块名</th><th>日期</th><th>指数</th><th>周均值</th><th>两周均值</th><th>月均值</th><th>Degree</th></tr>
+<table border="1" cellpadding="2" cellspacing="1" width="95%">
+  <tr>
+    <th>板块名</th>
+    <th>日期</th>
+    <th>指数</th>
+    <th>周均值</th>
+    <th>两周均值</th>
+    <th>月均值</th>
+    <th>Degree</th>
+  </tr>
   <tr th:each="in:${gnRecordDtos}">
     <td th:text="${in.name}"></td>
     <td th:text="${in.opendate}"></td>

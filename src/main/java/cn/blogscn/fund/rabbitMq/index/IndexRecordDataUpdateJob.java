@@ -28,26 +28,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class IndexRecordDataUpdateJob {
 
+    private static final Logger logger = LoggerFactory.getLogger(IndexRecordDataUpdateJob.class);
+    final LocalDate startDay = LocalDate.of(1991, 1, 1);
+    final private String INDEX_URL = "https://q.stock.sohu.com/hisHq";
+    DateTimeFormatter paramDateFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
+    DateTimeFormatter resultDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private IndicesService indicesService;
     @Autowired
     private IndexRecordService indexRecordService;
-    DateTimeFormatter paramDateFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
-    DateTimeFormatter resultDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    final LocalDate startDay = LocalDate.of(1991, 1, 1);
-    final private String INDEX_URL = "https://q.stock.sohu.com/hisHq";
-    private static final Logger logger = LoggerFactory.getLogger(IndexRecordDataUpdateJob.class);
     @Autowired
     private LogDataService logDataService;
 
     public Boolean indexRecordDataUpdateMain() {
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"指标Record遍历操作:start"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "指标Record遍历操作:start"));
         List<Indices> list = indicesService.list();
         for (Indices indices : list) {
             indexRecordDataUpdate(indices.getCode());
         }
         updateAvgValueAndDegree();
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"指标Record遍历操作:end"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "指标Record遍历操作:end"));
         return true;
     }
 
@@ -70,7 +70,7 @@ public class IndexRecordDataUpdateJob {
                     .header(Header.REFERER, "https://q.stock.sohu.com")
                     .form(paramMap)
                     .execute().body();
-            if(!result.startsWith("[")){
+            if (!result.startsWith("[")) {
                 firstDayOfMonth = firstDayOfMonth.minusMonths(1);
                 lastDayOfMonth = firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth());
                 logger.info("解析存在问题,result:{}", result);
@@ -80,29 +80,29 @@ public class IndexRecordDataUpdateJob {
                 JSONArray jsonArray = JSONUtil.parseArray(result);
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 JSONArray hq = jsonObject.getJSONArray("hq");
-                parseJsonArray(hq,code);// 调用对象解析和数据存储；
+                parseJsonArray(hq, code);// 调用对象解析和数据存储；
                 firstDayOfMonth = firstDayOfMonth.minusMonths(1);
                 lastDayOfMonth = firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth());
                 logger.info("将要爬取的数据：firstDay:{},endDay:{}", firstDayOfMonth, lastDayOfMonth);
             } catch (Exception e) {
                 logger.error(e.toString());
-                logger.info("请求响应信息：{}",result);
+                logger.info("请求响应信息：{}", result);
             }
         } while (firstDayOfMonth.isAfter(startDay));
     }
 
-    private Boolean parseJsonArray(JSONArray indexRecords,String code){
+    private Boolean parseJsonArray(JSONArray indexRecords, String code) {
         IndexRecord indexRecord = new IndexRecord();
         indexRecord.setCode(code);
         for (int i = 0; i < indexRecords.size(); i++) {
             JSONArray indexInfo = indexRecords.getJSONArray(i);
-            indexRecord.setOpendate(LocalDate.parse(indexInfo.getStr(0),resultDateFormat));
+            indexRecord.setOpendate(LocalDate.parse(indexInfo.getStr(0), resultDateFormat));
             indexRecord.setPrice(BigDecimal.valueOf(indexInfo.getDouble(2)));
             indexRecord.setVolume(Long.valueOf(indexInfo.getInt(7)));
             indexRecord.setTurnover(BigDecimal.valueOf(indexInfo.getDouble(8)));
             try {
                 indexRecordService.save(indexRecord);
-            }catch (DuplicateKeyException e) {
+            } catch (DuplicateKeyException e) {
                 logger.warn("主键冲突数据：{}", indexRecord.toString());
             }
         }
@@ -110,7 +110,7 @@ public class IndexRecordDataUpdateJob {
     }
 
 
-    public Boolean updateAvgValueAndDegree(){
+    public Boolean updateAvgValueAndDegree() {
         indexRecordService.updateAllAvgValue();
         indexRecordService.updateDegree();
         indicesService.updateDegree();

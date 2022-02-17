@@ -14,37 +14,40 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class BankuaiServiceImpl extends ServiceImpl<BankuaiMapper, Bankuai> implements BankuaiService {
+public class BankuaiServiceImpl extends ServiceImpl<BankuaiMapper, Bankuai> implements
+        BankuaiService {
+
     @Autowired
     private BkRecordService bkRecordService;
 
     @Override
-    public Boolean updateDegree(){
+    public Boolean updateDegree() {
         return baseMapper.updateDegree();
     }
 
-    public Boolean updateStartAndEndDay(){
+    public Boolean updateStartAndEndDay() {
         List<Bankuai> bankuais = list();
         QueryWrapper<BkRecord> bkRecordQueryWrapperAsc = new QueryWrapper<>();
         QueryWrapper<BkRecord> bkRecordQueryWrapperDesc = new QueryWrapper<>();
-        for(Bankuai bankuai:bankuais){
+        for (Bankuai bankuai : bankuais) {
             // startDay Asc
             bkRecordQueryWrapperAsc.select("opendate");
             bkRecordQueryWrapperAsc.orderByAsc("opendate");
             bkRecordQueryWrapperAsc.last("limit 1");
-            bkRecordQueryWrapperAsc.eq("code",bankuai.getCode());
+            bkRecordQueryWrapperAsc.eq("code", bankuai.getCode());
             BkRecord startDayOne = bkRecordService.getOne(bkRecordQueryWrapperAsc);
             bkRecordQueryWrapperAsc.clear();
             // endDay Desc
             bkRecordQueryWrapperDesc.select("opendate");
             bkRecordQueryWrapperDesc.orderByDesc("opendate");
             bkRecordQueryWrapperDesc.last("limit 1");
-            bkRecordQueryWrapperDesc.eq("code",bankuai.getCode());
+            bkRecordQueryWrapperDesc.eq("code", bankuai.getCode());
             BkRecord endDayOne = bkRecordService.getOne(bkRecordQueryWrapperDesc);
             bkRecordQueryWrapperDesc.clear();
             bankuai.setStartDay(startDayOne.getOpendate());
             bankuai.setEndDay(endDayOne.getOpendate());
-            bankuai.setDegree(bkRecordService.calculateDegree(bankuai.getCode(),endDayOne.getOpendate()));
+            bankuai.setDegree(
+                    bkRecordService.calculateDegree(bankuai.getCode(), endDayOne.getOpendate()));
             updateById(bankuai);
         }
         return true;

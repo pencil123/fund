@@ -14,9 +14,10 @@ public class CodeTypeHandler implements TypeHandler<CodeType> {
     @Override
     public void setParameter(PreparedStatement preparedStatement, int i, CodeType codeType,
             JdbcType jdbcType) throws SQLException {
-        if(codeType == null)
+        if (codeType == null) {
             codeType = CodeType.COMMON;
-        preparedStatement.setInt(i,codeType.getCode());
+        }
+        preparedStatement.setInt(i, codeType.getCode());
     }
 
     @Override

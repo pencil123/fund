@@ -6,7 +6,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class IndexRecord {
-    @TableId(type= IdType.AUTO)
+
+    @TableId(type = IdType.AUTO)
     private Integer id;
     private String code;
     private BigDecimal price;
@@ -17,8 +18,13 @@ public class IndexRecord {
     private BigDecimal avgWeek;
     private BigDecimal avgTwoWeek;
     private BigDecimal avgMonth;
+
     public String getCode() {
         return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Integer getId() {
@@ -35,10 +41,6 @@ public class IndexRecord {
 
     public void setDegree(BigDecimal degree) {
         this.degree = degree;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public BigDecimal getPrice() {

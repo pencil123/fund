@@ -2,12 +2,12 @@ package cn.blogscn.fund.model.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class FundRecord {
-    @TableId(type= IdType.AUTO)
+
+    @TableId(type = IdType.AUTO)
     private Integer id;
     private String code;
     private BigDecimal price;

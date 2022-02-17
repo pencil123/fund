@@ -1,4 +1,5 @@
 package cn.blogscn.fund.rabbitMq;
+
 import cn.blogscn.fund.model.domain.Bankuai;
 import cn.blogscn.fund.model.domain.BkRecord;
 import cn.blogscn.fund.model.domain.Gainian;
@@ -25,12 +26,13 @@ import javax.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 
 @Component
 public class SendMailJob {
+
+    private static final Logger logger = LoggerFactory.getLogger(SendMailJob.class);
     @Autowired
     private UserService userService;
     @Autowired
@@ -49,15 +51,14 @@ public class SendMailJob {
     private LogDataService logDataService;
     @Autowired
     private MailSend mailSend;
-    private static final Logger logger = LoggerFactory.getLogger(SendMailJob.class);
 
     public Boolean sendMail() {
         logDataService.save(new LogData(this.getClass().getSimpleName(), "发送邮件操作:start"));
         List<EmailRecordDto> indexRecordDtos = new ArrayList<>();
         List<Indices> indicesList = indicesService.listByDegreeDesc();
         QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
-        for(Indices indices:indicesList){
-            indexRecordQueryWrapper.eq("code",indices.getCode());
+        for (Indices indices : indicesList) {
+            indexRecordQueryWrapper.eq("code", indices.getCode());
             indexRecordQueryWrapper.orderByDesc("opendate");
             indexRecordQueryWrapper.last("limit 1");
             IndexRecord indexRecord = indexRecordService.getOne(indexRecordQueryWrapper);
@@ -72,8 +73,8 @@ public class SendMailJob {
         List<EmailRecordDto> gnRecordDtos = new ArrayList<>();
         List<Gainian> gainians = gainianService.listByDegreeDesc();
         QueryWrapper<GnRecord> gnRecordQueryWrapper = new QueryWrapper<>();
-        for(Gainian gainian:gainians){
-            gnRecordQueryWrapper.eq("code",gainian.getCode());
+        for (Gainian gainian : gainians) {
+            gnRecordQueryWrapper.eq("code", gainian.getCode());
             gnRecordQueryWrapper.orderByDesc("opendate");
             gnRecordQueryWrapper.last("limit 1");
             GnRecord gnRecord = gnRecordService.getOne(gnRecordQueryWrapper);
@@ -88,8 +89,8 @@ public class SendMailJob {
         List<EmailRecordDto> bkRecordDtos = new ArrayList<>();
         List<Bankuai> bankuais = bankuaiService.listByDegreeDesc();
         QueryWrapper<BkRecord> bkRecordQueryWrapper = new QueryWrapper<>();
-        for(Bankuai bankuai:bankuais){
-            bkRecordQueryWrapper.eq("code",bankuai.getCode());
+        for (Bankuai bankuai : bankuais) {
+            bkRecordQueryWrapper.eq("code", bankuai.getCode());
             bkRecordQueryWrapper.orderByDesc("opendate");
             bkRecordQueryWrapper.last("limit 1");
             BkRecord bkRecord = bkRecordService.getOne(bkRecordQueryWrapper);
@@ -104,13 +105,13 @@ public class SendMailJob {
         Context context = new Context();
         // 设置模板中的变量
         // 第一个参数为模板的名称
-        context.setVariable("bkRecordDtos",bkRecordDtos);
+        context.setVariable("bkRecordDtos", bkRecordDtos);
         context.setVariable("indexRecordDtos", indexRecordDtos);
-        context.setVariable("gnRecordDtos",gnRecordDtos);
+        context.setVariable("gnRecordDtos", gnRecordDtos);
         List<User> userList = userService.list();
-        for(User user:userList){
+        for (User user : userList) {
             try {
-                mailSend.sendThymeleafMail("明天会议安排",context,user.getEmail());
+                mailSend.sendThymeleafMail("明天会议安排", context, user.getEmail());
             } catch (MessagingException e) {
                 e.printStackTrace();
                 return false;

@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/indexFund")
 public class IndexFundController {
+
     @Autowired
     private IndexFundService indexFundService;
 
     @GetMapping("/list")
-    public JsonResult<List<IndexFund>> list(){
+    public JsonResult<List<IndexFund>> list() {
         return JsonResult.success(indexFundService.listByDegreeDesc());
     }
 
     @GetMapping("/updateStartAndEndDay")
-    public JsonResult<String> updateStartAndEndDay(){
-        return indexFundService.updateStartAndEndDay()? JsonResult.success("success"):JsonResult.error("false");
+    public JsonResult<String> updateStartAndEndDay() {
+        return indexFundService.updateStartAndEndDay() ? JsonResult.success("success")
+                : JsonResult.error("false");
     }
 }

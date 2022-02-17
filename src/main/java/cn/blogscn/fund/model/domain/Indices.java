@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Indices {
+
     @TableId
     private String code;
     private String name;
@@ -31,6 +32,7 @@ public class Indices {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
     public String getCode() {
         return code;
     }
@@ -43,16 +45,16 @@ public class Indices {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public BigDecimal getDegree() {
         return degree;
     }
 
     public void setDegree(BigDecimal degree) {
         this.degree = degree;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public LocalDateTime getCreateTime() {

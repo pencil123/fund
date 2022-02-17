@@ -3,22 +3,18 @@ package cn.blogscn.fund.service.impl;
 import cn.blogscn.fund.mapper.IndexRecordMapper;
 import cn.blogscn.fund.model.domain.IndexRecord;
 import cn.blogscn.fund.service.IndexRecordService;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class IndexRecordServiceImpl extends ServiceImpl<IndexRecordMapper,IndexRecord> implements IndexRecordService {
+public class IndexRecordServiceImpl extends ServiceImpl<IndexRecordMapper, IndexRecord> implements
+        IndexRecordService {
 
     @Override
     public Boolean updateAllAvgValue() {
@@ -48,8 +44,8 @@ public class IndexRecordServiceImpl extends ServiceImpl<IndexRecordMapper,IndexR
     @Override
     public List<IndexRecord> queryRecordList(String code, LocalDate startDay, LocalDate endDay) {
         QueryWrapper<IndexRecord> indexRecordQueryWrapper = new QueryWrapper<>();
-        indexRecordQueryWrapper.eq("code",code);
-        indexRecordQueryWrapper.between("opendate",startDay,endDay);
+        indexRecordQueryWrapper.eq("code", code);
+        indexRecordQueryWrapper.between("opendate", startDay, endDay);
         indexRecordQueryWrapper.orderByDesc("opendate");
         return list(indexRecordQueryWrapper);
     }

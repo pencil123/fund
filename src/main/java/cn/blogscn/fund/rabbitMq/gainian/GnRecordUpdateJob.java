@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,6 +28,7 @@ public class GnRecordUpdateJob {
 
     private static final Logger logger = LoggerFactory.getLogger(
             GnRecordUpdateJob.class);
+    private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private GainianService gainianService;
@@ -36,10 +36,9 @@ public class GnRecordUpdateJob {
     private GnRecordService gnRecordService;
     @Autowired
     private LogDataService logDataService;
-    private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
 
-    public Boolean updateGnRecords()  {
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"概念Record遍历操作:start"));
+    public Boolean updateGnRecords() {
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "概念Record遍历操作:start"));
         QueryWrapper<Gainian> gainianQueryWrapper = new QueryWrapper<>();
         //gainianQueryWrapper.isNull("start_day");
         List<Gainian> gainainList = gainianService.list(gainianQueryWrapper);
@@ -50,11 +49,11 @@ public class GnRecordUpdateJob {
             gainianService.updateById(gainian);
         }
         updateAvgValueAndDegree();
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"概念Record遍历操作:end"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "概念Record遍历操作:end"));
         return true;
     }
 
-    private void updateGnRecord(String code)  {
+    private void updateGnRecord(String code) {
 
         Boolean pageContinue = true;
         HashMap<String, Object> paramMap = new HashMap<>();
@@ -68,8 +67,9 @@ public class GnRecordUpdateJob {
                     .header(Header.REFERER, "http://vip.stock.finance.sina.com.cn/moneyflow/")
                     .form(paramMap)
                     .execute().body();
-            if(!result.startsWith("[")){
-                logDataService.save(new LogData(this.getClass().getSimpleName(),"Record遍历结果异常,Param:" + paramMap.toString() + "\nResult:" + result));
+            if (!result.startsWith("[")) {
+                logDataService.save(new LogData(this.getClass().getSimpleName(),
+                        "Record遍历结果异常,Param:" + paramMap.toString() + "\nResult:" + result));
                 continue;
             }
             JSONArray jsonArray = JSONUtil.parseArray(result);
@@ -129,7 +129,7 @@ public class GnRecordUpdateJob {
         return gnRecord.getOpendate();
     }
 
-    public Boolean updateAvgValueAndDegree(){
+    public Boolean updateAvgValueAndDegree() {
         gnRecordService.updateAllAvgValue();
         gnRecordService.updateDegree();
         gainianService.updateDegree();

@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bkRecord")
 public class BkRecordController {
+
     @Autowired
     private BkRecordService bkRecordService;
 
     @GetMapping("/find/list")
     public JsonResult<List<BkRecord>> queryRecordList(@RequestParam("code") String code,
-            @RequestParam("startDay") @DateTimeFormat(iso = ISO.DATE) LocalDate startDay, @RequestParam("endDay") @DateTimeFormat(iso = ISO.DATE) LocalDate endDay) {
+            @RequestParam("startDay") @DateTimeFormat(iso = ISO.DATE) LocalDate startDay,
+            @RequestParam("endDay") @DateTimeFormat(iso = ISO.DATE) LocalDate endDay) {
         List<BkRecord> records = bkRecordService.queryRecordList(code, startDay, endDay);
         return JsonResult.success(records);
     }

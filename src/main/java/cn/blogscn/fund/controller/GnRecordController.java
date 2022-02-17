@@ -1,6 +1,5 @@
 package cn.blogscn.fund.controller;
 
-import cn.blogscn.fund.model.domain.BkRecord;
 import cn.blogscn.fund.model.domain.GnRecord;
 import cn.blogscn.fund.model.json.JsonResult;
 import cn.blogscn.fund.service.GnRecordService;
@@ -23,7 +22,8 @@ public class GnRecordController {
 
     @GetMapping("/find/list")
     public JsonResult<List<GnRecord>> queryRecordList(@RequestParam("code") String code,
-            @RequestParam("startDay") @DateTimeFormat(iso = ISO.DATE) LocalDate startDay, @RequestParam("endDay") @DateTimeFormat(iso = ISO.DATE) LocalDate endDay) {
+            @RequestParam("startDay") @DateTimeFormat(iso = ISO.DATE) LocalDate startDay,
+            @RequestParam("endDay") @DateTimeFormat(iso = ISO.DATE) LocalDate endDay) {
         List<GnRecord> records = gnRecordService.queryRecordList(code, startDay, endDay);
         return JsonResult.success(records);
     }

@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/jobs")
 public class JobController {
+
+    @Autowired
+    IndexRecordDataUpdateJob indexRecordDataUpdateJob;
     @Autowired
     private FundDataInitJob fundDataInitJob;
     @Autowired
@@ -33,8 +36,6 @@ public class JobController {
     @Autowired
     private BkRecordUpdateJob bkRecordUpdateJob;
     @Autowired
-    IndexRecordDataUpdateJob indexRecordDataUpdateJob;
-    @Autowired
     private CheckItemStatusJob checkItemStatusJob;
     @Autowired
     private SendMailJob sendMailJob;
@@ -42,17 +43,19 @@ public class JobController {
     private Publisher publisher;
 
     @GetMapping("/fund/listUpdate")
-    public String jobSyncData(){
+    public String jobSyncData() {
         fundDataInitJob.syncFundRecordData();
         return "successs";
     }
+
     @GetMapping("/fund/dataUpdate")
-    public String jobUpdateData(){
+    public String jobUpdateData() {
         fundRecordDataUpdateJob.updateTodayData();
         return "success";
     }
+
     @GetMapping("/bankuai/listUpdate")
-    public String bankuaiListUpdate(){
+    public String bankuaiListUpdate() {
         bankuaiUpdateJob.updateBankuaiData();
         return "success";
     }
@@ -64,7 +67,7 @@ public class JobController {
     }
 
     @GetMapping("/gainian/listUpdate")
-    public String gainianListUpdate(){
+    public String gainianListUpdate() {
         gainianUpdateJob.updateGainianData();
         return "success";
     }
@@ -76,13 +79,13 @@ public class JobController {
     }
 
     @GetMapping("/indices/dataUpdate")
-    public String indicesDataUpdate(){
+    public String indicesDataUpdate() {
         indexRecordDataUpdateJob.indexRecordDataUpdateMain();
         return "success";
     }
 
     @GetMapping("/updateAvgValue")
-    public String updateAvgValue(){
+    public String updateAvgValue() {
         bkRecordUpdateJob.updateAvgValueAndDegree();
         fundRecordDataUpdateJob.updateAvgValueAndDegree();
         gnRecordUpdateJob.updateAvgValueAndDegree();
@@ -97,13 +100,13 @@ public class JobController {
     }
 
     @GetMapping("/checkItemStatusJob")
-    public String checkItemStatusJob(){
+    public String checkItemStatusJob() {
         checkItemStatusJob.updateItemStatus();
         return "success";
     }
 
     @GetMapping("/rabbitmqTest")
-    public String rabbitmqTest(){
+    public String rabbitmqTest() {
         publisher.sendDirectMessage(Process.IndexList);
         return "success";
     }

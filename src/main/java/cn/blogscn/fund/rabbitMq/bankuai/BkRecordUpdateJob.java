@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BkRecordUpdateJob {
 
     private static final Logger logger = LoggerFactory.getLogger(BkRecordUpdateJob.class);
+    private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private BankuaiService bankuaiService;
@@ -37,10 +37,9 @@ public class BkRecordUpdateJob {
     private BkRecordService bkRecordService;
     @Autowired
     private LogDataService logDataService;
-    private static final String BK_RECORD_URL = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssl_bkzj_zjlrqs";
 
     public Boolean updateBkRecords() {
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"板块Record遍历操作:start"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:start"));
         List<Bankuai> bankuaiList = bankuaiService.list();
         for (Bankuai bankuai : bankuaiList) {
             updateBkRecord(bankuai.getCode());
@@ -49,7 +48,7 @@ public class BkRecordUpdateJob {
             bankuaiService.updateById(bankuai);
         }
         updateAvgValueAndDegree();
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"板块Record遍历操作:end"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:end"));
         return true;
     }
 
@@ -66,8 +65,9 @@ public class BkRecordUpdateJob {
                     .header(Header.REFERER, "http://vip.stock.finance.sina.com.cn/moneyflow/")
                     .form(paramMap)
                     .execute().body();
-            if(!result.startsWith("[")){
-                logDataService.save(new LogData(this.getClass().getSimpleName(),"Record遍历结果异常,Param:" + paramMap.toString() + "\nResult:" + result));
+            if (!result.startsWith("[")) {
+                logDataService.save(new LogData(this.getClass().getSimpleName(),
+                        "Record遍历结果异常,Param:" + paramMap.toString() + "\nResult:" + result));
                 continue;
             }
             JSONArray jsonArray = JSONUtil.parseArray(result);
@@ -129,7 +129,7 @@ public class BkRecordUpdateJob {
     }
 
 
-    public Boolean updateAvgValueAndDegree(){
+    public Boolean updateAvgValueAndDegree() {
         bkRecordService.updateAllAvgValue();
         bkRecordService.updateDegree();
         bankuaiService.updateDegree();

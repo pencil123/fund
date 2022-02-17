@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class IndexRecordDto {
+
     private String code;
     private String name;
     private BigDecimal price;
@@ -19,16 +20,16 @@ public class IndexRecordDto {
         return code;
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public BigDecimal getDegree() {
         return degree;
     }
 
     public void setDegree(BigDecimal degree) {
         this.degree = degree;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getName() {

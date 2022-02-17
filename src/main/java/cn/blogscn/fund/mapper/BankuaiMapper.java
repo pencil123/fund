@@ -1,7 +1,6 @@
 package cn.blogscn.fund.mapper;
 
 import cn.blogscn.fund.model.domain.Bankuai;
-import cn.blogscn.fund.model.domain.FundRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -10,8 +9,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BankuaiMapper extends BaseMapper<Bankuai> {
+
     @Update("update bankuai g set degree = (select degree from bk_record where bk_record.opendate = g.end_day and bk_record.code = g.code)")
     Boolean updateDegree();
+
     void batchInsert(@Param("bankuais") List<Bankuai> bankuais);
 
     @Update("update bankuai f\n"

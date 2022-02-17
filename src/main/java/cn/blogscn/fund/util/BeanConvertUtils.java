@@ -11,15 +11,16 @@ import org.springframework.beans.BeanUtils;
  * @date 2021/1/19 16:43
  */
 public class BeanConvertUtils {
-    private BeanConvertUtils() {
-    }
 
     private static final Logger logger = LoggerFactory.getLogger(BeanConvertUtils.class);
 
+    private BeanConvertUtils() {
+    }
+
     /**
-     * @param source      Object
+     * @param source Object
      * @param targetClass Class
-     * @param <T>         T
+     * @param <T> T
      * @return T
      */
     public static <T> T copyProperties(Object source, Class<T> targetClass) {
@@ -34,10 +35,10 @@ public class BeanConvertUtils {
     }
 
 
-    public static <T> T TransformerString(String value,Class<T> clazz){
+    public static <T> T TransformerString(String value, Class<T> clazz) {
         System.out.println(clazz.getTypeName());
         System.out.println(Integer.class.getTypeName());
-        if(clazz.getClass().equals(Integer.class)){
+        if (clazz.getClass().equals(Integer.class)) {
             System.out.println("测试");
             return (T) Integer.valueOf(value);
         }

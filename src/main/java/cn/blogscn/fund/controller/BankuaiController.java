@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bk")
 public class BankuaiController {
+
     @Autowired
     private BankuaiService bankuaiService;
 
     @GetMapping("/list")
-    public JsonResult<List<Bankuai>> list(){
+    public JsonResult<List<Bankuai>> list() {
         return JsonResult.success(bankuaiService.listByDegreeDesc());
     }
 
     @GetMapping("/updateStartAndEndDay")
-    public JsonResult<String> updateStartAndEndDay(){
-        return bankuaiService.updateStartAndEndDay()? JsonResult.success("success"):JsonResult.error("false");
+    public JsonResult<String> updateStartAndEndDay() {
+        return bankuaiService.updateStartAndEndDay() ? JsonResult.success("success")
+                : JsonResult.error("false");
     }
 }

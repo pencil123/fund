@@ -23,25 +23,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitmqConfig {
 
+    private final static Logger logger = LoggerFactory.getLogger(RabbitmqConfig.class);
     @Value("${rabbitmq.process.queue}")
     private String queue;
-
     @Value("${rabbitmq.process.exchange}")
     private String exchange;
-
     @Value("${rabbitmq.process.routing}")
     private String routing;
-
     @Value("${rabbitmq.dlx.queue}")
     private String dlxQueue;
-
     @Value("${rabbitmq.dlx.exchange}")
     private String dlxExchange;
-
     @Autowired
     private CachingConnectionFactory connectionFactory;
-
-    private final static Logger logger = LoggerFactory.getLogger(RabbitmqConfig.class);
 
     @Bean
     public RabbitTemplate.ConfirmCallback confirmCallback() {
@@ -101,10 +95,10 @@ public class RabbitmqConfig {
         //return new Queue("TestDirectQueue",true,true,false);
         //一般设置一下队列的持久化就好,其余两个就是默认false
         HashMap<String, Object> args = new HashMap<>();
-        args.put("x-message-ttl",10000);
-        args.put("x-dead-letter-exchange",dlxExchange);
-        args.put("x-dead-letter-routing-key",routing);
-        return new Queue(queue, true, false, false,args);
+        args.put("x-message-ttl", 10000);
+        args.put("x-dead-letter-exchange", dlxExchange);
+        args.put("x-dead-letter-routing-key", routing);
+        return new Queue(queue, true, false, false, args);
     }
 
     //Direct交换机 起名：TestDirectExchange

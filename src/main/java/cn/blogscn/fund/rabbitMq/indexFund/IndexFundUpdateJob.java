@@ -18,17 +18,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IndexFundUpdateJob {
+
     private static final Logger logger = LoggerFactory.getLogger(IndexFundUpdateJob.class);
+    private static final String BK_URL = "https://xueqiu.com/service/v5/stock/screener/fund/list";
     @Autowired
     private IndexFundService indexFundService;
     @Autowired
     private LogDataService logDataService;
-    private static final String BK_URL = "https://xueqiu.com/service/v5/stock/screener/fund/list";
 
     //?type=17&parent_type=1&order=desc&order_by=percent&page=19&size=30&_=1644654777740
 
-    public Boolean updateIndexFund(){
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"指数基金列表更新操作:start"));
+    public Boolean updateIndexFund() {
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "指数基金列表更新操作:start"));
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("type", "17");
         paramMap.put("parent_type", "1");
@@ -40,14 +41,14 @@ public class IndexFundUpdateJob {
                 .header(Header.REFERER, "https://xueqiu.com/hq")
                 .form(paramMap)
                 .execute().body();
-        logger.info("获取结果：{}",result);
+        logger.info("获取结果：{}", result);
         JSONObject resultJsonObj = JSONUtil.parseObj(result);
         JSONObject data = resultJsonObj.getJSONObject("data");
-        if(data == null){
+        if (data == null) {
             return false;
         }
         JSONArray jsonArray = data.getJSONArray("list");
-        for(int i=0;i< jsonArray.size();i++){
+        for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.get(i, JSONObject.class);
             IndexFund indexFund = parseIndexFundJson(jsonObject);
             System.out.println(indexFund.toString());
@@ -57,11 +58,11 @@ public class IndexFundUpdateJob {
                 logger.warn("主键冲突数据：{}", indexFund.toString());
             }
         }
-        logDataService.save(new LogData(this.getClass().getSimpleName(),"指数基金列表更新操作:end"));
+        logDataService.save(new LogData(this.getClass().getSimpleName(), "指数基金列表更新操作:end"));
         return true;
     }
 
-    private IndexFund parseIndexFundJson(JSONObject indexFundObject){
+    private IndexFund parseIndexFundJson(JSONObject indexFundObject) {
         IndexFund indexFund = new IndexFund();
         indexFund.setCode(indexFundObject.getStr("symbol").substring(2));
         indexFund.setName(indexFundObject.getStr("name"));

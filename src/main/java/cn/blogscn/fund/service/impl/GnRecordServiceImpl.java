@@ -11,7 +11,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GnRecordServiceImpl extends ServiceImpl<GnRecordMapper, GnRecord> implements GnRecordService {
+public class GnRecordServiceImpl extends ServiceImpl<GnRecordMapper, GnRecord> implements
+        GnRecordService {
 
     @Override
     public Boolean updateAllAvgValue() {
@@ -41,8 +42,8 @@ public class GnRecordServiceImpl extends ServiceImpl<GnRecordMapper, GnRecord> i
     @Override
     public List<GnRecord> queryRecordList(String code, LocalDate startDay, LocalDate endDay) {
         QueryWrapper<GnRecord> gnRecordQueryWrapper = new QueryWrapper<>();
-        gnRecordQueryWrapper.eq("code",code);
-        gnRecordQueryWrapper.between("opendate",startDay,endDay);
+        gnRecordQueryWrapper.eq("code", code);
+        gnRecordQueryWrapper.between("opendate", startDay, endDay);
         gnRecordQueryWrapper.orderByDesc("opendate");
         return list(gnRecordQueryWrapper);
     }

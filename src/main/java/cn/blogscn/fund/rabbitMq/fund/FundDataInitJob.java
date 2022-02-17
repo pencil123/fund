@@ -2,33 +2,31 @@ package cn.blogscn.fund.rabbitMq.fund;
 
 import cn.blogscn.fund.model.domain.Fund;
 import cn.blogscn.fund.model.domain.FundRecord;
-import cn.blogscn.fund.service.FundService;
 import cn.blogscn.fund.service.FundRecordService;
+import cn.blogscn.fund.service.FundService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Transactional
 public class FundDataInitJob {
+
     private static final Logger logger = LoggerFactory.getLogger(FundDataInitJob.class);
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
@@ -38,12 +36,12 @@ public class FundDataInitJob {
 
     public void syncFundRecordData() {
         List<Fund> funds = fundService.list();
-        for(Fund fund: funds){
+        for (Fund fund : funds) {
             syncFundRecordData(fund.getCode());
         }
     }
 
-    private void syncFundRecordData(String fundCode){
+    private void syncFundRecordData(String fundCode) {
         //http://fundf10.eastmoney.com/jjjz_519983.html
         LocalDate startDate = LocalDate.of(1980, 1, 1);
         LocalDate endDate = startDate.plusDays(20);
@@ -81,8 +79,9 @@ public class FundDataInitJob {
                 fundRecord.setOpendate(LocalDate.parse(fundRecordInfo.getStr("FSRQ"), timeDtf));
                 fundRecord.setPrice(BigDecimal.valueOf(fundRecordInfo.getDouble("DWJZ")));
                 Double jzzzl = fundRecordInfo.getDouble("JZZZL");
-                if (jzzzl == null)
+                if (jzzzl == null) {
                     jzzzl = 0.0;
+                }
                 fundRecord.setJzzzl(BigDecimal.valueOf(jzzzl));
                 fundRecord.setLjjz(BigDecimal.valueOf(fundRecordInfo.getDouble("LJJZ")));
                 try {

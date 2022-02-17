@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class EmailRecordDto {
+
     private String name;
     private BigDecimal price;
     private BigDecimal degree;

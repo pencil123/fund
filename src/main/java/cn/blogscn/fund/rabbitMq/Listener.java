@@ -1,7 +1,6 @@
 package cn.blogscn.fund.rabbitMq;
 
 import cn.blogscn.fund.emuns.Process;
-import cn.blogscn.fund.model.domain.FundRecord;
 import cn.blogscn.fund.rabbitMq.bankuai.BankuaiUpdateJob;
 import cn.blogscn.fund.rabbitMq.bankuai.BkRecordUpdateJob;
 import cn.blogscn.fund.rabbitMq.fund.FundRecordDataUpdateJob;
@@ -23,6 +22,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Listener {
+
+    private final static Logger logger = LoggerFactory.getLogger(Listener.class);
     @Autowired
     private Publisher publisher;
     @Autowired
@@ -41,48 +42,54 @@ public class Listener {
     private FundRecordDataUpdateJob fundRecordDataUpdateJob;
     @Autowired
     private SendMailJob sendMailJob;
-    private final static Logger logger = LoggerFactory.getLogger(Listener.class);
 
     @RabbitHandler
     @RabbitListener(queues = "${rabbitmq.process.queue}", containerFactory = "singleListenerContainer")
     public void consumerFundQueue(@Payload Process process,
-            @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel){
+            @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) {
         Boolean msgHandleStatus = false;
-        switch(process){
+        switch (process) {
             case IndexList:
             case IndexRecord:
                 msgHandleStatus = indexRecordDataUpdateJob.indexRecordDataUpdateMain();
-                if (msgHandleStatus)
+                if (msgHandleStatus) {
                     publisher.sendDirectMessage(Process.BankuaiList);
+                }
                 break;
             case BankuaiList:
                 msgHandleStatus = bankuaiUpdateJob.updateBankuaiData();
-                if (msgHandleStatus)
+                if (msgHandleStatus) {
                     publisher.sendDirectMessage(Process.BankuaiRecord);
+                }
                 break;
             case BankuaiRecord:
                 msgHandleStatus = bkRecordUpdateJob.updateBkRecords();
-                if (msgHandleStatus)
+                if (msgHandleStatus) {
                     publisher.sendDirectMessage(Process.GainianList);
+                }
                 break;
             case GainianList:
                 msgHandleStatus = gainianUpdateJob.updateGainianData();
-                if (msgHandleStatus)
+                if (msgHandleStatus) {
                     publisher.sendDirectMessage(Process.GainianRecord);
+                }
                 break;
             case GainianRecord:
                 msgHandleStatus = gnRecordUpdateJob.updateGnRecords();
-                if (msgHandleStatus)
+                if (msgHandleStatus) {
                     publisher.sendDirectMessage(Process.FundList);
+                }
                 break;
             case FundList:
                 msgHandleStatus = indexFundUpdateJob.updateIndexFund();
-                if (msgHandleStatus)
+                if (msgHandleStatus) {
                     publisher.sendDirectMessage(Process.FundRecord);
+                }
             case FundRecord:
                 msgHandleStatus = fundRecordDataUpdateJob.updateTodayData();
-                if (msgHandleStatus)
+                if (msgHandleStatus) {
                     publisher.sendDirectMessage(Process.SendMail);
+                }
                 break;
             case SendMail:
                 msgHandleStatus = sendMailJob.sendMail();
@@ -102,7 +109,7 @@ public class Listener {
     @RabbitHandler
     @RabbitListener(queues = "${rabbitmq.dlx.queue}", containerFactory = "singleListenerContainer")
     public void consumerDlxQueue(@Payload Process process,
-            @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel){
+            @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) {
         logger.info("消费消息：{}", process.toString());
         try {
             if (true) {

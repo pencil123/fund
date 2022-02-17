@@ -3,7 +3,7 @@ package cn.blogscn.fund.emuns;
 public enum Process {
     IndexList(1, "指标列表更新"), IndexRecord(2, "指标数据更新"), BankuaiList(3, "行业板块列表更新"), BankuaiRecord(4,
             "行业板块数据更新"), GainianList(5, "概念板块列表更新"), GainianRecord(6, "概念板块数据更新"), FundList(7,
-            "基金列表更新"), FundRecord(8, "基金数据更新"),SendMail(200,"发送邮件");
+            "基金列表更新"), FundRecord(8, "基金数据更新"), SendMail(200, "发送邮件");
     private Integer code;
     private String step;
 
@@ -19,6 +19,7 @@ public enum Process {
     public void setCode(Integer code) {
         this.code = code;
     }
+
 
     @Override
     public String toString() {

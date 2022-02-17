@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Bankuai {
+
     @TableId
     private String code;
     private String name;

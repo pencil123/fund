@@ -14,23 +14,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/fund")
 public class FundController {
+
     @Autowired
     private FundService fundService;
 
     @GetMapping("/list")
-    public JsonResult<List<Fund>> list(){
+    public JsonResult<List<Fund>> list() {
         return JsonResult.success(fundService.listByDegreeDesc());
     }
 
     @PostMapping("add")
-    public  JsonResult<String> add(@RequestBody Fund fund){
-        return fundService.save(fund)? JsonResult.success():JsonResult.error();
+    public JsonResult<String> add(@RequestBody Fund fund) {
+        return fundService.save(fund) ? JsonResult.success() : JsonResult.error();
     }
 
 
     @GetMapping("/updateStartAndEndDay")
-    public JsonResult<String> updateStartAndEndDay(){
-        return fundService.updateStartAndEndDay()? JsonResult.success("success"):JsonResult.error("false");
+    public JsonResult<String> updateStartAndEndDay() {
+        return fundService.updateStartAndEndDay() ? JsonResult.success("success")
+                : JsonResult.error("false");
     }
 
 }

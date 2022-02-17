@@ -8,19 +8,20 @@ import cn.blogscn.fund.service.IndicesService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.util.List;
-import javax.xml.ws.Action;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class IndicesServiceImpl extends ServiceImpl<IndicesMapper, Indices> implements IndicesService {
+public class IndicesServiceImpl extends ServiceImpl<IndicesMapper, Indices> implements
+        IndicesService {
+
     @Autowired
     private IndexRecordService indexRecordService;
 
     @Override
-    public Boolean updateDegree(){
+    public Boolean updateDegree() {
         return baseMapper.updateDegree();
     }
 
@@ -31,24 +32,25 @@ public class IndicesServiceImpl extends ServiceImpl<IndicesMapper, Indices> impl
 
         QueryWrapper<IndexRecord> indexRecordQueryWrapperDesc = new QueryWrapper<>();
 
-        for(Indices indices:indicesList){
+        for (Indices indices : indicesList) {
             // startDay
             indexRecordQueryWrapperAsc.select("opendate");
             indexRecordQueryWrapperAsc.orderByAsc("opendate");
             indexRecordQueryWrapperAsc.last("limit 1");
-            indexRecordQueryWrapperAsc.eq("code",indices.getCode());
+            indexRecordQueryWrapperAsc.eq("code", indices.getCode());
             IndexRecord startDayOne = indexRecordService.getOne(indexRecordQueryWrapperAsc);
             indexRecordQueryWrapperAsc.clear();
             //endDay
             indexRecordQueryWrapperDesc.select("opendate");
             indexRecordQueryWrapperDesc.orderByDesc("opendate");
             indexRecordQueryWrapperDesc.last("limit 1");
-            indexRecordQueryWrapperDesc.eq("code",indices.getCode());
+            indexRecordQueryWrapperDesc.eq("code", indices.getCode());
             IndexRecord endDayOne = indexRecordService.getOne(indexRecordQueryWrapperDesc);
             indexRecordQueryWrapperDesc.clear();
             indices.setStartDay(startDayOne.getOpendate());
             indices.setEndDay(endDayOne.getOpendate());
-            indices.setDegree(indexRecordService.calculateDegree(indices.getCode(),endDayOne.getOpendate()));
+            indices.setDegree(
+                    indexRecordService.calculateDegree(indices.getCode(), endDayOne.getOpendate()));
             updateById(indices);
         }
         return true;

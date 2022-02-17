@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FundMapper extends BaseMapper<Fund> {
+
     @Update("update fund g set degree = (select degree from fund_record where fund_record.opendate = g.end_day and fund_record.code = g.code)")
     Boolean updateDegree();
 

@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -49,16 +48,16 @@ public class FundRecordServiceImpl extends ServiceImpl<FundRecordMapper, FundRec
     public IPage<FundRecord> queryFundRecordPage(String code, Long currentPage, Long pageSize) {
         IPage<FundRecord> fundRecordPage = new Page<>(currentPage, pageSize);
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
-        fundRecordQueryWrapper.eq("code",code);
+        fundRecordQueryWrapper.eq("code", code);
         fundRecordQueryWrapper.orderByDesc("opendate");
-        return page(fundRecordPage,fundRecordQueryWrapper);
+        return page(fundRecordPage, fundRecordQueryWrapper);
     }
 
     @Override
     public List<FundRecord> queryFundRecordList(String code, LocalDate startDay, LocalDate endDay) {
         QueryWrapper<FundRecord> fundRecordQueryWrapper = new QueryWrapper<>();
-        fundRecordQueryWrapper.eq("code",code);
-        fundRecordQueryWrapper.between("opendate",startDay,endDay);
+        fundRecordQueryWrapper.eq("code", code);
+        fundRecordQueryWrapper.between("opendate", startDay, endDay);
         fundRecordQueryWrapper.orderByDesc("opendate");
         return list(fundRecordQueryWrapper);
     }

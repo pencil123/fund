@@ -20,31 +20,32 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CheckItemStatusJob {
+
+    private static final Logger logger = LoggerFactory.getLogger(CheckItemStatusJob.class);
     @Autowired
     private FundService fundService;
     @Autowired
     private IndexFundService indexFundService;
-    private static final Logger logger = LoggerFactory.getLogger(CheckItemStatusJob.class);
 
     @Scheduled(cron = "0 15 9 ? * *")
-    public Boolean updateItemStatus(){
+    public Boolean updateItemStatus() {
         fundService.updateCount();
         indexFundService.updateCount();
         List<Fund> fundList = fundService.list();
-        for(Fund fund: fundList){
-            if(fund.getCount().equals(getCount(fund.getCode()))){
+        for (Fund fund : fundList) {
+            if (fund.getCount().equals(getCount(fund.getCode()))) {
                 fund.setStatus(1);
-            }else{
+            } else {
                 fund.setStatus(0);
             }
             fundService.updateById(fund);
         }
 
         List<IndexFund> indexFundList = indexFundService.list();
-        for(IndexFund indexFund:indexFundList){
-            if(indexFund.getCount().equals(getCount(indexFund.getCode()))){
+        for (IndexFund indexFund : indexFundList) {
+            if (indexFund.getCount().equals(getCount(indexFund.getCode()))) {
                 indexFund.setStatus(1);
-            }else{
+            } else {
                 indexFund.setStatus(0);
             }
             indexFundService.updateById(indexFund);
@@ -71,7 +72,7 @@ public class CheckItemStatusJob {
         String group = matcher.group(1);
         JSONObject jsonObject = JSONUtil.parseObj(group);
         Integer totalCount = jsonObject.getInt("TotalCount");
-        logger.info("Item状态检查（爬取数据）:{}的TotalCount为{}.",fundCode,totalCount);
+        logger.info("Item状态检查（爬取数据）:{}的TotalCount为{}.", fundCode, totalCount);
         return totalCount;
     }
 }
