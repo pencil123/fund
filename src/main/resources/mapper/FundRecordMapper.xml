@@ -11,6 +11,6 @@
       )
     </foreach>
     ON DUPLICATE KEY UPDATE
-    opendate=values(opendate)
+    price=values(price)
   </insert>
 </mapper>
