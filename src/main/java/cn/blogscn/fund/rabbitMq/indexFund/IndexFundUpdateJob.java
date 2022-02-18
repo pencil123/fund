@@ -39,7 +39,7 @@ public class IndexFundUpdateJob {
         QueryWrapper<LogData> logDataQueryWrapper = new QueryWrapper<>();
         logDataQueryWrapper.eq("module",this.getClass().getSimpleName());
         logDataQueryWrapper.gt("create_time",startOfTheDay);
-        LogData ifExist = logDataService.getOne(logDataQueryWrapper);
+        LogData ifExist = logDataService.getOne(logDataQueryWrapper,false);
         if(ifExist != null){
             logDataService.save(new LogData(this.getClass().getSimpleName(), "指数基金列表更新操作；skip"));
             return true;

@@ -40,7 +40,7 @@ public class GainianUpdateJob {
         QueryWrapper<LogData> logDataQueryWrapper = new QueryWrapper<>();
         logDataQueryWrapper.eq("module",this.getClass().getSimpleName());
         logDataQueryWrapper.gt("create_time",startOfTheDay);
-        LogData ifExist = logDataService.getOne(logDataQueryWrapper);
+        LogData ifExist = logDataService.getOne(logDataQueryWrapper,false);
         if(ifExist != null){
             logDataService.save(new LogData(this.getClass().getSimpleName(), "概念遍历完成(获取800个)；skip"));
             return true;

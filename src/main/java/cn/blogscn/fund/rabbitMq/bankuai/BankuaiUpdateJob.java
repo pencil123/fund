@@ -39,7 +39,7 @@ public class BankuaiUpdateJob {
         QueryWrapper<LogData> logDataQueryWrapper = new QueryWrapper<>();
         logDataQueryWrapper.eq("module",this.getClass().getSimpleName());
         logDataQueryWrapper.gt("create_time",startOfTheDay);
-        LogData ifExist = logDataService.getOne(logDataQueryWrapper);
+        LogData ifExist = logDataService.getOne(logDataQueryWrapper,false);
         if(ifExist != null){
             logDataService.save(new LogData(this.getClass().getSimpleName(), "板块遍历完成(获取80个)；skip"));
             return true;

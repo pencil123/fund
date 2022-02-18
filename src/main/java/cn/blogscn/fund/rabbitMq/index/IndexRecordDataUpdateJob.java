@@ -1,6 +1,5 @@
 package cn.blogscn.fund.rabbitMq.index;
 
-import cn.blogscn.fund.model.domain.BkRecord;
 import cn.blogscn.fund.model.domain.IndexRecord;
 import cn.blogscn.fund.model.domain.Indices;
 import cn.blogscn.fund.model.domain.LogData;
@@ -12,14 +11,13 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +52,7 @@ public class IndexRecordDataUpdateJob {
             indexRecordDataUpdate(indices.getCode());
             indices.setEndDay(getEndDay(indices.getCode()));
             indices.setStartDay(getStartDay(indices.getCode()));
-            indicesService.save(indices);
+            indicesService.updateById(indices);
         }
         updateAvgValueAndDegree();
         logDataService.save(new LogData(this.getClass().getSimpleName(), "指标Record遍历操作:end"));
