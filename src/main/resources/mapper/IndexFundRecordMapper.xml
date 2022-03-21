@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.blogscn.fund.mapper.indexFund.IndexFundRecordMapper">
+  <insert id="batchInsertOrUpdateJz" keyProperty="id" parameterType="java.util.List" useGeneratedKeys="true">
+    insert ignore into index_fund_record(code,price,ljjz,jzzzl,opendate)
+    values
+    <foreach collection="indexFundRecordList" index="index" item="indexFundRecord" separator=",">
+      (
+      #{indexFundRecord.code},#{indexFundRecord.price},#{indexFundRecord.ljjz},#{indexFundRecord.jzzzl},#{indexFundRecord.opendate}
+      )
+    </foreach>
+    ON DUPLICATE KEY UPDATE
+    price=values(price)
+  </insert>
+</mapper>

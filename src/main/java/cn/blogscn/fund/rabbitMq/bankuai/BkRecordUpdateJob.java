@@ -1,11 +1,11 @@
 package cn.blogscn.fund.rabbitMq.bankuai;
 
-import cn.blogscn.fund.model.domain.Bankuai;
-import cn.blogscn.fund.model.domain.BkRecord;
-import cn.blogscn.fund.model.domain.LogData;
-import cn.blogscn.fund.service.BankuaiService;
-import cn.blogscn.fund.service.BkRecordService;
-import cn.blogscn.fund.service.LogDataService;
+import cn.blogscn.fund.entity.bankuai.Bankuai;
+import cn.blogscn.fund.entity.bankuai.BkRecord;
+import cn.blogscn.fund.entity.log.LogData;
+import cn.blogscn.fund.service.bankuai.BankuaiService;
+import cn.blogscn.fund.service.bankuai.BkRecordService;
+import cn.blogscn.fund.service.log.LogDataService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
@@ -14,7 +14,6 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +42,9 @@ public class BkRecordUpdateJob {
         logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:start"));
         List<Bankuai> bankuaiList = bankuaiService.list();
         for (Bankuai bankuai : bankuaiList) {
-            if(bankuai.getEndDay().equals(LocalDate.now())){
-                logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:"+bankuai.getName()+";;skip"));
+            if (bankuai.getEndDay() != null && bankuai.getEndDay().equals(LocalDate.now())) {
+                logDataService.save(new LogData(this.getClass().getSimpleName(),
+                        "板块Record遍历操作:" + bankuai.getName() + ";;skip"));
                 return true;
             }
             updateBkRecord(bankuai.getCode());
@@ -121,7 +121,7 @@ public class BkRecordUpdateJob {
         bkRecordQueryWrapper.orderByAsc("opendate");
         bkRecordQueryWrapper.last("limit 1");
         BkRecord bkRecord = bkRecordService.getOne(bkRecordQueryWrapper);
-        return bkRecord.getOpendate();
+        return bkRecord == null ? null : bkRecord.getOpendate();
     }
 
     private LocalDate getBkRecordEndDay(String code) {
@@ -130,7 +130,7 @@ public class BkRecordUpdateJob {
         bkRecordQueryWrapper.orderByDesc("opendate");
         bkRecordQueryWrapper.last("limit 1");
         BkRecord bkRecord = bkRecordService.getOne(bkRecordQueryWrapper);
-        return bkRecord.getOpendate();
+        return bkRecord == null ? null : bkRecord.getOpendate();
     }
 
 

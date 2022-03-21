@@ -95,7 +95,7 @@ public class RabbitmqConfig {
         //return new Queue("TestDirectQueue",true,true,false);
         //一般设置一下队列的持久化就好,其余两个就是默认false
         HashMap<String, Object> args = new HashMap<>();
-        args.put("x-message-ttl", 10000);
+        args.put("x-message-ttl", 60000 * 30 );
         args.put("x-dead-letter-exchange", dlxExchange);
         args.put("x-dead-letter-routing-key", routing);
         return new Queue(queue, true, false, false, args);

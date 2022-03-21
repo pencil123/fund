@@ -1,9 +1,9 @@
 package cn.blogscn.fund.xxljob;
 
-import cn.blogscn.fund.model.domain.Fund;
-import cn.blogscn.fund.model.domain.IndexFund;
-import cn.blogscn.fund.service.FundService;
-import cn.blogscn.fund.service.IndexFundService;
+import cn.blogscn.fund.entity.fund.Fund;
+import cn.blogscn.fund.entity.indexFund.IndexFund;
+import cn.blogscn.fund.service.fund.FundService;
+import cn.blogscn.fund.service.indexFund.IndexFundService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONObject;

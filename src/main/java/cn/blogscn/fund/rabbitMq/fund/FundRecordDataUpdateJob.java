@@ -1,13 +1,11 @@
 package cn.blogscn.fund.rabbitMq.fund;
 
-import cn.blogscn.fund.model.domain.Fund;
-import cn.blogscn.fund.model.domain.FundRecord;
-import cn.blogscn.fund.model.domain.IndexFund;
-import cn.blogscn.fund.model.domain.LogData;
-import cn.blogscn.fund.service.FundRecordService;
-import cn.blogscn.fund.service.FundService;
-import cn.blogscn.fund.service.IndexFundService;
-import cn.blogscn.fund.service.LogDataService;
+import cn.blogscn.fund.entity.fund.Fund;
+import cn.blogscn.fund.entity.fund.FundRecord;
+import cn.blogscn.fund.entity.log.LogData;
+import cn.blogscn.fund.service.fund.FundRecordService;
+import cn.blogscn.fund.service.fund.FundService;
+import cn.blogscn.fund.service.log.LogDataService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
@@ -36,28 +34,19 @@ public class FundRecordDataUpdateJob {
     @Autowired
     private FundService fundService;
     @Autowired
-    private IndexFundService indexFundService;
-    @Autowired
     private LogDataService logDataService;
 
     //http://api.fund.eastmoney.com/f10/lsjz?callback=jQuery183019096624312824972_1640614711227&fundCode=519983&pageIndex=1&pageSize=20&startDate=&endDate=&_=1640614711245
     public Boolean updateTodayData() {
         logDataService.save(new LogData(this.getClass().getSimpleName(), "基金Record遍历操作：start"));
         List<Fund> funds = fundService.list();
-        List<IndexFund> indexFunds = indexFundService.list();
         for (Fund fund : funds) {
-            if(fund.getEndDay().equals(LocalDate.now())){
-                logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:"+fund.getName()+";;skip"));
+            if (fund.getEndDay() != null && fund.getEndDay().equals(LocalDate.now())) {
+                logDataService.save(new LogData(this.getClass().getSimpleName(),
+                        "板块Record遍历操作:" + fund.getName() + ";;skip"));
                 return true;
             }
             updateOne(fund.getCode(), fund.getStatus());
-        }
-        for (IndexFund indexFund : indexFunds) {
-            if(indexFund.getEndDay().equals(LocalDate.now())){
-                logDataService.save(new LogData(this.getClass().getSimpleName(), "板块Record遍历操作:"+indexFund.getName()+";;skip"));
-                return true;
-            }
-            updateOne(indexFund.getCode(), indexFund.getStatus());
         }
         updateAvgValueAndDegree();
         logDataService.save(new LogData(this.getClass().getSimpleName(), "基金Record遍历操作:end"));
@@ -129,8 +118,6 @@ public class FundRecordDataUpdateJob {
         fundRecordService.updateDegree();
         fundService.updateDegree();
         fundService.updateStartAndEndDay();
-        indexFundService.updateDegree();
-        indexFundService.updateStartAndEndDay();
         return true;
     }
 }

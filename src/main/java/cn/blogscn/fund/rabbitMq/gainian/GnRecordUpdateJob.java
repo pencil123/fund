@@ -1,11 +1,11 @@
 package cn.blogscn.fund.rabbitMq.gainian;
 
-import cn.blogscn.fund.model.domain.Gainian;
-import cn.blogscn.fund.model.domain.GnRecord;
-import cn.blogscn.fund.model.domain.LogData;
-import cn.blogscn.fund.service.GainianService;
-import cn.blogscn.fund.service.GnRecordService;
-import cn.blogscn.fund.service.LogDataService;
+import cn.blogscn.fund.entity.gainian.Gainian;
+import cn.blogscn.fund.entity.gainian.GnRecord;
+import cn.blogscn.fund.entity.log.LogData;
+import cn.blogscn.fund.service.gainian.GainianService;
+import cn.blogscn.fund.service.gainian.GnRecordService;
+import cn.blogscn.fund.service.log.LogDataService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
@@ -43,8 +43,9 @@ public class GnRecordUpdateJob {
         //gainianQueryWrapper.isNull("start_day");
         List<Gainian> gainainList = gainianService.list(gainianQueryWrapper);
         for (Gainian gainian : gainainList) {
-            if(gainian.getEndDay().equals(LocalDate.now())){
-                logDataService.save(new LogData(this.getClass().getSimpleName(), "概念Record遍历操作:"+gainian.getName()+";;skip"));
+            if (gainian.getEndDay() != null && gainian.getEndDay().equals(LocalDate.now())) {
+                logDataService.save(new LogData(this.getClass().getSimpleName(),
+                        "概念Record遍历操作:" + gainian.getName() + ";;skip"));
                 return true;
             }
             updateGnRecord(gainian.getCode());
@@ -121,7 +122,7 @@ public class GnRecordUpdateJob {
         gnRecordQueryWrapper.orderByAsc("opendate");
         gnRecordQueryWrapper.last("limit 1");
         GnRecord gnRecord = gnRecordService.getOne(gnRecordQueryWrapper);
-        return gnRecord.getOpendate();
+        return gnRecord == null ? null : gnRecord.getOpendate();
     }
 
     private LocalDate getGnRecordEndDay(String code) {
@@ -130,7 +131,7 @@ public class GnRecordUpdateJob {
         gnRecordQueryWrapper.orderByDesc("opendate");
         gnRecordQueryWrapper.last("limit 1");
         GnRecord gnRecord = gnRecordService.getOne(gnRecordQueryWrapper);
-        return gnRecord.getOpendate();
+        return gnRecord == null ? null : gnRecord.getOpendate();
     }
 
     public Boolean updateAvgValueAndDegree() {

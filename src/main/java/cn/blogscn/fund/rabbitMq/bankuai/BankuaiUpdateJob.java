@@ -1,21 +1,19 @@
 package cn.blogscn.fund.rabbitMq.bankuai;
 
-import cn.blogscn.fund.model.domain.Bankuai;
-import cn.blogscn.fund.model.domain.LogData;
-import cn.blogscn.fund.service.BankuaiService;
-import cn.blogscn.fund.service.LogDataService;
+import cn.blogscn.fund.entity.bankuai.Bankuai;
+import cn.blogscn.fund.entity.log.LogData;
+import cn.blogscn.fund.service.bankuai.BankuaiService;
+import cn.blogscn.fund.service.log.LogDataService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +35,10 @@ public class BankuaiUpdateJob {
         LocalDate now = LocalDate.now();
         LocalDateTime startOfTheDay = now.atStartOfDay();
         QueryWrapper<LogData> logDataQueryWrapper = new QueryWrapper<>();
-        logDataQueryWrapper.eq("module",this.getClass().getSimpleName());
-        logDataQueryWrapper.gt("create_time",startOfTheDay);
-        LogData ifExist = logDataService.getOne(logDataQueryWrapper,false);
-        if(ifExist != null){
+        logDataQueryWrapper.eq("module", this.getClass().getSimpleName());
+        logDataQueryWrapper.gt("create_time", startOfTheDay);
+        LogData ifExist = logDataService.getOne(logDataQueryWrapper, false);
+        if (ifExist != null) {
             logDataService.save(new LogData(this.getClass().getSimpleName(), "板块遍历完成(获取80个)；skip"));
             return true;
         }

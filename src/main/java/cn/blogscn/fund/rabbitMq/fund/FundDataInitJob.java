@@ -1,9 +1,9 @@
 package cn.blogscn.fund.rabbitMq.fund;
 
-import cn.blogscn.fund.model.domain.Fund;
-import cn.blogscn.fund.model.domain.FundRecord;
-import cn.blogscn.fund.service.FundRecordService;
-import cn.blogscn.fund.service.FundService;
+import cn.blogscn.fund.entity.fund.Fund;
+import cn.blogscn.fund.entity.fund.FundRecord;
+import cn.blogscn.fund.service.fund.FundRecordService;
+import cn.blogscn.fund.service.fund.FundService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;

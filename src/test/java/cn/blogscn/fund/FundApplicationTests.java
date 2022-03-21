@@ -1,7 +1,7 @@
 package cn.blogscn.fund;
 
 import cn.blogscn.fund.rabbitMq.indexFund.IndexFundUpdateJob;
-import cn.blogscn.fund.service.FundRecordService;
+import cn.blogscn.fund.service.fund.FundRecordService;
 import cn.blogscn.fund.rabbitMq.SendMailJob;
 import cn.blogscn.fund.rabbitMq.bankuai.BankuaiUpdateJob;
 import cn.blogscn.fund.rabbitMq.bankuai.BkRecordUpdateJob;

@@ -1,11 +1,11 @@
 package cn.blogscn.fund.rabbitMq.index;
 
-import cn.blogscn.fund.model.domain.IndexRecord;
-import cn.blogscn.fund.model.domain.Indices;
-import cn.blogscn.fund.model.domain.LogData;
-import cn.blogscn.fund.service.IndexRecordService;
-import cn.blogscn.fund.service.IndicesService;
-import cn.blogscn.fund.service.LogDataService;
+import cn.blogscn.fund.entity.index.IndexRecord;
+import cn.blogscn.fund.entity.index.Indices;
+import cn.blogscn.fund.entity.log.LogData;
+import cn.blogscn.fund.service.index.IndexRecordService;
+import cn.blogscn.fund.service.index.IndicesService;
+import cn.blogscn.fund.service.log.LogDataService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
@@ -45,8 +45,9 @@ public class IndexRecordDataUpdateJob {
         logDataService.save(new LogData(this.getClass().getSimpleName(), "指标Record遍历操作:start"));
         List<Indices> list = indicesService.list();
         for (Indices indices : list) {
-            if(indices.getEndDay().equals(LocalDate.now())){
-                logDataService.save(new LogData(this.getClass().getSimpleName(), "指标Record遍历操作:"+indices.getName()+";;skip"));
+            if (indices.getEndDay() != null && indices.getEndDay().equals(LocalDate.now())) {
+                logDataService.save(new LogData(this.getClass().getSimpleName(),
+                        "指标Record遍历操作:" + indices.getName() + ";;skip"));
                 return true;
             }
             indexRecordDataUpdate(indices.getCode());
@@ -134,7 +135,6 @@ public class IndexRecordDataUpdateJob {
         IndexRecord indexRecord = indexRecordService.getOne(indexRecordQueryWrapper);
         return indexRecord.getOpendate();
     }
-
 
 
     public Boolean updateAvgValueAndDegree() {
