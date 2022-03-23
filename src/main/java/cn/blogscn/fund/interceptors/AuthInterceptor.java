@@ -14,12 +14,18 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+@Component
 public class AuthInterceptor implements HandlerInterceptor {
 
+    private static final Logger logger = LoggerFactory
+            .getLogger(AuthInterceptor.class);
     @Autowired
     private PersistentLoginsService persistentLoginsService;
     @Autowired
@@ -41,10 +47,9 @@ public class AuthInterceptor implements HandlerInterceptor {
                 if (cValues.length == 2) {
                     String usernameByCookie = cValues[0]; // 获取用户名
                     String uuidByCookie = cValues[1]; // 获取UUID值
+                    logger.warn("Cookie 信息;username: {},uuid:{}",usernameByCookie,uuidByCookie);
                     // 到数据库中查询自动登录记录
-                    PersistentLogins pLogins = persistentLoginsService
-                            .selectByUsernameAndSeries(usernameByCookie,
-                                    uuidByCookie);
+                    PersistentLogins pLogins = persistentLoginsService.selectByUsernameAndSeries(usernameByCookie,uuidByCookie);
                     if (pLogins != null) {
                         String savedToken = pLogins.getToken(); // 数据库中保存的密文
 
@@ -88,12 +93,12 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return true;  //校验成功，此次拦截操作完成
                                 } else { // 用户部分信息被修改，删除cookie并清空数据库中的记录
                                     CookieUtils.delCookie(response, rememberme);
-                                    persistentLoginsService.removeById(pLogins.getId());
+                                    persistentLoginsService.removeById(pLogins.getUsername());
                                 }
                             }
                         } else { // 超过保存的有效期，删除cookie并清空数据库中的记录
                             CookieUtils.delCookie(response, rememberme);
-                            persistentLoginsService.removeById(pLogins.getId());
+                            persistentLoginsService.removeById(pLogins.getUsername());
                         }
                     }
                 }
@@ -101,8 +106,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             //将来源地址存放在session中，登录成功之后跳回原地址
             String callback = request.getRequestURL().toString();
             session.setAttribute("callback", callback);
-            response.sendRedirect(
-                    request.getContextPath() + "/login.html?callback=" + callback);
+            response.setStatus(403);
             return false;
         }
     }

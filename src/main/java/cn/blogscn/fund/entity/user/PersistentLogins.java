@@ -1,21 +1,16 @@
 package cn.blogscn.fund.entity.user;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 
 public class PersistentLogins {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @TableId
     private String username;
     private String series;
     private String token;
     private LocalDateTime validTime;
 
-    public Integer getId() {
-        return id;
-    }
 
  /*   这张表是用户校验用户自动登录的表。设计这张表的原因是我看过一些网上的文章介绍使用cookie自动登录，但是他们基本上都是将用户名、密码、salt等字符串拼接之后md5加密然后保存在cookie中。
     虽然使用了md5这类非对称加密方式，但是将密码这类关键信息保存在用户端，我觉得是不太靠谱的。
@@ -28,10 +23,6 @@ public class PersistentLogins {
     validTime    自动登录失效的时间，即：这个时间点之后只能重新用用户名、密码登录，如果在重新登录时勾选了“30天内自动登录”则更新该用户在persistent_logins这个表中的自动登录记录
     */
 
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

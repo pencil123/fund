@@ -93,7 +93,6 @@ public class CookieUtils {
      */
     public static Cookie getCookie(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
-
         if (cookies == null || cookieName == null || cookieName.equals("")) {
             return null;
         }
