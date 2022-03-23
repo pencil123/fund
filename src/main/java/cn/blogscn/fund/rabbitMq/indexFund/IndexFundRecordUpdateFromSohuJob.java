@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class IndexFundRecordUpdateFromSohuJob {
 
-    private static final Logger logger = LoggerFactory.getLogger(IndexFundRecordUpdateFromSohuJob.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(IndexFundRecordUpdateFromSohuJob.class);
     final private String INDEX_URL = "https://q.stock.sohu.com/hisHq";
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     DateTimeFormatter paramDateFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -54,7 +55,6 @@ public class IndexFundRecordUpdateFromSohuJob {
             }
             fundRecordDataUpdate(indexFund.getCode(), indexFund.getExpect());
         }
-        updateAvgValueAndDegree();
         logDataService.save(new LogData(this.getClass().getSimpleName(), "基金Record遍历操作:end"));
         return true;
     }
@@ -129,14 +129,6 @@ public class IndexFundRecordUpdateFromSohuJob {
                 //logger.warn("主键冲突数据：{}", indexFundRecord.toString());
             }
         }
-        return true;
-    }
-
-    public Boolean updateAvgValueAndDegree() {
-        indexFundRecordService.updateAllAvgValue();
-        indexFundRecordService.updateDegree();
-        indexFundService.updateDegree();
-        indexFundService.updateStartAndEndDay();
         return true;
     }
 }

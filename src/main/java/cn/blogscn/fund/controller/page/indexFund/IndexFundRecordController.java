@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/index-fund-record")
 public class IndexFundRecordController {
+
     @Autowired
     private IndexFundRecordService indexFundRecordService;
 
@@ -23,7 +24,8 @@ public class IndexFundRecordController {
     public JsonResult<List<IndexFundRecord>> queryRecordList(@RequestParam("code") String code,
             @RequestParam("startDay") @DateTimeFormat(iso = ISO.DATE) LocalDate startDay,
             @RequestParam("endDay") @DateTimeFormat(iso = ISO.DATE) LocalDate endDay) {
-        List<IndexFundRecord> records = indexFundRecordService.queryFundRecordList(code, startDay, endDay);
+        List<IndexFundRecord> records = indexFundRecordService
+                .queryFundRecordList(code, startDay, endDay);
         return JsonResult.success(records);
     }
 }

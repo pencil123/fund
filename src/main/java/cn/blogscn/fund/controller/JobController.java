@@ -10,6 +10,7 @@ import cn.blogscn.fund.rabbitMq.fund.FundRecordDataUpdateJob;
 import cn.blogscn.fund.rabbitMq.gainian.GainianUpdateJob;
 import cn.blogscn.fund.rabbitMq.gainian.GnRecordUpdateJob;
 import cn.blogscn.fund.rabbitMq.index.IndexRecordDataUpdateJob;
+import cn.blogscn.fund.rabbitMq.indexFund.IndexFundUpdateJob;
 import cn.blogscn.fund.xxljob.CheckItemStatusJob;
 import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class JobController {
 
     @Autowired
     IndexRecordDataUpdateJob indexRecordDataUpdateJob;
+    @Autowired
+    private IndexFundUpdateJob indexFundUpdateJob;
     @Autowired
     private FundDataInitJob fundDataInitJob;
     @Autowired
@@ -102,6 +105,12 @@ public class JobController {
     @GetMapping("/checkItemStatusJob")
     public String checkItemStatusJob() {
         checkItemStatusJob.updateItemStatus();
+        return "success";
+    }
+
+    @GetMapping("/updateIndexFund")
+    public String updateIndexFund() {
+        indexFundUpdateJob.updateIndexFund();
         return "success";
     }
 

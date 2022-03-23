@@ -12,11 +12,12 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -61,16 +62,15 @@ public class IndexFundUpdateJob {
             return false;
         }
         JSONArray jsonArray = data.getJSONArray("list");
+        indexFundService.disabledAll();
+        List<IndexFund> indexFundList = new ArrayList<>();
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.get(i, JSONObject.class);
             IndexFund indexFund = parseIndexFundJson(jsonObject);
             System.out.println(indexFund.toString());
-            try {
-                indexFundService.save(indexFund);
-            } catch (DuplicateKeyException e) {
-                logger.warn("主键冲突数据：{}", indexFund.toString());
-            }
+            indexFundList.add(indexFund);
         }
+        indexFundService.batchInsertCodeAndName(indexFundList);
         logDataService.save(new LogData(this.getClass().getSimpleName(), "指数基金列表更新操作:end"));
         return true;
     }
@@ -79,6 +79,7 @@ public class IndexFundUpdateJob {
         IndexFund indexFund = new IndexFund();
         indexFund.setCode(indexFundObject.getStr("symbol").substring(2));
         indexFund.setName(indexFundObject.getStr("name"));
+        indexFund.setDisabled(false);
         return indexFund;
     }
 }

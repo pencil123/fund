@@ -27,7 +27,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class IndexFundRecordUpdateFromEastJob {
 
-    private static final Logger logger = LoggerFactory.getLogger(IndexFundRecordUpdateFromEastJob.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(IndexFundRecordUpdateFromEastJob.class);
     DateTimeFormatter timeDtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private IndexFundService indexFundService;
@@ -38,22 +39,23 @@ public class IndexFundRecordUpdateFromEastJob {
 
     //http://api.fund.eastmoney.com/f10/lsjz?callback=jQuery183019096624312824972_1640614711227&fundCode=519983&pageIndex=1&pageSize=20&startDate=&endDate=&_=1640614711245
     public Boolean updateTodayData() {
-        logDataService.save(new LogData(this.getClass().getSimpleName(), "基金IndexRecord遍历操作：start"));
+        logDataService
+                .save(new LogData(this.getClass().getSimpleName(), "基金IndexRecord遍历操作：start"));
         List<IndexFund> indexFunds = indexFundService.list();
         for (IndexFund indexFund : indexFunds) {
             if (indexFund.getEndDay() != null && indexFund.getEndDay().equals(LocalDate.now())) {
                 logDataService.save(new LogData(this.getClass().getSimpleName(),
                         "板块IndexRecord遍历操作:" + indexFund.getName() + ";;skip"));
-                return true;
+                continue;
             }
-            updateOne(indexFund.getCode(), indexFund.getStatus());
+            updateOne(indexFund.getCode(), indexFund.getBackward());
         }
         updateAvgValueAndDegree();
         logDataService.save(new LogData(this.getClass().getSimpleName(), "基金IndexRecord遍历操作:end"));
         return true;
     }
 
-    private void updateOne(String indexFundCode, Integer status) {
+    private void updateOne(String indexFundCode, Boolean status) {
         HashMap<String, Object> paramMap = new HashMap<>();
         Integer pageIndex = 1;
         Pattern compile = Pattern.compile("\\((.*)\\)");
@@ -75,10 +77,10 @@ public class IndexFundRecordUpdateFromEastJob {
             JSONObject jsonObject = JSONUtil.parseObj(group);
             JSONObject data = jsonObject.get("Data", JSONObject.class);
             JSONArray lsjzList = data.getJSONArray("LSJZList");
-            status = lsjzList.size() == 0 ? 1 : 0;
+            status = lsjzList.size() == 0;
             parseItems(lsjzList, indexFundCode);
             pageIndex++;
-        } while (status == 0);
+        } while (!status);
     }
 
     private Boolean parseItems(JSONArray lsjzList, String fundCode) {
@@ -88,7 +90,8 @@ public class IndexFundRecordUpdateFromEastJob {
             IndexFundRecord indexFundRecord = new IndexFundRecord();
             try {
                 indexFundRecord.setCode(fundCode);
-                indexFundRecord.setOpendate(LocalDate.parse(fundRecordInfo.getStr("FSRQ"), timeDtf));
+                indexFundRecord
+                        .setOpendate(LocalDate.parse(fundRecordInfo.getStr("FSRQ"), timeDtf));
                 indexFundRecord.setPrice(BigDecimal.valueOf(fundRecordInfo.getDouble("DWJZ")));
                 Double jzzzl = fundRecordInfo.getDouble("JZZZL");
                 if (jzzzl == null) {

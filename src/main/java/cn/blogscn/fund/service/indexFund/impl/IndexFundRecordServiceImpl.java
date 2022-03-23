@@ -5,6 +5,7 @@ import cn.blogscn.fund.mapper.indexFund.IndexFundRecordMapper;
 import cn.blogscn.fund.service.indexFund.IndexFundRecordService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -46,11 +47,18 @@ public class IndexFundRecordServiceImpl extends
 
 
     @Override
-    public List<IndexFundRecord> queryFundRecordList(String code, LocalDate startDay, LocalDate endDay) {
+    public List<IndexFundRecord> queryFundRecordList(String code, LocalDate startDay,
+            LocalDate endDay) {
         QueryWrapper<IndexFundRecord> indexFundRecordQueryWrapper = new QueryWrapper<>();
         indexFundRecordQueryWrapper.eq("code", code);
         indexFundRecordQueryWrapper.between("opendate", startDay, endDay);
         indexFundRecordQueryWrapper.orderByDesc("opendate");
         return list(indexFundRecordQueryWrapper);
+    }
+
+
+    @Override
+    public BigDecimal calculateDegree(String code, LocalDate opendate) {
+        return baseMapper.calculateDegree(code,opendate.toString());
     }
 }

@@ -29,5 +29,6 @@ public interface IndexFundRecordMapper extends BaseMapper<IndexFundRecord> {
     Boolean updateDegree();
 
 
-    boolean batchInsertOrUpdateJz(@Param("indexFundRecordList") List<IndexFundRecord> indexFundRecordList);
+    boolean batchInsertOrUpdateJz(
+            @Param("indexFundRecordList") List<IndexFundRecord> indexFundRecordList);
 }

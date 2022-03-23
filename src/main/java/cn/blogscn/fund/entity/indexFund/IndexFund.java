@@ -16,7 +16,17 @@ public class IndexFund {
     private LocalDate endDay;
     private Integer count;
     private Integer expect;
-    private Integer status;
+    private Boolean backward;
+    private Boolean stopped;
+    private Boolean disabled;
+
+    public Boolean getStopped() {
+        return stopped;
+    }
+
+    public void setStopped(Boolean stopped) {
+        this.stopped = stopped;
+    }
 
     public Integer getCount() {
         return count;
@@ -26,12 +36,20 @@ public class IndexFund {
         this.count = count;
     }
 
-    public Integer getStatus() {
-        return status;
+    public Boolean getBackward() {
+        return backward;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setBackward(Boolean backward) {
+        this.backward = backward;
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
     }
 
     public String getCode() {

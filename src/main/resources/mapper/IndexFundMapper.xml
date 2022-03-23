@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.blogscn.fund.mapper.indexFund.IndexFundMapper">
+  <insert id="batchInsertCodeAndName" keyProperty="id" parameterType="java.util.List" useGeneratedKeys="true">
+    insert ignore into index_fund(code,name)
+    values
+    <foreach collection="indexFundList" index="index" item="indexFund" separator=",">
+      (
+      #{indexFund.code},#{indexFund.name}
+      )
+    </foreach>
+    ON DUPLICATE KEY UPDATE
+    disabled=values(disabled)
+  </insert>
+</mapper>

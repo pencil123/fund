@@ -18,7 +18,7 @@ public class IndexFundController {
 
     @GetMapping("/list")
     public JsonResult<List<IndexFund>> list() {
-        return JsonResult.success(indexFundService.listByDegreeDesc());
+        return JsonResult.success(indexFundService.listByDegreeDescAndFilter());
     }
 
     @GetMapping("/updateStartAndEndDay")

@@ -1,9 +1,9 @@
 package cn.blogscn.fund.service.indexFund.impl;
 
-import cn.blogscn.fund.entity.fund.FundRecord;
 import cn.blogscn.fund.entity.indexFund.IndexFund;
+import cn.blogscn.fund.entity.indexFund.IndexFundRecord;
 import cn.blogscn.fund.mapper.indexFund.IndexFundMapper;
-import cn.blogscn.fund.service.fund.FundRecordService;
+import cn.blogscn.fund.service.indexFund.IndexFundRecordService;
 import cn.blogscn.fund.service.indexFund.IndexFundService;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
@@ -21,11 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class IndexFundServiceImpl extends ServiceImpl<IndexFundMapper, IndexFund> implements
         IndexFundService {
-
     @Autowired
-    private IndexFundService indexFundService;
-    @Autowired
-    private FundRecordService fundRecordService;
+    private IndexFundRecordService indexFundRecordService;
 
     @Override
     public Boolean updateDegree() {
@@ -35,28 +32,35 @@ public class IndexFundServiceImpl extends ServiceImpl<IndexFundMapper, IndexFund
     @Override
     public Boolean updateStartAndEndDay() {
         List<IndexFund> indexFundList = list();
-        QueryWrapper<FundRecord> fundRecordQueryWrapperAsc = new QueryWrapper<>();
-        QueryWrapper<FundRecord> fundRecordQueryWrapperDesc = new QueryWrapper<>();
+        QueryWrapper<IndexFundRecord> indexFundRecordQueryWrapperAsc = new QueryWrapper<>();
+        QueryWrapper<IndexFundRecord> indexFundRecordQueryWrapperDesc = new QueryWrapper<>();
         for (IndexFund indexFund : indexFundList) {
             // startDay Asc
-            fundRecordQueryWrapperAsc.select("opendate");
-            fundRecordQueryWrapperAsc.orderByAsc("opendate");
-            fundRecordQueryWrapperAsc.last("limit 1");
-            fundRecordQueryWrapperAsc.eq("code", indexFund.getCode());
-            FundRecord startDayOne = fundRecordService.getOne(fundRecordQueryWrapperAsc);
-            fundRecordQueryWrapperAsc.clear();
+            indexFundRecordQueryWrapperAsc.select("opendate");
+            indexFundRecordQueryWrapperAsc.orderByAsc("opendate");
+            indexFundRecordQueryWrapperAsc.last("limit 1");
+            indexFundRecordQueryWrapperAsc.eq("code", indexFund.getCode());
+            IndexFundRecord startDayOne = indexFundRecordService
+                    .getOne(indexFundRecordQueryWrapperAsc);
+            indexFundRecordQueryWrapperAsc.clear();
             // endDay Desc
-            fundRecordQueryWrapperDesc.select("opendate");
-            fundRecordQueryWrapperDesc.orderByDesc("opendate");
-            fundRecordQueryWrapperDesc.last("limit 1");
-            fundRecordQueryWrapperDesc.eq("code", indexFund.getCode());
-            FundRecord endDayOne = fundRecordService.getOne(fundRecordQueryWrapperDesc);
-            fundRecordQueryWrapperDesc.clear();
-            if(startDayOne != null){
+            indexFundRecordQueryWrapperDesc.select("opendate");
+            indexFundRecordQueryWrapperDesc.orderByDesc("opendate");
+            indexFundRecordQueryWrapperDesc.last("limit 1");
+            indexFundRecordQueryWrapperDesc.eq("code", indexFund.getCode());
+            IndexFundRecord endDayOne = indexFundRecordService
+                    .getOne(indexFundRecordQueryWrapperDesc);
+            indexFundRecordQueryWrapperDesc.clear();
+            if (startDayOne != null) {
+                Integer integer = baseMapper.calculateDateDiff(endDayOne.getOpendate());
+                if(integer > 3){
+                    indexFund.setStopped(true);
+                }else{
+                    indexFund.setStopped(false);
+                }
                 indexFund.setStartDay(startDayOne.getOpendate());
                 indexFund.setEndDay(endDayOne.getOpendate());
-                indexFund.setDegree(fundRecordService
-                        .calculateDegree(indexFund.getCode(), endDayOne.getOpendate()));
+                // update Degree
                 updateById(indexFund);
             }
         }
@@ -64,8 +68,10 @@ public class IndexFundServiceImpl extends ServiceImpl<IndexFundMapper, IndexFund
     }
 
     @Override
-    public List<IndexFund> listByDegreeDesc() {
+    public List<IndexFund> listByDegreeDescAndFilter() {
         QueryWrapper<IndexFund> indexFundQueryWrapper = new QueryWrapper<>();
+        indexFundQueryWrapper.eq("disabled",false);
+        indexFundQueryWrapper.eq("stopped",false);
         indexFundQueryWrapper.orderByDesc("degree");
         return list(indexFundQueryWrapper);
     }
@@ -101,5 +107,16 @@ public class IndexFundServiceImpl extends ServiceImpl<IndexFundMapper, IndexFund
             updateById(fund);
         }
         return true;
+    }
+
+    @Override
+    public Boolean disabledAll() {
+        return baseMapper.disableAll();
+    }
+
+
+    @Override
+    public Boolean batchInsertCodeAndName(List<IndexFund> indexFundList) {
+        return baseMapper.batchInsertCodeAndName(indexFundList);
     }
 }

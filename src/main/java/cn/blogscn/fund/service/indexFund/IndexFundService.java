@@ -10,9 +10,14 @@ public interface IndexFundService extends IService<IndexFund> {
 
     Boolean updateStartAndEndDay();
 
-    List<IndexFund> listByDegreeDesc();
+    List<IndexFund> listByDegreeDescAndFilter();
 
     Boolean updateCount();
 
     Boolean updateExpect();
+
+    Boolean disabledAll();
+
+
+    Boolean batchInsertCodeAndName(List<IndexFund> indexFundList);
 }

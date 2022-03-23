@@ -44,9 +44,9 @@ public class CheckItemStatusJob {
         List<IndexFund> indexFundList = indexFundService.list();
         for (IndexFund indexFund : indexFundList) {
             if (indexFund.getCount().equals(getCount(indexFund.getCode()))) {
-                indexFund.setStatus(1);
+                indexFund.setBackward(true);
             } else {
-                indexFund.setStatus(0);
+                indexFund.setBackward(false);
             }
             indexFundService.updateById(indexFund);
         }
