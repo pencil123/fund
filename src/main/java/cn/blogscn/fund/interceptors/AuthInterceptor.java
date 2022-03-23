@@ -47,20 +47,20 @@ public class AuthInterceptor implements HandlerInterceptor {
                 if (cValues.length == 2) {
                     String usernameByCookie = cValues[0]; // 获取用户名
                     String uuidByCookie = cValues[1]; // 获取UUID值
-                    logger.warn("Cookie 信息;username: {},uuid:{}",usernameByCookie,uuidByCookie);
                     // 到数据库中查询自动登录记录
                     PersistentLogins pLogins = persistentLoginsService.selectByUsernameAndSeries(usernameByCookie,uuidByCookie);
                     if (pLogins != null) {
+                        //存在登录记录
                         String savedToken = pLogins.getToken(); // 数据库中保存的密文
-
                         // 获取有效时间
                         LocalDateTime savedValidtime = pLogins.getValidTime();
                         LocalDateTime now = LocalDateTime.now();
-
                         // 如果还在cookie有效期之内，继续判断是否可以自动登录
                         if (now.isBefore(savedValidtime)) {
+                            //cookie 在有效期内
                             User u = userService.selectByName(usernameByCookie);
                             if (u != null) {
+                                // cookie  所属用户存在；自动执行登录过程
                                 // 精确到分的时间字符串
                                 String timeString = pLogins.getValidTime().format(
                                         DateTimeFormatter.ISO_LOCAL_DATE);
@@ -68,7 +68,6 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String newToken = EncryptionUtil
                                         .base64Encode(u.getName() + "_" + u.getPassword() + "_"
                                                 + timeString + "_" + CookieConstantTable.salt);
-
                                 // 校验sha256加密的值，如果不一样则表示用户部分信息已被修改，需要重新登录
                                 if (savedToken.equals(newToken)) {
                                     /**
@@ -85,27 +84,33 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     // 更新数据库
                                     pLogins.setSeries(uuidNewString);
                                     persistentLoginsService.updateById(pLogins);
-
                                     /**
                                      * 将用户加到session中，不退出浏览器时就只需判断session即可
                                      */
                                     session.setAttribute("user", u);
                                     return true;  //校验成功，此次拦截操作完成
-                                } else { // 用户部分信息被修改，删除cookie并清空数据库中的记录
+                                } else {
+                                    // 用户部分信息被修改，删除cookie并清空数据库中的记录
                                     CookieUtils.delCookie(response, rememberme);
                                     persistentLoginsService.removeById(pLogins.getUsername());
                                 }
+                            }else {
+                                //cookie 所属用户不存在
+                                CookieUtils.delCookie(response, rememberme);
+                                persistentLoginsService.removeById(pLogins.getUsername());
                             }
-                        } else { // 超过保存的有效期，删除cookie并清空数据库中的记录
+                        } else {
+                            // 超过保存的有效期，删除cookie并清空数据库中的记录
                             CookieUtils.delCookie(response, rememberme);
                             persistentLoginsService.removeById(pLogins.getUsername());
                         }
+                    }else{
+                        // 不存在登录记录
+                        CookieUtils.delCookie(response, rememberme);
                     }
                 }
             }
-            //将来源地址存放在session中，登录成功之后跳回原地址
-            String callback = request.getRequestURL().toString();
-            session.setAttribute("callback", callback);
+            // 拒绝访问
             response.setStatus(403);
             return false;
         }
