@@ -20,6 +20,60 @@ public class IndexFundRecord {
     private BigDecimal avgWeek;
     private BigDecimal avgTwoWeek;
     private BigDecimal avgMonth;
+    private BigDecimal recentWeekPrice;
+    private BigDecimal recentTwoWeekPrice;
+    private BigDecimal recentMonthPrice;
+    private BigDecimal recentWeekRate;
+    private BigDecimal recentTwoWeekRate;
+    private BigDecimal recentMonthRate;
+
+    public BigDecimal getRecentWeekPrice() {
+        return recentWeekPrice;
+    }
+
+    public void setRecentWeekPrice(BigDecimal recentWeekPrice) {
+        this.recentWeekPrice = recentWeekPrice;
+    }
+
+    public BigDecimal getRecentTwoWeekPrice() {
+        return recentTwoWeekPrice;
+    }
+
+    public void setRecentTwoWeekPrice(BigDecimal recentTwoWeekPrice) {
+        this.recentTwoWeekPrice = recentTwoWeekPrice;
+    }
+
+    public BigDecimal getRecentMonthPrice() {
+        return recentMonthPrice;
+    }
+
+    public void setRecentMonthPrice(BigDecimal recentMonthPrice) {
+        this.recentMonthPrice = recentMonthPrice;
+    }
+
+    public BigDecimal getRecentWeekRate() {
+        return recentWeekRate;
+    }
+
+    public void setRecentWeekRate(BigDecimal recentWeekRate) {
+        this.recentWeekRate = recentWeekRate;
+    }
+
+    public BigDecimal getRecentTwoWeekRate() {
+        return recentTwoWeekRate;
+    }
+
+    public void setRecentTwoWeekRate(BigDecimal recentTwoWeekRate) {
+        this.recentTwoWeekRate = recentTwoWeekRate;
+    }
+
+    public BigDecimal getRecentMonthRate() {
+        return recentMonthRate;
+    }
+
+    public void setRecentMonthRate(BigDecimal recentMonthRate) {
+        this.recentMonthRate = recentMonthRate;
+    }
 
     public Integer getId() {
         return id;

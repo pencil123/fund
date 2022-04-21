@@ -19,6 +19,33 @@ public class IndexFund {
     private Boolean backward;
     private Boolean stopped;
     private Boolean disabled;
+    private BigDecimal recentWeekRate;
+    private BigDecimal recentTwoWeekRate;
+    private BigDecimal recentMonthRate;
+
+    public BigDecimal getRecentWeekRate() {
+        return recentWeekRate;
+    }
+
+    public void setRecentWeekRate(BigDecimal recentWeekRate) {
+        this.recentWeekRate = recentWeekRate;
+    }
+
+    public BigDecimal getRecentTwoWeekRate() {
+        return recentTwoWeekRate;
+    }
+
+    public void setRecentTwoWeekRate(BigDecimal recentTwoWeekRate) {
+        this.recentTwoWeekRate = recentTwoWeekRate;
+    }
+
+    public BigDecimal getRecentMonthRate() {
+        return recentMonthRate;
+    }
+
+    public void setRecentMonthRate(BigDecimal recentMonthRate) {
+        this.recentMonthRate = recentMonthRate;
+    }
 
     public Boolean getStopped() {
         return stopped;

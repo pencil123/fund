@@ -14,6 +14,12 @@ public interface IndexFundMapper extends BaseMapper<IndexFund> {
 
     @Update("update index_fund g set degree = (select degree from index_fund_record where index_fund_record.opendate = g.end_day and index_fund_record.code = g.code)")
     Boolean updateDegree();
+    @Update("update index_fund g set recent_week_rate = (select recent_week_rate from index_fund_record where index_fund_record.opendate = g.end_day and index_fund_record.code = g.code)")
+    Boolean updateWeekRate();
+    @Update("update index_fund g set recent_two_week_rate = (select recent_two_week_rate from index_fund_record where index_fund_record.opendate = g.end_day and index_fund_record.code = g.code)")
+    Boolean updateTwoWeekRate();
+    @Update("update index_fund g set recent_month_rate = (select recent_month_rate from index_fund_record where index_fund_record.opendate = g.end_day and index_fund_record.code = g.code)")
+    Boolean updateMonthRate();
 
     @Update("update index_fund f\n"
             + "set count = (select count(1) \n"

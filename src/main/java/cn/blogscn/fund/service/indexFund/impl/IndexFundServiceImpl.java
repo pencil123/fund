@@ -25,7 +25,10 @@ public class IndexFundServiceImpl extends ServiceImpl<IndexFundMapper, IndexFund
     private IndexFundRecordService indexFundRecordService;
 
     @Override
-    public Boolean updateDegree() {
+    public Boolean updateDegreeAndRate() {
+        baseMapper.updateWeekRate();
+        baseMapper.updateTwoWeekRate();
+        baseMapper.updateMonthRate();
         return baseMapper.updateDegree();
     }
 

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class IndexRecordDto {
-
     private String code;
     private String name;
     private BigDecimal price;

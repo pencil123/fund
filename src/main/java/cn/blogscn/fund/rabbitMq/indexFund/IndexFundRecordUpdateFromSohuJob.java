@@ -128,6 +128,7 @@ public class IndexFundRecordUpdateFromSohuJob {
             } catch (DuplicateKeyException e) {
                 //logger.warn("主键冲突数据：{}", indexFundRecord.toString());
             }
+
         }
         return true;
     }

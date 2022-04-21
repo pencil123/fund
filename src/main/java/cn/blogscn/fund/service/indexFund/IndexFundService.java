@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IndexFundService extends IService<IndexFund> {
 
-    Boolean updateDegree();
+    Boolean updateDegreeAndRate();
 
     Boolean updateStartAndEndDay();
 

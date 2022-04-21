@@ -5,7 +5,6 @@ import cn.blogscn.fund.mapper.indexFund.IndexFundRecordMapper;
 import cn.blogscn.fund.service.indexFund.IndexFundRecordService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,9 @@ public class IndexFundRecordServiceImpl extends
         indexFundRecordQueryWrapper.isNull("avg_week");
         indexFundRecordQueryWrapper.or().isNull("avg_two_week");
         indexFundRecordQueryWrapper.or().isNull("avg_month");
+        indexFundRecordQueryWrapper.or().isNull("recent_week_price");
+        indexFundRecordQueryWrapper.or().isNull("recent_two_week_price");
+        indexFundRecordQueryWrapper.or().isNull("recent_month_price");
         indexFundRecordQueryWrapper.select("id", "code", "opendate");
         List<IndexFundRecord> list = list(indexFundRecordQueryWrapper);
         for (IndexFundRecord indexFundRecord : list) {
@@ -29,6 +31,15 @@ public class IndexFundRecordServiceImpl extends
                     indexFundRecord.getOpendate().toString(), indexFundRecord.getCode()));
             indexFundRecord.setAvgMonth(baseMapper.avgMonth(
                     indexFundRecord.getOpendate().toString(), indexFundRecord.getCode()));
+            indexFundRecord.setRecentMonthPrice(baseMapper
+                    .recentMonthPrice(indexFundRecord.getOpendate().toString(),
+                            indexFundRecord.getCode()));
+            indexFundRecord.setRecentTwoWeekPrice(baseMapper
+                    .recentTwoWeekPrice(indexFundRecord.getOpendate().toString(),
+                            indexFundRecord.getCode()));
+            indexFundRecord.setRecentWeekPrice(baseMapper
+                    .recentWeekPrice(indexFundRecord.getOpendate().toString(),
+                            indexFundRecord.getCode()));
             updateById(indexFundRecord);
         }
         return null;
@@ -36,6 +47,7 @@ public class IndexFundRecordServiceImpl extends
 
     @Override
     public Boolean updateDegree() {
+        baseMapper.updatePriceRate();
         return baseMapper.updateDegree();
     }
 
@@ -54,11 +66,5 @@ public class IndexFundRecordServiceImpl extends
         indexFundRecordQueryWrapper.between("opendate", startDay, endDay);
         indexFundRecordQueryWrapper.orderByDesc("opendate");
         return list(indexFundRecordQueryWrapper);
-    }
-
-
-    @Override
-    public BigDecimal calculateDegree(String code, LocalDate opendate) {
-        return baseMapper.calculateDegree(code,opendate.toString());
     }
 }

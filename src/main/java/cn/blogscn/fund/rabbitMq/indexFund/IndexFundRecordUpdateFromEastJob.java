@@ -119,7 +119,7 @@ public class IndexFundRecordUpdateFromEastJob {
     public Boolean updateAvgValueAndDegree() {
         indexFundRecordService.updateAllAvgValue();
         indexFundRecordService.updateDegree();
-        indexFundService.updateDegree();
+        indexFundService.updateDegreeAndRate();
         indexFundService.updateStartAndEndDay();
         return true;
     }
