@@ -1,15 +1,6 @@
 package cn.blogscn.fund.rabbitMq;
 
 import cn.blogscn.fund.emuns.Process;
-import cn.blogscn.fund.rabbitMq.bankuai.BankuaiUpdateJob;
-import cn.blogscn.fund.rabbitMq.bankuai.BkRecordUpdateJob;
-import cn.blogscn.fund.rabbitMq.fund.FundRecordDataUpdateJob;
-import cn.blogscn.fund.rabbitMq.gainian.GainianUpdateJob;
-import cn.blogscn.fund.rabbitMq.gainian.GnRecordUpdateJob;
-import cn.blogscn.fund.rabbitMq.index.IndexRecordDataUpdateJob;
-import cn.blogscn.fund.rabbitMq.indexFund.IndexFundRecordUpdateFromEastJob;
-import cn.blogscn.fund.rabbitMq.indexFund.IndexFundRecordUpdateFromSohuJob;
-import cn.blogscn.fund.rabbitMq.indexFund.IndexFundUpdateJob;
 import com.rabbitmq.client.Channel;
 import java.io.IOException;
 import org.slf4j.Logger;
@@ -28,26 +19,7 @@ public class ProcessObjectConsumer {
     private final static Logger logger = LoggerFactory.getLogger(ProcessObjectConsumer.class);
     @Autowired
     private Publisher publisher;
-    @Autowired
-    private IndexRecordDataUpdateJob indexRecordDataUpdateJob;
-    @Autowired
-    private BankuaiUpdateJob bankuaiUpdateJob;
-    @Autowired
-    private BkRecordUpdateJob bkRecordUpdateJob;
-    @Autowired
-    private GainianUpdateJob gainianUpdateJob;
-    @Autowired
-    private GnRecordUpdateJob gnRecordUpdateJob;
-    @Autowired
-    private IndexFundUpdateJob indexFundUpdateJob;
-    @Autowired
-    private IndexFundRecordUpdateFromSohuJob indexFundRecordUpdateFromSohuJob;
-    @Autowired
-    private IndexFundRecordUpdateFromEastJob indexFundRecordUpdateFromEastJob;
-    @Autowired
-    private FundRecordDataUpdateJob fundRecordDataUpdateJob;
-    @Autowired
-    private SendMailJob sendMailJob;
+
 
     @RabbitHandler
     @RabbitListener(queues = "${rabbitmq.process.queue}", containerFactory = "singleListenerContainer")
@@ -57,56 +29,22 @@ public class ProcessObjectConsumer {
         switch (process) {
             case IndexList:
             case IndexRecord:
-                msgHandleStatus = indexRecordDataUpdateJob.indexRecordDataUpdateMain();
-                if (msgHandleStatus) {
-                    publisher.sendDirectMessage(Process.BankuaiList);
-                }
                 break;
             case BankuaiList:
-                msgHandleStatus = bankuaiUpdateJob.updateBankuaiData();
-                if (msgHandleStatus) {
-                    publisher.sendDirectMessage(Process.BankuaiRecord);
-                }
                 break;
             case BankuaiRecord:
-                msgHandleStatus = bkRecordUpdateJob.updateBkRecords();
-                if (msgHandleStatus) {
-                    publisher.sendDirectMessage(Process.GainianList);
-                }
                 break;
             case GainianList:
-                msgHandleStatus = gainianUpdateJob.updateGainianData();
-                if (msgHandleStatus) {
-                    publisher.sendDirectMessage(Process.GainianRecord);
-                }
                 break;
             case GainianRecord:
-                msgHandleStatus = gnRecordUpdateJob.updateGnRecords();
-                if (msgHandleStatus) {
-                    publisher.sendDirectMessage(Process.IndexFundList);
-                }
                 break;
             case IndexFundList:
-                msgHandleStatus = indexFundUpdateJob.updateIndexFund();
-                if (msgHandleStatus) {
-                    publisher.sendDirectMessage(Process.IndexFundRecord);
-                }
                 break;
             case IndexFundRecord:
-                indexFundRecordUpdateFromSohuJob.updateTodayData();
-                msgHandleStatus = indexFundRecordUpdateFromEastJob.updateTodayData();
-                if (msgHandleStatus) {
-                    publisher.sendDirectMessage(Process.FundRecord);
-                }
                 break;
             case FundRecord:
-                msgHandleStatus = fundRecordDataUpdateJob.updateTodayData();
-                if (msgHandleStatus) {
-                    publisher.sendDirectMessage(Process.SendMail);
-                }
                 break;
             case SendMail:
-                msgHandleStatus = sendMailJob.sendMail();
                 break;
         }
         try {
