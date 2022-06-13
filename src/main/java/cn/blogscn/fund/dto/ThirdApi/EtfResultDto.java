@@ -6,20 +6,21 @@ import java.time.LocalDate;
 public class EtfResultDto {
     private Integer code;
     private String name;
-    private String issuer;
-    private Integer amount; // 份额（万份）
-    private BigDecimal unitTotal; //规模（亿元）
-    private BigDecimal unitIncr; // 规模变化（亿元）
     private BigDecimal price; // 现价
-    private BigDecimal volume; // 成交额
-    private LocalDate date;
     private BigDecimal increaseRt; // 涨幅
     private BigDecimal estimateValue; // 估值
     private BigDecimal discountRt; // 溢价率
+    private BigDecimal volume; // 成交额
+    private Integer amount; // 份额（万份）
+    private BigDecimal unitTotal; //规模（亿元）
+    private BigDecimal unitIncr; // 规模变化（亿元）
+    private String issuer; // 基金公司
+    private LocalDate lastDt;
     private BigDecimal fundNav; //净值
     private LocalDate navDate; // 净值日期
+    private String indexId;
     private String indexName; //跟踪的指数名称
-    private BigDecimal indexIcreaseRt; // 指数涨幅
+    private BigDecimal indexIncreaseRt; // 指数涨幅
 
     public BigDecimal getDiscountRt() {
         return discountRt;
@@ -93,12 +94,12 @@ public class EtfResultDto {
         this.volume = volume;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getLastDt() {
+        return lastDt;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setLastDt(LocalDate lastDt) {
+        this.lastDt = lastDt;
     }
 
     public BigDecimal getIncreaseRt() {
@@ -141,12 +142,20 @@ public class EtfResultDto {
         this.indexName = indexName;
     }
 
-    public BigDecimal getIndexIcreaseRt() {
-        return indexIcreaseRt;
+    public BigDecimal getIndexIncreaseRt() {
+        return indexIncreaseRt;
     }
 
-    public void setIndexIcreaseRt(BigDecimal indexIcreaseRt) {
-        this.indexIcreaseRt = indexIcreaseRt;
+    public String getIndexId() {
+        return indexId;
+    }
+
+    public void setIndexId(String indexId) {
+        this.indexId = indexId;
+    }
+
+    public void setIndexIncreaseRt(BigDecimal indexIncreaseRt) {
+        this.indexIncreaseRt = indexIncreaseRt;
     }
 
     @Override
@@ -154,20 +163,21 @@ public class EtfResultDto {
         return "EtfResultDto{" +
                 "code=" + code +
                 ", name='" + name + '\'' +
-                ", issuer='" + issuer + '\'' +
-                ", amount=" + amount +
-                ", unitTotal=" + unitTotal +
-                ", unitIncr=" + unitIncr +
                 ", price=" + price +
-                ", volume=" + volume +
-                ", date=" + date +
                 ", increaseRt=" + increaseRt +
                 ", estimateValue=" + estimateValue +
                 ", discountRt=" + discountRt +
+                ", volume=" + volume +
+                ", amount=" + amount +
+                ", unitTotal=" + unitTotal +
+                ", unitIncr=" + unitIncr +
+                ", issuer='" + issuer + '\'' +
+                ", lastDt=" + lastDt +
                 ", fundNav=" + fundNav +
                 ", navDate=" + navDate +
+                ", indexId=" + indexId +
                 ", indexName='" + indexName + '\'' +
-                ", indexIcreaseRt=" + indexIcreaseRt +
+                ", indexIncreaseRt=" + indexIncreaseRt +
                 '}';
     }
 }
